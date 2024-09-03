@@ -57,11 +57,11 @@
   width: 100%;
   height: auto;
   font-size: 14px;
-  color: azure;
+  color: var(--clrBL0000);
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start;
-  background-color: var(--clrBL0);
+  background-color: var(--body);
 }
 
 /* .ui input{

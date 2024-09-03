@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
     try {
       await axios.post('/api/auth/logout')
       setUser(null)
-      router.push('/')
+      router.push('/join/signin')
     } catch (error) {
       console.error('Error al cerrar sesión:', error)
     }

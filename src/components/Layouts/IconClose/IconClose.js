@@ -1,7 +1,7 @@
 import { FaTimes } from 'react-icons/fa'
-import styles from './IconCloseModal.module.css'
+import styles from './IconClose.module.css'
 
-export function IconCloseModal(props) {
+export function IconClose(props) {
 
   const {onOpenClose} = props
 

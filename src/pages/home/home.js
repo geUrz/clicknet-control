@@ -2,7 +2,8 @@ import { BasicLayout } from '@/layouts'
 import styles from './home.module.css'
 import { useState } from 'react'
 import { Card } from '@/components/Home'
-import { FaBullhorn, FaCarCrash, FaClipboard, FaHornbill } from 'react-icons/fa'
+import { FaBullhorn, FaCarCrash, FaClipboard, FaUserCog } from 'react-icons/fa'
+import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 
 export default function Home() {
 
@@ -11,6 +12,8 @@ export default function Home() {
   const onReload = () => setReload((prevState) => !prevState)
 
   return (
+
+    <ProtectedRoute>
 
     <BasicLayout title='Inicio' onReload={onReload} relative>
 
@@ -32,8 +35,15 @@ export default function Home() {
           </Card>
 
           <Card
+            link='/visitatecnica'
+            title='Visita Técnica'
+          >
+            <FaUserCog />
+          </Card>
+
+          <Card
             link='/reportes'
-            title='reportes'
+            title='Reportes'
           >
             <FaClipboard />
           </Card>
@@ -42,6 +52,8 @@ export default function Home() {
       </div>
 
     </BasicLayout>
+
+    </ProtectedRoute>
 
   )
 }

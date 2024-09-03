@@ -22,6 +22,7 @@
 
 .card svg, .card path{
   font-size: 26px;
+  color: var(--clrBL2);
   position: absolute;
   top: 10px;
   left: 10px;
@@ -29,8 +30,7 @@
 }
 
 .card h1{ 
-  font-size: 20px;
-  font-weight: 600 !important;
+  font-size: 24px;
   cursor: pointer;
 }
 

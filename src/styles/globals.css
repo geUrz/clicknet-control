@@ -22,7 +22,7 @@
 }
 
 body{
-  background-color: rgb(218, 255, 255);
+  background-color: var(--body);
 }
 
 h1,h2,h3,h4{

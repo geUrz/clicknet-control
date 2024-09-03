@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, Button, Input, Label, FormGroup, FormField } from 'semantic-ui-react'
 import styles from './ModUsuarioForm.module.css'
-import { IconCloseModal, Confirm } from '@/components/Layouts'
 import { FaCheck, FaTimes } from 'react-icons/fa'
 
 export function ModUsuarioForm(props) {
@@ -89,12 +88,12 @@ export function ModUsuarioForm(props) {
   return (
     <>
 
-      <IconCloseModal onOpenClose={onOpenClose} />
+      <IconClose onOpenClose={onOpenClose} />
 
       <Form>
-        <FormGroup>
+        <FormGroup widths='equal'>
           <FormField error={!!errors.newUsuario}>
-            <Label>Nuevo Usuario</Label>
+            <Label>Nuevo usuario</Label>
             <Input
               name='newUsuario'
               type='text'
@@ -104,7 +103,7 @@ export function ModUsuarioForm(props) {
             {errors.newUsuario && <span className={styles.error}>{errors.newUsuario}</span>}
           </FormField>
           <FormField error={!!errors.newEmail}>
-            <Label>Nuevo Correo</Label>
+            <Label>Nuevo correo</Label>
             <Input
               name='newEmail'
               type='email'
@@ -114,7 +113,7 @@ export function ModUsuarioForm(props) {
             {errors.newEmail && <span className={styles.error}>{errors.newEmail}</span>}
           </FormField>
           <FormField>
-            <Label>Nueva Contraseña</Label>
+            <Label>Nueva contraseña</Label>
             <Input
               name='newPassword'
               type='password'
@@ -150,7 +149,7 @@ export function ModUsuarioForm(props) {
         }
         onConfirm={handleSubmit}
         onCancel={onShowConfirm}
-        content='La sesión se cerrara, tendrás que iniciar sesión con el nuevo usuario. ¿ Estas seguro de modificar el usuario ?'
+        content='¿ Estas seguro de modificar el usuario ? Se cerrara la sesión.'
       />
 
     </>
