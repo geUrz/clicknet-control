@@ -1,0 +1,31 @@
+.icon{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 130px;
+  right: 0;
+  z-index: 900;
+}
+
+.icon svg, .icon path{
+  padding: 18px;
+  font-size: 60px;
+  border-radius: 50%;
+  background-color: var(--clrBL0);
+  cursor: pointer;
+}
+
+.icon div{
+  cursor: pointer;
+}
+
+.icon div:hover svg, .icon div:hover path{
+  background-color: var(--clrBL1);
+}
+
+.icon div:active svg, .icon div:active path{
+  background-color: var(--clrBL2);
+}

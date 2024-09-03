@@ -1,0 +1,80 @@
+.ui.form{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ui.form input, .ui.form textarea{
+  padding-left: 5px !important;
+  width: 300px !important;
+  font-size: 12.5px !important;
+  color: grey !important;
+}
+
+.ui.form input:focus, .ui.form textarea:focus, .ui.form select:focus{
+  border-color: var(--clrBL0) !important;
+}
+
+.ui.form select{
+  padding-left: 5px !important;
+  width: 300px !important;
+  font-size: 12.5px;
+  text-transform: capitalize;
+  color: grey !important;
+} 
+
+.ui.form option{
+  color: grey !important;
+}
+
+.fields{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.field{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ui.form button{
+  margin-top: 30px;
+}
+
+.ui.circular.label{
+  color: azure;
+  font-size: 6.5px;
+  cursor: pointer;
+}
+
+.ui.label{
+  padding: 10px 5px;
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: azure;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start;
+  background-color: var(--clrBL0);
+}
+
+/* .ui input{
+  border: none !important;
+} */
+
+.ui.page{
+  background-color: rgba(0, 0, 0, .8 );
+}  
+
+.field.error input, .field.error select, .field.error textarea{
+  border: 1px solid rgb(167, 0, 0) !important;
+}
+
+
+

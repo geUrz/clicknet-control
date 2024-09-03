@@ -1,0 +1,49 @@
+.card{
+  padding: 0 10px;
+  margin: 0 10px 20px 10px;
+  width: 140px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--clrBL0000);
+  border-radius: 5%;
+  position: relative;
+  cursor: pointer;
+}
+
+.card:hover{
+  background-color: var(--clrBL000);
+}
+
+.card:active{
+  background-color: var(--clrBL00);
+}
+
+.card svg, .card path{
+  font-size: 26px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+}
+
+.card h1{ 
+  font-size: 20px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.card div{ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card h2{ 
+  margin-top: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
