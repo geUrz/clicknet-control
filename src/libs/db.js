@@ -5,7 +5,7 @@ const connection = mysql.createPool({
   host: 'autorack.proxy.rlwy.net',   
   port: 14849,   
   user: 'root',           
-  password: 'QaVxvYyAGSZVoAbfcHTpTQJzBMqBnNtf',    
+  password: 'TJiPOtvOrgKhbNISFcuKTbJekryFSJIQ',    
   database: 'railway',  
   waitForConnections: true,
   connectionLimit: 10,
