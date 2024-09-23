@@ -1,7 +1,7 @@
 import { BasicLayout } from '@/layouts'
 import { useCallback, useEffect, useState } from 'react'
 import { Card } from '@/components/Home'
-import { FaBox, FaBoxes, FaBoxOpen, FaBoxTissue, FaBullhorn, FaCaravan, FaCarCrash, FaClipboard, FaInbox, FaParachuteBox, FaUserCheck, FaUserCog, FaUserMd } from 'react-icons/fa'
+import { FaBullhorn, FaCarCrash, FaClipboard, FaUserCheck, FaUserCog, FaUserMd } from 'react-icons/fa'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import axios from 'axios'
 import { size } from 'lodash'
@@ -62,7 +62,7 @@ export default function Home() {
       <BasicLayout title='Inicio' onReload={onReload}>
         <div className={styles.main}>
           <div className={styles.section}>
-            <Card link='/incidencias' title='Incidencias' 
+            <Card link='/incidencias' title='Incidencias'
               countIncidencias={
                 !countData.incidencias ? (
                   <LoadingMini />
@@ -72,7 +72,7 @@ export default function Home() {
               }>
               <FaCarCrash />
             </Card>
-            <Card link='/anuncios' title='Anuncios' 
+            <Card link='/anuncios' title='Anuncios'
               countAnuncios={
                 !countData.anuncios ? (
                   <LoadingMini />
@@ -82,7 +82,7 @@ export default function Home() {
               }>
               <FaBullhorn />
             </Card>
-            <Card link='/visitatecnica' title='Visita Técnica' 
+            <Card link='/visitatecnica' title='Visita Técnica'
               countVisitatecnica={
                 !countData.visitatecnica ? (
                   <LoadingMini />
@@ -92,7 +92,7 @@ export default function Home() {
               }>
               <FaUserCog />
             </Card>
-            <Card link='/reportes' title='Reportes' 
+            <Card link='/reportes' title='Reportes'
               countReportes={
                 !countData.reportes ? (
                   <LoadingMini />
@@ -102,7 +102,7 @@ export default function Home() {
               }>
               <FaClipboard />
             </Card>
-            <Card link='/visitaprovedores' title='Visita Provedores' 
+            <Card link='/visitaprovedores' title='Visita Provedores'
               countVisitaprovedores={
                 !countData.visitaprovedores ? (
                   <LoadingMini />
@@ -113,21 +113,16 @@ export default function Home() {
               <FaUserMd />
             </Card>
 
-            {user.isadmin === 'Admin' || user.isadmin === 'Caseta' ? (
-              <>
+            {user && (user.isadmin === 'Admin' || user.isadmin === 'Caseta') ? (
+              <Card link='/validarvisitas' title='Validar Visitas' count={false}>
+                <FaUserCheck />
+              </Card>
+            ) : null}
 
-                <Card link='/validarvisitas' title='Validar Visitas' count={false}>
-                  <FaUserCheck />
-                </Card>
-
-              </>
-            ) : (
-              ''
-            )}
 
           </div>
         </div>
       </BasicLayout>
     </ProtectedRoute>
-  );
+  )
 }

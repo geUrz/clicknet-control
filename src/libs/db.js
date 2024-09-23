@@ -5,14 +5,14 @@ const connection = mysql.createPool({
   host: 'autorack.proxy.rlwy.net',   
   port: 14849,   
   user: 'root',           
-  password: 'TJiPOtvOrgKhbNISFcuKTbJekryFSJIQ',    
+  password: 'QaVxvYyAGSZVoAbfcHTpTQJzBMqBnNtf',    
   database: 'railway',  
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 })
 
-export default connection  
+export default connection   
 
 /* import mysql from 'mysql2/promise';
 
@@ -27,5 +27,5 @@ const connection  = mysql.createPool({
   queueLimit: 0
 });
 
-export default connection    */
+export default connection   */ 
 
