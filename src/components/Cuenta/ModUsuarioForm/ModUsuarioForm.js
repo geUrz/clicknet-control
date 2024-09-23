@@ -2,8 +2,10 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, Button, Input, Label, FormGroup, FormField } from 'semantic-ui-react'
-import styles from './ModUsuarioForm.module.css'
 import { FaCheck, FaTimes } from 'react-icons/fa'
+import { IconClose } from '@/components/Layouts/IconClose/IconClose'
+import styles from './ModUsuarioForm.module.css'
+import { Confirm } from '@/components/Layouts'
 
 export function ModUsuarioForm(props) {
 
@@ -83,7 +85,7 @@ export function ModUsuarioForm(props) {
         setError('Ocurrió un error inesperado');
       }
     }
-  };
+  }
 
   return (
     <>

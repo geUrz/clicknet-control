@@ -1,0 +1,126 @@
+import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { useState } from 'react'
+import axios from 'axios'
+import { useAuth } from '@/contexts/AuthContext'
+import { IconClose } from '@/components/Layouts/IconClose/IconClose'
+import { genVPId } from '@/helpers'
+import styles from './VisitaProvForm.module.css'
+
+export function VisitaProvForm(props) {
+
+  const { user } = useAuth()
+
+  const [visitaprovedor, setVisitaprov] = useState('')
+  const [descripcion, setDescripcion] = useState('')
+
+  const { reload, onReload, onOpenCloseForm, onToastSuccessVisitaprov } = props
+
+  const [errors, setErrors] = useState({})
+
+  const validarForm = () => {
+    const newErrors = {}
+
+    if (!visitaprovedor) {
+      newErrors.visitaprovedor = 'El campo es requerido'
+    }
+
+    if (!descripcion) {
+      newErrors.descripcion = 'El campo es requerido'
+    }
+
+    setErrors(newErrors)
+
+    return Object.keys(newErrors).length === 0
+
+  }
+
+  const handleVisitaprovChange = (e) => {
+    const value = e.target.value
+    setVisitaprov(value)
+  }
+
+  const crearVisitaprov = async (e) => {
+
+    e.preventDefault()
+
+    if (!validarForm()) {
+      return
+    }
+
+    const folio = genVPId(4)
+
+    try {
+      await axios.post('/api/visitaprovedores/visitaprovedores', {
+        usuario_id: user.id,
+        folio,
+        visitaprovedor,
+        descripcion
+      })
+
+      setVisitaprov('')
+      setDescripcion('')
+
+      onReload()
+      onOpenCloseForm()
+      onToastSuccessVisitaprov()
+
+    } catch (error) {
+      console.error('Error al crear la visita provedor:', error)
+    }
+
+  }
+
+  return (
+
+    <>
+
+      <IconClose onOpenClose={onOpenCloseForm} />
+
+      <div className={styles.main}>
+
+        <div className={styles.container}>
+
+          <Form>
+            <FormGroup widths='equal'>
+              <FormField error={!!errors.visitaprovedor}>
+                <Label>
+                  Visita provedor
+                </Label>
+                <Input
+                  name='visitaprovedor'
+                  type="text"
+                  value={visitaprovedor}
+                  onChange={handleVisitaprovChange}
+                />
+                {errors.visitaprovedor && <span className={styles.error}>{errors.visitaprovedor}</span>}
+              </FormField>
+              <FormField error={!!errors.descripcion}>
+                <Label>
+                  Descripción
+                </Label>
+                <TextArea
+                  name='descripcion'
+                  type="text"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                />
+                {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+              </FormField>
+            </FormGroup>
+            <Button
+              primary
+              onClick={crearVisitaprov}
+            >
+              Crear
+            </Button>
+
+          </Form>
+
+        </div>
+
+      </div>
+
+    </>
+
+  )
+}

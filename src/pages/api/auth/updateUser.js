@@ -2,7 +2,7 @@ import connection from '@/libs/db'; // Asegúrate de importar la configuración 
 import bcrypt from 'bcrypt';
 
 export default async function updateUserHandler(req, res) {
-  const { userId, newNombre, newUsuario, newEmail, newIsAdmin, newPassword  } = req.body;
+  const { userId, newNombre, newUsuario, newPrivada, newCalle, newCasa, newIsAdmin, newEmail, newPassword  } = req.body;
 
   try {
     // Verificar si el nuevo email o el nuevo nombre de usuario ya están registrados por otro usuario
@@ -35,15 +35,18 @@ export default async function updateUserHandler(req, res) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const updatedNombre = newNombre || currentUser[0].nombre;
-    const updatedUsuario = newUsuario || currentUser[0].usuario;
-    const updatedEmail = newEmail || currentUser[0].email;
-    const updatedIsAdmin = newIsAdmin || currentUser[0].isadmin;
+    const updatedNombre = newNombre || currentUser[0].nombre
+    const updatedUsuario = newUsuario || currentUser[0].usuario
+    const updatedPrivada = newPrivada || currentUser[0].privada
+    const updatedCalle = newCalle || currentUser[0].calle
+    const updatedCasa = newCasa || currentUser[0].casa
+    const updatedIsAdmin = newIsAdmin || currentUser[0].isadmin
+    const updatedEmail = newEmail || currentUser[0].email
 
     // Actualizar el usuario en la base de datos
     await connection.query(
-      'UPDATE usuarios SET nombre = ?, usuario = ?, email = ?, isadmin = ?, password = ? WHERE id = ?',
-      [updatedNombre, updatedUsuario, updatedEmail, updatedIsAdmin, updatedPassword, userId]
+      'UPDATE usuarios SET nombre = ?, usuario = ?, privada = ?, calle = ?, casa = ?, isadmin = ?, email = ?, password = ? WHERE id = ?',
+      [updatedNombre, updatedUsuario, updatedPrivada, updatedCalle, updatedCasa, updatedIsAdmin, updatedEmail, updatedPassword, userId]
     );
 
     // Devolver una respuesta exitosa

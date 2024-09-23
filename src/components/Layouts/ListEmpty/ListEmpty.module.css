@@ -1,6 +1,7 @@
 .section{
+  padding: 50px 0;
   width: 100%;
-  min-height: 50vh;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,20 +13,9 @@
 }
 
 .section svg, .section path{
-  color: var(--bg5);
+  color: var(--clrGR0);
 }
 
 .section svg:nth-child(1), .section path:nth-child(1){
-  font-size: 50px;
-}
-
-.section svg:nth-child(2), .section path:nth-child(2){
-  padding: 2px;
-  font-size: 28px;
-  background-color: var(--bg1);
-  border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  z-index: 1;
+  font-size: 45px;
 }

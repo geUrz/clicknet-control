@@ -13,14 +13,13 @@
 }
 
 .ui.form input:focus, .ui.form textarea:focus, .ui.form select:focus{
-  border-color: var(--clrBL0) !important;
+  border: 2px solid var(--clrBL0) !important;
 }
 
 .ui.form select{
   padding-left: 5px !important;
   width: 300px !important;
   font-size: 12.5px;
-  text-transform: capitalize;
   color: grey !important;
 } 
 
@@ -53,10 +52,11 @@
 }
 
 .ui.label{
-  padding: 10px 5px;
+  padding: 8px 5px;
   width: 100%;
   height: auto;
   font-size: 14px;
+  font-weight: 600 !important;
   color: var(--clrBL0000);
   display: flex !important;
   align-items: center !important;
@@ -73,7 +73,7 @@
 }  
 
 .field.error input, .field.error select, .field.error textarea{
-  border: 1px solid rgb(167, 0, 0) !important;
+  border: 2px solid rgb(167, 0, 0) !important;
 }
 
 

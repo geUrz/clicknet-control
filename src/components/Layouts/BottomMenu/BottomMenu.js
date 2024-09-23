@@ -1,9 +1,11 @@
-import { FaBullhorn, FaCar, FaCaravan, FaCarBattery, FaCarCrash, FaCaretSquareDown, FaCarSide, FaHome, FaLayerGroup, FaListAlt, FaRegListAlt, FaSadTear, FaSearchengin, FaServicestack, FaUsers, FaUserSecret } from 'react-icons/fa'
-import { BiAlarm, BiAlarmExclamation, BiAlarmSnooze } from 'react-icons/bi'
+import { FaBullhorn, FaCarCrash, FaHome, FaLayerGroup, FaUserCheck, FaUsers } from 'react-icons/fa'
 import Link from 'next/link'
 import styles from './BottomMenu.module.css'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function BottomMenu() {
+
+  const { user } = useAuth()
 
   return (
 
@@ -21,18 +23,51 @@ export function BottomMenu() {
             <h1>Incidencias</h1>
           </div>
         </Link>
-        <Link href='/visitas' className={styles.tab}>
-          <div>
-            <FaUsers />
-            <h1>Visitas</h1>
-          </div>
-        </Link>
         <Link href='/anuncios' className={styles.tab}>
           <div>
             <FaBullhorn />
             <h1>Anuncios</h1>
           </div>
         </Link>
+
+        {user.isadmin === 'Admin' || user.isadmin === 'Comité' ? (
+          <>
+
+            <Link href='/visitas' className={styles.tab}>
+              <div>
+                <FaUsers />
+                <h1>Visitas</h1>
+              </div>
+            </Link>
+
+            <Link href='/validarvisitas' className={styles.tab}>
+              <div>
+                <FaUserCheck />
+                <h1>Validar V.</h1>
+              </div>
+            </Link>
+
+          </>
+        ) : (
+          user.isadmin === 'Caseta' ? (
+            <Link href='/validarvisitas' className={styles.tab}>
+              <div>
+                <FaUserCheck />
+                <h1>Validar V.</h1>
+              </div>
+            </Link>
+          ) : (
+            user.isadmin === 'Residente' ? (
+              <Link href='/visitas' className={styles.tab}>
+              <div>
+                <FaUsers />
+                <h1>Visitas</h1>
+              </div>
+            </Link>
+            ) : ('')
+          )
+        ) }
+
         <Link href='/extras' className={styles.tab}>
           <div>
             <FaLayerGroup />

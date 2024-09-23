@@ -18,7 +18,7 @@ export function Loading(props) {
     
     <div className={loadingClass}>
       <MoonLoader
-        color='gray'
+        color='black'
         size={size}
         speedMultiplier={.8}
       />

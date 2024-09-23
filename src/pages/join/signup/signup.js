@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { FaUserPlus } from 'react-icons/fa'
 import Link from 'next/link'
 import { useRedirectIfAuthenticated } from '@/hooks'
-import { BasicJoin, BasicLayout } from '@/layouts'
+import { BasicJoin } from '@/layouts'
 import styles from './signup.module.css'
 
 export default function Signup() {
@@ -17,10 +17,14 @@ export default function Signup() {
   const [credentials, setCredentials] = useState({
     nombre: '',
     usuario: '',
+    privada: '',
+    calle: '',
+    casa: '',
+    isadmin: '',
     email: '',
     password: '',
     confirmarPassword: ''
-  });
+  })
 
   useRedirectIfAuthenticated()
 
@@ -39,9 +43,13 @@ export default function Signup() {
     if (!credentials.nombre) {
       newErrors.nombre = 'El campo es requerido'
     }
-    
+
     if (!credentials.usuario) {
       newErrors.usuario = 'El campo es requerido'
+    }
+
+    if (!credentials.isadmin) {
+      newErrors.isadmin = 'El campo es requerido'
     }
 
     if (!credentials.email) {
@@ -82,6 +90,10 @@ export default function Signup() {
       setCredentials({
         nombre: '',
         usuario: '',
+        privada: '',
+        calle: '',
+        casa: '',
+        isadmin: '',
         email: '',
         password: '',
         confirmarPassword: ''
@@ -107,77 +119,144 @@ export default function Signup() {
 
       <div className={styles.main}>
 
-      <div className={styles.boxForm}>
+        <div className={styles.boxForm}>
 
-        <div className={styles.user}>
-          <div>
-            <FaUserPlus />
+          <div className={styles.user}>
+            <div>
+              <FaUserPlus />
+            </div>
+            <h1>Crear usuario</h1>
           </div>
-          <h1>Crear usuario</h1>
-        </div>
 
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-          <FormField error={!!errors.nombre}>
-              <Label>Nombre</Label>
-              <Input
-                name='nombre'
-                type='text'
-                value={credentials.nombre}
-                onChange={handleChange}
-              />
-              {errors.nombre && <Message negative>{errors.nombre}</Message>}
-            </FormField>
-            <FormField error={!!errors.usuario}>
-              <Label>Usuario</Label>
-              <Input
-                name='usuario'
-                type='text'
-                value={credentials.usuario}
-                onChange={handleChange}
-              />
-              {errors.usuario && <Message negative>{errors.usuario}</Message>}
-            </FormField>
-            <FormField error={!!errors.email}>
-              <Label>Correo</Label>
-              <Input
-                name='email'
-                type='email'
-                value={credentials.email}
-                onChange={handleChange}
-              />
-              {errors.email && <Message negative>{errors.email}</Message>}
-            </FormField>
-            <FormField error={!!errors.password}>
-              <Label>Contraseña</Label>
-              <Input
-                name='password'
-                type='password'
-                value={credentials.password}
-                onChange={handleChange}
-              />
-              {errors.password && <Message negative>{errors.password}</Message>}
-            </FormField>
-            <FormField error={!!errors.confirmarPassword}>
-              <Label>Confirmar contraseña</Label>
-              <Input
-                name='confirmarPassword'
-                type='password'
-                value={credentials.confirmarPassword}
-                onChange={handleChange}
-              />
-              {errors.confirmarPassword && <Message negative>{errors.confirmarPassword}</Message>}
-            </FormField>
-          </FormGroup>
-          {error && <p className={styles.error}>{error}</p>}
-          <Button primary type='submit'>Crear</Button>
-        </Form>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <FormField error={!!errors.nombre}>
+                <Label>Nombre</Label>
+                <Input
+                  name='nombre'
+                  type='text'
+                  value={credentials.nombre}
+                  onChange={handleChange}
+                />
+                {errors.nombre && <Message negative>{errors.nombre}</Message>}
+              </FormField>
+              <FormField error={!!errors.usuario}>
+                <Label>Usuario</Label>
+                <Input
+                  name='usuario'
+                  type='text'
+                  value={credentials.usuario}
+                  onChange={handleChange}
+                />
+                {errors.usuario && <Message negative>{errors.usuario}</Message>}
+              </FormField>
+              <FormField>
+                <Label>
+                  Privada
+                </Label>
+                <FormField
+                  name='privada'
+                  type="text"
+                  control='select'
+                  value={credentials.privada}
+                  onChange={handleChange}
+                >
+                  <option value=''></option>
+                  <option value='León'>León</option>
+                  <option value='Calet'>Calet</option>
+                  <option value='Yza'>Yza</option>
+                  <option value='Páramo'>Páramo</option>
+                </FormField>
+              </FormField>
+              <FormField>
+                <Label>
+                  Calle
+                </Label>
+                <FormField
+                  name='calle'
+                  type="text"
+                  control='select'
+                  value={credentials.calle}
+                  onChange={handleChange}
+                >
+                  <option value=''></option>
+                  <option value='Boceguillas'>Boceguillas</option>
+                  <option value='Real de nieva'>Real de nieva</option>
+                  <option value='Batanes'>Batanes</option>
+                  <option value='Beceas'>Beceas</option>
+                </FormField>
+              </FormField>
+              <FormField>
+                <Label>Casa</Label>
+                <Input
+                  name='casa'
+                  type='number'
+                  value={credentials.casa}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField error={!!errors.isadmin}>
+                <Label>
+                  Nivel
+                </Label>
+                <FormField
+                  name='isadmin'
+                  type="text"
+                  control='select'
+                  value={credentials.isadmin}
+                  onChange={handleChange}
+                >
+                  <option value=''></option>
+                  <option value='Admin'>Admin</option>
+                  <option value='Comité'>Comité</option>
+                  <option value='Residente'>Residente</option>
+                  <option value='Caseta'>Caseta</option>
+                  <option value='Técnico'>Técnico</option>
+                </FormField>
+                {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
+              </FormField>
+              <FormField error={!!errors.email}>
+                <Label>Correo</Label>
+                <Input
+                  name='email'
+                  type='email'
+                  value={credentials.email}
+                  onChange={handleChange}
+                />
+                {errors.email && <Message negative>{errors.email}</Message>}
+              </FormField>
+              <FormField error={!!errors.password}>
+                <Label>Contraseña</Label>
+                <Input
+                  name='password'
+                  type='password'
+                  value={credentials.password}
+                  onChange={handleChange}
+                />
+                {errors.password && <Message negative>{errors.password}</Message>}
+              </FormField>
+              <FormField error={!!errors.confirmarPassword}>
+                <Label>Confirmar contraseña</Label>
+                <Input
+                  name='confirmarPassword'
+                  type='password'
+                  value={credentials.confirmarPassword}
+                  onChange={handleChange}
+                />
+                {errors.confirmarPassword && <Message negative>{errors.confirmarPassword}</Message>}
+              </FormField>
+            </FormGroup>
+            {error && <p className={styles.error}>{error}</p>}
+            <Button primary type='submit'>
+              Crear
+            </Button>
+          </Form>
 
-        <div className={styles.link}>
-          <Link href='/join/signin'>
-            Iniciar sesión
-          </Link>
-        </div>
+          <div className={styles.link}>
+            <Link href='/join/signin'>
+              Iniciar sesión
+            </Link>
+          </div>
 
         </div>
 

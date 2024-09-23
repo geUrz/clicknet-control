@@ -20,7 +20,7 @@ export function ModUsuarioForm(props) {
     newUsuario: user.usuario || '',
     newEmail: user.email || '',
     newPassword: '',
-    confirmPassword: '' // Nuevo campo para confirmar la contraseña
+    confirmPassword: ''
   });
 
   const [error, setError] = useState(null)
@@ -150,7 +150,7 @@ export function ModUsuarioForm(props) {
         }
         onConfirm={handleSubmit}
         onCancel={onShowConfirm}
-        content='La sesión se cerrara, tendrás que iniciar sesión con el nuevo usuario. ¿ Estas seguro de modificar el usuario ?'
+        content='¿ Estas seguro de modificar el usuario ?'
       />
 
     </>

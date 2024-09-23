@@ -20,7 +20,12 @@
   --clrGR0: rgb(165, 165, 165);
   --clrGR1: rgb(184, 184, 184);
   --clrGR2: rgb(202, 202, 202);
+  --clrGR3: rgb(216, 216, 216);
+  --clrGR4: rgb(228, 226, 226);
 
-  --body: rgb(218, 255, 255)
+  --inProcess : #ffffc5;
+  --finish: rgb(209, 255, 209);
+
+  --body: rgb(233, 255, 255);
 
 }

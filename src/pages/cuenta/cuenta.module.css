@@ -8,6 +8,7 @@
 }
 
 .section{
+  padding: 50px 0;
   width: 100%;
   height: auto;
   display: flex;
@@ -22,13 +23,24 @@
 }
 
 .section h1{
-  margin-top: 5px;
   font-size: 24px;
   color: var(--clrBL2);
 }
 
-.section h2{
+.section div{
   margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section div h1{
+  font-size: 14px;
+  color: var(--clrBL2);
+}
+
+.section h2{
+  margin-left: 5px;
   font-size: 14px;
   color: var(--clrGR0);
 }

@@ -9,7 +9,7 @@
 
 .loadingLarge{
   width: 100%;
-  height: 40vh;
+  height: 45vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,8 +27,6 @@
 
 .loadingMini{
   padding: 4px 0 !important;
-  width: 100%;
-  height: auto;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;

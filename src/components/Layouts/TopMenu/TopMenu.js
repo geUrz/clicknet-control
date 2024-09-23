@@ -9,7 +9,9 @@ export function TopMenu(props) {
   return (
 
     <div className={styles.main}>
-      <FaBell />
+      <Link href='/noti'>
+        <FaBell />
+      </Link>
       <h1>{title}</h1>
       <Link href='/cuenta'>
         <FaUser />

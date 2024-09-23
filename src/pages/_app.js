@@ -9,9 +9,9 @@ export default function App(props) {
 
   const { Component, pageProps } = props
 
-  useEffect(() => {
+  /* useEffect(() => {
     initializeOneSignal()
-  }, [])
+  }, []) */
 
   return(
   

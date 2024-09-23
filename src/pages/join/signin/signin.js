@@ -1,5 +1,5 @@
 import { Button, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { BasicJoin, BasicLayout } from '@/layouts'
 import { FaUserCircle } from 'react-icons/fa'
@@ -64,18 +64,47 @@ export default function Signin() {
     }
   }
 
+  const [activate, setActivate] = useState(false)
+
+  const timer = useRef(null)
+
+  const handleTouchStart = () => {
+    timer.current = setTimeout(() => {
+      setActivate(prev => !prev)
+    }, 3000)
+  }
+
+  const handleTouchEnd = () => {
+    clearTimeout(timer.current)
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.ctrlKey && e.key === '0') {
+      e.preventDefault()
+      setActivate((prevState) => !prevState)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   return (
 
     <BasicJoin relative>
 
       <div className={styles.main}>
 
-      <div className={styles.boxForm}>
-        
-        <div className={styles.user}>
-          <FaUserCircle />
-          <h1>Iniciar sesión</h1>
-        </div>
+        <div className={styles.boxForm}>
+
+          <div className={styles.user}>
+            <FaUserCircle onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} />
+            <h1>Iniciar sesión</h1>
+          </div>
 
           <Form onSubmit={handleSubmit}>
             <FormGroup widths='equal'>
@@ -101,14 +130,20 @@ export default function Signin() {
               </FormField>
             </FormGroup>
             {error && <p className={styles.error}>{error}</p>}
-            <Button primary type='submit'>Iniciar sesión</Button>
+            <Button primary type='submit'>
+              Iniciar sesión
+            </Button>
           </Form>
 
-          <div className={styles.link}>
-            <Link href='/join/signup'>
-              ¿No tienes un usuario?, Crea uno aquí
-            </Link>
-          </div>
+          {activate ? (
+            <div className={styles.link}>
+              <Link href='/join/signup'>
+                ¿No tienes un usuario?, Crea uno aquí
+              </Link>
+            </div>
+          ) : (
+            ''
+          )}
 
         </div>
 

@@ -1,20 +1,20 @@
-/* import mysql from 'mysql2/promise'
+import mysql from 'mysql2/promise'
 
 // Configura la conexión a la base de datos
 const connection = mysql.createPool({
-  host: 'junction.proxy.rlwy.net',   
-  port: 22709,   
+  host: 'autorack.proxy.rlwy.net',   
+  port: 14849,   
   user: 'root',           
-  password: 'QaVxvYyAGSZVoAbfcHTpTQJzBMqBnNtf',    
+  password: 'TJiPOtvOrgKhbNISFcuKTbJekryFSJIQ',    
   database: 'railway',  
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 })
 
-export default connection  */ 
+export default connection  
 
-import mysql from 'mysql2/promise';
+/* import mysql from 'mysql2/promise';
 
 // Configura la conexión a la base de datos
 const connection  = mysql.createPool({
@@ -27,5 +27,5 @@ const connection  = mysql.createPool({
   queueLimit: 0
 });
 
-export default connection   
+export default connection    */
 
