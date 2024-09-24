@@ -8,11 +8,8 @@ export function Add(props) {
   return (
 
     <div className={styles.iconMain}>
-      <div className={styles.iconSection}>
-        <div onClick={onOpenClose}>
-          <FaPlus />
-        </div>
-        <h1>{titulo}</h1>
+      <div onClick={onOpenClose}>
+        <FaPlus />
       </div>
     </div>
 

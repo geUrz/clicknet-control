@@ -54,7 +54,8 @@ export function VisitaProvForm(props) {
         usuario_id: user.id,
         folio,
         visitaprovedor,
-        descripcion
+        descripcion, 
+        autorizo: user.id
       })
 
       setVisitaprov('')

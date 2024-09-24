@@ -30,7 +30,7 @@ export function BottomMenu() {
           </div>
         </Link>
 
-        {user.isadmin === 'Admin' || user.isadmin === 'Comité' ? (
+        {user.isadmin === 'Admin' ? (
           <>
 
             <Link href='/visitas' className={styles.tab}>
@@ -49,7 +49,7 @@ export function BottomMenu() {
 
           </>
         ) : (
-          user.isadmin === 'Caseta' ? (
+          user.isadmin === 'Caseta' || user.isadmin === 'Comité' ? (
             <Link href='/validarvisitas' className={styles.tab}>
               <div>
                 <FaUserCheck />

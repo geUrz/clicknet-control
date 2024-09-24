@@ -80,8 +80,8 @@ export function VisitasList(props) {
               onChange={(e) => setFilterTipoacceso(e.target.value)}
             >
               <option value="">Todos</option>
-              <option value='Eventual'>Eventual</option>
-              <option value='Frecuente'>Frecuente</option>
+              <option value='eventual'>Eventual</option>
+              <option value='frecuente'>Frecuente</option>
             </FormField>
 
             <Label className={styles.label}>Estatus</Label>
@@ -113,7 +113,7 @@ export function VisitasList(props) {
         </Form>
       </div>
 
-      {!visitas ? (
+      {!filteredVisitas ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredVisitas) === 0 ? (

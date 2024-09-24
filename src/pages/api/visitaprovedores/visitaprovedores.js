@@ -18,9 +18,9 @@ async function sendNotification(message) {
     };
 
     try {
-        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
     } catch (error) {
-        console.error('Error sending notification:', error.message);
+        console.error('Error sending notification:', error.message)
     }
 }
 
@@ -29,10 +29,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
 
-        // Caso para obtener negocio por usuario_id
+        // Caso para obtener visitaprovedores por usuario_id
         if (usuario_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, visitaprovedor, descripcion, createdAt FROM visitaprovedores WHERE usuario_id = ?', [usuario_id]);
+                const [rows] = await connection.query('SELECT id, usuario_id, folio, visitaprovedor, descripcion, createdAt FROM visitaprovedores WHERE usuario_id = ?', [usuario_id])
                 if (rows.length === 0) {
                     return res.status(404).json({ error: 'Negocio no encontrado' })
                 }
@@ -47,35 +47,37 @@ export default async function handler(req, res) {
         try {
             const [rows] = await connection.query(
                 `SELECT
-            visitaprovedores.id,
-            visitaprovedores.usuario_id,
-            usuarios.nombre AS usuario_nombre,
-            usuarios.usuario AS usuario_usuario,
-            usuarios.privada AS usuario_privada,
-            usuarios.calle AS usuario_calle,
-            usuarios.casa AS usuario_casa,
-            usuarios.usuario AS usuario_usuario,
-            visitaprovedores.folio,
-            visitaprovedores.visitaprovedor,
-            visitaprovedores.descripcion,
-            visitaprovedores.createdAt
-        FROM visitaprovedores
-        JOIN usuarios ON visitaprovedores.usuario_id = usuarios.id
-    `);
+                    visitaprovedores.id,
+                    visitaprovedores.usuario_id,
+                    usuarios.nombre AS usuario_nombre,
+                    usuarios.usuario AS usuario_usuario,
+                    usuarios.privada AS usuario_privada,
+                    usuarios.calle AS usuario_calle,
+                    usuarios.casa AS usuario_casa,
+                    usuarios.usuario AS usuario_usuario,
+                    visitaprovedores.folio,
+                    visitaprovedores.visitaprovedor,
+                    visitaprovedores.descripcion,
+                    autorizo_usuario.usuario AS autorizo_usuario,
+                    visitaprovedores.createdAt
+                FROM visitaprovedores
+                JOIN usuarios ON visitaprovedores.usuario_id = usuarios.id
+                LEFT JOIN usuarios AS autorizo_usuario ON visitaprovedores.autorizo = autorizo_usuario.id
+    `)
             res.status(200).json(rows)
         } catch (error) {
             res.status(500).json({ error: error.message })
         }
     } else if (req.method === 'POST') {
         try {
-            const { usuario_id, folio, visitaprovedor, descripcion } = req.body;
+            const { usuario_id, folio, visitaprovedor, descripcion, autorizo } = req.body;
             if (!usuario_id || !visitaprovedor || !descripcion) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
             const [result] = await connection.query(
-                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion) VALUES (?, ?, ?, ?)',
-                [usuario_id, folio, visitaprovedor, descripcion]
+                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion, autorizo) VALUES (?, ?, ?, ?, ?)',
+                [usuario_id, folio, visitaprovedor, descripcion, autorizo]
             )
 
             // Enviar notificación después de crear la visitaprovedor
@@ -89,7 +91,7 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'PUT') {
         if (!id) {
-            return res.status(400).json({ error: 'ID de la visitaprovedor es obligatorio' });
+            return res.status(400).json({ error: 'ID de la visitaprovedor es obligatorio' })
         }
 
         const { visitaprovedor, descripcion } = req.body;
@@ -101,41 +103,41 @@ export default async function handler(req, res) {
                 const [result] = await connection.query(
                     'UPDATE visitaprovedores SET visitaprovedor = ?, descripcion = ?',
                     [visitaprovedor, descripcion]
-                );
+                )
 
                 if (result.affectedRows === 0) {
-                    return res.status(404).json({ error: 'Visita provedor no encontrada' });
+                    return res.status(404).json({ error: 'Visita provedor no encontrada' })
                 }
 
-                res.status(200).json({ message: 'Visita provedor actualizada correctamente' });
+                res.status(200).json({ message: 'Visita provedor actualizada correctamente' })
             } catch (error) {
-                res.status(500).json({ error: error.message });
+                res.status(500).json({ error: error.message })
             }
         } else {
-            return res.status(400).json({ error: 'Datos insuficientes para actualizar la visitaprovedor' });
+            return res.status(400).json({ error: 'Datos insuficientes para actualizar la visitaprovedor' })
         }
     } else if (req.method === 'DELETE') {
         if (!id) {
-            return res.status(400).json({ error: 'ID de la visitaprovedor es obligatorio' });
+            return res.status(400).json({ error: 'ID de la visitaprovedor es obligatorio' })
         }
 
         else{
             // Eliminar la visitaprovedor por ID
             try {
-                const [result] = await connection.query('DELETE FROM visitaprovedores WHERE id = ?', [id]);
+                const [result] = await connection.query('DELETE FROM visitaprovedores WHERE id = ?', [id])
 
                 // Verificar si el negocio fue eliminado
                 if (result.affectedRows === 0) {
-                    return res.status(404).json({ error: 'Visita provedor no encontrada' });
+                    return res.status(404).json({ error: 'Visita provedor no encontrada' })
                 }
 
-                res.status(200).json({ message: 'Visita provedor eliminada correctamente' });
+                res.status(200).json({ message: 'Visita provedor eliminada correctamente' })
             } catch (error) {
-                res.status(500).json({ error: error.message });
+                res.status(500).json({ error: error.message })
             }
         }
     } else {
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE'])
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }

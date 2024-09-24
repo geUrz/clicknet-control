@@ -1,12 +1,12 @@
-import { IconClose, Confirm, DatosRes } from '@/components/Layouts';
-import { formatDate, formatDateInc, formatDateIncDet, formatDateVT } from '@/helpers';
-import { BasicModal } from '@/layouts';
-import { FaCheck, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
-import { IncidenciaEditForm, VisitaProvEditForm } from '../VisitaProvEditForm/VisitaProvEditForm';
-import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext';
-import styles from './VisitaProvDetalles.module.css';
+import { IconClose, Confirm, DatosAuth } from '@/components/Layouts'
+import { formatDateVT } from '@/helpers'
+import { BasicModal } from '@/layouts'
+import { FaCheck, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa'
+import { useState } from 'react'
+import { VisitaProvEditForm } from '../VisitaProvEditForm/VisitaProvEditForm'
+import axios from 'axios'
+import { useAuth } from '@/contexts/AuthContext'
+import styles from './VisitaProvDetalles.module.css'
 
 export function VisitaProvDetalles(props) {
   const { reload, onReload, visitaprov, onOpenCloseDetalles, onToastSuccessVisitaprovMod, onToastSuccessVisitaprovDel } = props
@@ -16,10 +16,6 @@ export function VisitaProvDetalles(props) {
   const [showEditVisitaprov, setShowEditVisitaprov] = useState(false)
 
   const onOpenEditVisitaprov = () => setShowEditVisitaprov((prevState) => !prevState)
-
-  const [showRes, setShowRes] = useState(false)
-
-  const onOpenCloseRes = () => setShowRes((prevState) => !prevState)
 
   const [showConfirmDel, setShowConfirmDel] = useState(false)
 
@@ -55,12 +51,9 @@ export function VisitaProvDetalles(props) {
               <h1>Descripción</h1>
               <h2>{visitaprov.descripcion}</h2>
             </div>
-            <div className={styles.reporta}>
+            <div>
               <h1>Autorizó</h1>
-              <div onClick={onOpenCloseRes}>
-                <h2>{visitaprov.usuario_nombre}</h2>
-                <FaInfoCircle />
-              </div>
+              <h2>{visitaprov.autorizo_usuario}</h2>
             </div>
           </div>
           <div className={styles.box1_2}>
@@ -98,10 +91,6 @@ export function VisitaProvDetalles(props) {
 
       <BasicModal title='Editar visita provedor' show={showEditVisitaprov} onClose={onOpenEditVisitaprov}>
         <VisitaProvEditForm reload={reload} onReload={onReload} visitaprov={visitaprov} onOpenEditVisitaprov={onOpenEditVisitaprov} onToastSuccessVisitaprovMod={onToastSuccessVisitaprovMod} />
-      </BasicModal>
-
-      <BasicModal title='datos de residente' show={showRes} onClose={onOpenCloseRes}>
-        <DatosRes visitaprov={visitaprov} onOpenCloseRes={onOpenCloseRes} />
       </BasicModal>
 
       <Confirm

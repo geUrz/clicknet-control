@@ -19,7 +19,7 @@ export function ValidarCodigo(props) {
   const [showCam, setShowCam] = useState(false)
   const [icon, setIcon] = useState(<FaQrcode />)
 
-  const onOpenCloseCam = () => setShowCam((prevState) => !prevState)
+  const onOpenCloseCam = () => setShowCam(prevState => !prevState)
 
   const handleChange = (e) => {
     setCodigo(e.target.value)
@@ -92,7 +92,7 @@ export function ValidarCodigo(props) {
       if (resultado.visita.estado === 'Sin ingresar') {
         await handleValidar()
       } else if (resultado.visita.estado === 'Ingresado' && resultado.visita.tipoacceso === 'frecuente') {
-        await handleValidar() // Reutilizamos la misma función para validar
+        await handleValidar()
       } else {
         await handleConsultar()
       }
@@ -120,13 +120,15 @@ export function ValidarCodigo(props) {
               value={codigo}
               onChange={handleChange}
             />
-            <div className={styles.iconQr}>
+
+            <div className={styles.iconQr} onClick={showCam ? handleClear : onOpenCloseCam}>
               {resultado ? (
-                <FaEraser onClick={handleClear} />
+                <FaEraser onClick={(e) => { e.stopPropagation(); handleClear(); }} />
               ) : (
                 icon
               )}
             </div>
+
           </div>
 
           {resultado && !resultado.validado && (

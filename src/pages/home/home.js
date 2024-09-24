@@ -113,7 +113,7 @@ export default function Home() {
               <FaUserMd />
             </Card>
 
-            {user && (user.isadmin === 'Admin' || user.isadmin === 'Caseta') ? (
+            {user && (user.isadmin === 'Admin' || user.isadmin === 'Caseta' || user.isadmin === 'Comité') ? (
               <Card link='/validarvisitas' title='Validar Visitas' count={false}>
                 <FaUserCheck />
               </Card>
