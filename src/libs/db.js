@@ -1,6 +1,5 @@
 import mysql from 'mysql2/promise';
 
-// Configura la conexión a la base de datos utilizando las variables de entorno
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -12,7 +11,7 @@ const connection = mysql.createPool({
   queueLimit: 0
 });
 
-export default connection;
+export default connection; 
 
 
 /* import mysql from 'mysql2/promise';

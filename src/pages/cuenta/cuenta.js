@@ -8,6 +8,7 @@ import { Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { Button } from 'semantic-ui-react'
 import styles from './cuenta.module.css'
 import axios from 'axios'
+import { ModResidenteForm } from '@/components/Cuenta/ModResidenteForm'
 
 export default function Cuenta() {
 
@@ -51,8 +52,8 @@ export default function Cuenta() {
     })()
   }, [reload])
 
-  if (loading) {
-    <Loading size={45} loading={0} />
+  if (loading || !user) {
+    return <Loading size={45} loading={0} />
   }
 
   return (
@@ -77,9 +78,13 @@ export default function Cuenta() {
 
                   <h1>{user.usuario}</h1>
                   <div>
-                      <h1>Nombre:</h1>
-                      <h2>{user.nombre}</h2>
-                    </div>
+                    <h1>Nombre:</h1>
+                    <h2>{user.nombre}</h2>
+                  </div>
+                  <div>
+                    <h1>Correo:</h1>
+                    <h2>{user.email}</h2>
+                  </div>
                   <div>
                     <h1>Nivel:</h1>
                     <h2>{user.isadmin}</h2>
@@ -92,6 +97,10 @@ export default function Cuenta() {
 
                     <h1>{user.usuario}</h1>
                     <div>
+                      <h1>Nombre:</h1>
+                      <h2>{user.nombre}</h2>
+                    </div>
+                    <div>
                       <h1>Privada:</h1>
                       <h2>{user.privada}</h2>
                     </div>
@@ -102,10 +111,6 @@ export default function Cuenta() {
                     <div>
                       <h1>Casa:</h1>
                       <h2>#{user.casa}</h2>
-                    </div>
-                    <div>
-                      <h1>Nombre:</h1>
-                      <h2>{user.nombre}</h2>
                     </div>
                     <div>
                       <h1>Correo:</h1>
@@ -140,9 +145,15 @@ export default function Cuenta() {
         </div>
 
 
-        <BasicModal title='modificar usuario' show={show} onClose={onOpenClose}>
-          <ModUsuarioForm user={user} onOpenClose={onOpenClose} onToastSuccess={onToastSuccessIncidenciaMod} />
-        </BasicModal>
+        {user.isadmin === 'Admin' || user.isadmin === 'Comité' || user.isadmin === 'Técnico' ? (
+          <BasicModal title='Modificar usuario' show={show} onClose={onOpenClose}>
+            <ModUsuarioForm user={user} onOpenClose={onOpenClose} onToastSuccess={onToastSuccessIncidenciaMod} />
+          </BasicModal>
+        ) : user.isadmin === 'Residente' ? (
+          <BasicModal title='Modificar residente' show={show} onClose={onOpenClose}>
+            <ModResidenteForm user={user} onOpenClose={onOpenClose} onToastSuccess={onToastSuccessIncidenciaMod} />
+          </BasicModal>
+        ) : null}
 
 
       </BasicLayout>

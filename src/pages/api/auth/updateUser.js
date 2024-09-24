@@ -42,6 +42,8 @@ export default async function updateUserHandler(req, res) {
     const updatedCasa = newCasa || currentUser[0].casa
     const updatedIsAdmin = newIsAdmin || currentUser[0].isadmin
     const updatedEmail = newEmail || currentUser[0].email
+    const updatedPassword = newPassword ? hashedPassword : currentUser[0].password;
+
 
     // Actualizar el usuario en la base de datos
     await connection.query(

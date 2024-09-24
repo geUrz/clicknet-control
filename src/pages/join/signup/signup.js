@@ -52,10 +52,6 @@ export default function Signup() {
       newErrors.isadmin = 'El campo es requerido'
     }
 
-    if (!credentials.email) {
-      newErrors.email = 'El campo es requerido'
-    }
-
     if (!credentials.password) {
       newErrors.password = 'El campo es requerido'
     }
@@ -154,37 +150,23 @@ export default function Signup() {
                 <Label>
                   Privada
                 </Label>
-                <FormField
+                <Input
                   name='privada'
                   type="text"
-                  control='select'
                   value={credentials.privada}
                   onChange={handleChange}
-                >
-                  <option value=''></option>
-                  <option value='León'>León</option>
-                  <option value='Calet'>Calet</option>
-                  <option value='Yza'>Yza</option>
-                  <option value='Páramo'>Páramo</option>
-                </FormField>
+                />
               </FormField>
               <FormField>
                 <Label>
                   Calle
                 </Label>
-                <FormField
+                <Input
                   name='calle'
                   type="text"
-                  control='select'
                   value={credentials.calle}
                   onChange={handleChange}
-                >
-                  <option value=''></option>
-                  <option value='Boceguillas'>Boceguillas</option>
-                  <option value='Real de nieva'>Real de nieva</option>
-                  <option value='Batanes'>Batanes</option>
-                  <option value='Beceas'>Beceas</option>
-                </FormField>
+                />
               </FormField>
               <FormField>
                 <Label>Casa</Label>

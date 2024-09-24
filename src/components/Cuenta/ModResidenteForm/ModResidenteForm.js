@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, Button, Input, Label, FormGroup, FormField, Message } from 'semantic-ui-react'
+import { Form, Button, Input, Label, FormGroup, FormField } from 'semantic-ui-react'
 import { FaCheck, FaTimes } from 'react-icons/fa'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
-import styles from './ModUsuarioForm.module.css'
 import { Confirm } from '@/components/Layouts'
+import styles from './ModResidenteForm.module.css'
 
-export function ModUsuarioForm(props) {
+export function ModResidenteForm(props) {
 
   const { onOpenClose } = props
 
@@ -16,6 +16,9 @@ export function ModUsuarioForm(props) {
   const [formData, setFormData] = useState({
     newNombre: user.nombre || '',
     newUsuario: user.usuario || '',
+    newPrivada: user.privada || '',
+    newCalle: user.calle || '',
+    newCasa: user.casa || '',
     newEmail: user.email || '',
     newIsAdmin: user.isadmin || '',
     newPassword: '',
@@ -71,6 +74,9 @@ export function ModUsuarioForm(props) {
         userId: user.id,
         newNombre: formData.newNombre,
         newUsuario: formData.newUsuario,
+        newPrivada: formData.newPrivada,
+        newCalle: formData.newCalle,
+        newCasa: formData.newCasa,
         newEmail: formData.newEmail,
         newIsAdmin: formData.newIsAdmin,
         newPassword: formData.newPassword,
@@ -124,17 +130,17 @@ export function ModUsuarioForm(props) {
 
       <Form onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <FormGroup widths='equal'>
-          <FormField error={!!errors.newNombre}>
-            <Label>Nuevo nombre</Label>
-            <Input
-              name='newNombre'
-              type='text'
-              value={formData.newNombre}
-              onChange={handleChange}
-            />
-            {errors.newNombre && <Message negative>{errors.newNombre}</Message>}
-          </FormField>
           <FormField error={!!errors.newUsuario}>
+            <FormField error={!!errors.newNombre}>
+              <Label>Nuevo nombre</Label>
+              <Input
+                name='newNombre'
+                type='text'
+                value={formData.newNombre}
+                onChange={handleChange}
+              />
+              {errors.newNombre && <span className={styles.error}>{errors.newNombre}</span>}
+            </FormField>
             <Label>Nuevo usuario</Label>
             <Input
               name='newUsuario'
@@ -142,9 +148,39 @@ export function ModUsuarioForm(props) {
               value={formData.newUsuario}
               onChange={handleChange}
             />
-            {errors.newUsuario && <Message negative>{errors.newUsuario}</Message>}
+            {errors.newUsuario && <span className={styles.error}>{errors.newUsuario}</span>}
           </FormField>
-          <FormField>
+          <FormField error={!!errors.newPrivada}>
+            <Label>Nueva privada</Label>
+            <Input
+              name='newPrivada'
+              type='text'
+              value={formData.newPrivada}
+              onChange={handleChange}
+            />
+            {errors.newPrivada && <span className={styles.error}>{errors.newPrivada}</span>}
+          </FormField>
+          <FormField error={!!errors.newCalle}>
+            <Label>Nueva calle</Label>
+            <Input
+              name='newCalle'
+              type='text'
+              value={formData.newCalle}
+              onChange={handleChange}
+            />
+            {errors.newCalle && <span className={styles.error}>{errors.newCalle}</span>}
+          </FormField>
+          <FormField error={!!errors.newCasa}>
+            <Label>Nueva casa</Label>
+            <Input
+              name='newCasa'
+              type='text'
+              value={formData.newCasa}
+              onChange={handleChange}
+            />
+            {errors.newCasa && <span className={styles.error}>{errors.newCasa}</span>}
+          </FormField>
+          <FormField error={!!errors.newEmail}>
             <Label>Nuevo correo</Label>
             <Input
               name='newEmail'
@@ -152,6 +188,7 @@ export function ModUsuarioForm(props) {
               value={formData.newEmail}
               onChange={handleChange}
             />
+            {errors.newEmail && <span className={styles.error}>{errors.newEmail}</span>}
           </FormField>
           
           {activate ? (
