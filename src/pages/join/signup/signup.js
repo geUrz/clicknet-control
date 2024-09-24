@@ -33,9 +33,10 @@ export default function Signup() {
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value === '' ? null : e.target.value
     })
   }
+  
 
   const validarFormSignUp = () => {
     const newErrors = {}
