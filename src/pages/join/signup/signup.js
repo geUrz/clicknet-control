@@ -20,8 +20,8 @@ export default function Signup() {
     privada: '',
     calle: '',
     casa: '',
-    isadmin: '',
     email: '',
+    isadmin: '',
     password: '',
     confirmarPassword: ''
   })
@@ -89,8 +89,8 @@ export default function Signup() {
         privada: '',
         calle: '',
         casa: '',
-        isadmin: '',
         email: '',
+        isadmin: '',
         password: '',
         confirmarPassword: ''
       })
@@ -177,6 +177,16 @@ export default function Signup() {
                   onChange={handleChange}
                 />
               </FormField>
+              <FormField error={!!errors.email}>
+                <Label>Correo</Label>
+                <Input
+                  name='email'
+                  type='email'
+                  value={credentials.email}
+                  onChange={handleChange}
+                />
+                {errors.email && <Message negative>{errors.email}</Message>}
+              </FormField>
               <FormField error={!!errors.isadmin}>
                 <Label>
                   Nivel
@@ -196,16 +206,6 @@ export default function Signup() {
                   <option value='Técnico'>Técnico</option>
                 </FormField>
                 {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
-              </FormField>
-              <FormField error={!!errors.email}>
-                <Label>Correo</Label>
-                <Input
-                  name='email'
-                  type='email'
-                  value={credentials.email}
-                  onChange={handleChange}
-                />
-                {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
               <FormField error={!!errors.password}>
                 <Label>Contraseña</Label>
