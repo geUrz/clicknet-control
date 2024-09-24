@@ -33,10 +33,9 @@ export default function Signup() {
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value === '' ? null : e.target.value
+      [e.target.name]: e.target.value
     })
   }
-  
 
   const validarFormSignUp = () => {
     const newErrors = {}
@@ -178,7 +177,7 @@ export default function Signup() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField error={!!errors.email}>
+              <FormField>
                 <Label>Correo</Label>
                 <Input
                   name='email'
@@ -186,7 +185,6 @@ export default function Signup() {
                   value={credentials.email}
                   onChange={handleChange}
                 />
-                {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
               <FormField error={!!errors.isadmin}>
                 <Label>
