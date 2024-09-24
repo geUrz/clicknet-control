@@ -64,50 +64,70 @@ export default function Home() {
           <div className={styles.section}>
             <Card link='/incidencias' title='Incidencias'
               countIncidencias={
-                !countData.incidencias ? (
+                !countData ? (
                   <LoadingMini />
                 ) : (
-                  countData.incidencias
+                  countData.incidencias === 0 ? (
+                    '0'
+                  ) : (
+                    countData.incidencias
+                  )
                 )
               }>
               <FaCarCrash />
             </Card>
             <Card link='/anuncios' title='Anuncios'
               countAnuncios={
-                !countData.anuncios ? (
+                !countData ? (
                   <LoadingMini />
                 ) : (
-                  countData.anuncios
+                  countData.anuncios === 0 ? (
+                    '0'
+                  ) : (
+                    countData.anuncios
+                  )
                 )
               }>
               <FaBullhorn />
             </Card>
             <Card link='/visitatecnica' title='Visita Técnica'
               countVisitatecnica={
-                !countData.visitatecnica ? (
+                !countData ? (
                   <LoadingMini />
                 ) : (
-                  countData.visitatecnica
+                  countData.visitatecnica === 0 ? (
+                    '0'
+                  ) : (
+                    countData.visitatecnica
+                  )
                 )
               }>
               <FaUserCog />
             </Card>
             <Card link='/reportes' title='Reportes'
               countReportes={
-                !countData.reportes ? (
+                !countData ? (
                   <LoadingMini />
                 ) : (
-                  countData.reportes
+                  countData.reportes === 0 ? (
+                    '0'
+                  ) : (
+                    countData.reportes
+                  )
                 )
               }>
               <FaClipboard />
             </Card>
             <Card link='/visitaprovedores' title='Visita Provedores'
               countVisitaprovedores={
-                !countData.visitaprovedores ? (
+                !countData ? (
                   <LoadingMini />
                 ) : (
-                  countData.visitaprovedores
+                  countData.visitaprovedores === 0 ? (
+                    '0'
+                  ) : (
+                    countData.visitaprovedores
+                  )
                 )
               }>
               <FaUserMd />

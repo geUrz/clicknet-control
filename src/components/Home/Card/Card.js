@@ -20,11 +20,7 @@ export function Card(props) {
         {children}
       </div>
       <div>
-        {count ? (
-          <h1>{counts[link] || '0'}</h1>
-        ) : (
-          ''
-        )}
+        <h1>{counts[link]}</h1>
         <h2>{title}</h2>
       </div>
     </Link>
