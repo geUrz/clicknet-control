@@ -145,7 +145,7 @@ export default function Cuenta() {
         </div>
 
 
-        {user.isadmin === 'Admin' || user.isadmin === 'Comité' || user.isadmin === 'Técnico' ? (
+        {user.isadmin === 'Admin' || user.isadmin === 'Comité' || user.isadmin === 'Técnico' || user.isadmin === 'Caseta' ? (
           <BasicModal title='Modificar usuario' show={show} onClose={onOpenClose}>
             <ModUsuarioForm user={user} onOpenClose={onOpenClose} onToastSuccess={onToastSuccessIncidenciaMod} />
           </BasicModal>
