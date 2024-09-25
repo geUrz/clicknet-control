@@ -25,7 +25,7 @@ async function sendNotification(message) {
 }
 
 export default async function handler(req, res) {
-    const { id, usuario_id, zona, estado, search, deleteImage } = req.query; // Agregamos 'search' al destructuring
+    const { id, usuario_id, search, deleteImage } = req.query; // Agregamos 'search' al destructuring
 
     if (req.method === 'GET') {
 
@@ -52,30 +52,8 @@ export default async function handler(req, res) {
                 res.status(500).json({ error: 'Error al realizar la búsqueda' });
             }
             return
-        }  
-        // Caso para obtener incidencias destacados
-        if (zona) {
-            try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, image, createdAt FROM incidencias WHERE best = ?', [zona]);
-                res.status(200).json(rows)
-            } catch (error) {
-                res.status(500).json({ error: error.message })
-            }
-            return;
         }
-
-        // Caso para obtener incidencias por estado
-        if (estado) {
-            try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, image, createdAt FROM incidencias WHERE estado = ? ', [estado]);
-                res.status(200).json(rows);
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-            return;
-        }
-
-        // Caso para obtener negocio por usuario_id
+        // Caso para obtener incidencia por usuario_id
         if (usuario_id) {
             try {
                 const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, image, createdAt FROM incidencias WHERE usuario_id = ?', [usuario_id]);
@@ -110,7 +88,8 @@ export default async function handler(req, res) {
             incidencias.createdAt
         FROM incidencias
         JOIN usuarios ON incidencias.usuario_id = usuarios.id
-    `);
+        ORDER BY incidencias.updatedAt DESC
+    `)
             res.status(200).json(rows)
         } catch (error) {
             res.status(500).json({ error: error.message })
@@ -164,8 +143,8 @@ export default async function handler(req, res) {
             try {
 
                 const [result] = await connection.query(
-                    'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ?, image = ?',
-                    [incidencia, descripcion, zona, estado, image]
+                    'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ?, image = ? WHERE id = ?',
+                    [incidencia, descripcion, zona, estado, image, id]
                 );
 
                 if (result.affectedRows === 0) {

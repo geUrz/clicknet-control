@@ -63,6 +63,7 @@ export default async function handler(req, res) {
                 FROM visitaprovedores
                 JOIN usuarios ON visitaprovedores.usuario_id = usuarios.id
                 LEFT JOIN usuarios AS autorizo_usuario ON visitaprovedores.autorizo = autorizo_usuario.id
+                ORDER BY visitaprovedores.updatedAt DESC
     `)
             res.status(200).json(rows)
         } catch (error) {

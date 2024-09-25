@@ -25,7 +25,7 @@ async function sendNotification(message) {
 }
 
 export default async function handler(req, res) {
-  const { id, usuario_id, folio, reporte, descripcion, search } = req.query; // Agregamos 'search' al destructuring
+  const { id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
 
   if (req.method === 'GET') {
 
@@ -51,43 +51,6 @@ export default async function handler(req, res) {
         res.status(500).json({ error: 'Error al realizar la búsqueda' });
       }
       return
-    }
-
-    // Caso para obtener reportes por folio
-    if (folio) {
-
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion FROM reportes WHERE folio = ?', [folio]);
-        if (rows.length === 0) {
-          return res.status(404).json({ error: 'Reporte no encontrado' })
-        }
-        res.status(200).json(rows[0])
-      } catch (error) {
-        res.status(500).json({ error: error.message })
-      }
-      return
-    }
-
-    // Caso para obtener reportes por reporte
-    if (reporte) {
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion FROM reportes WHERE reporte = ?', [reporte]);
-        res.status(200).json(rows)
-      } catch (error) {
-        res.status(500).json({ error: error.message })
-      }
-      return;
-    }
-
-    // Caso para obtener reportes por descripcion
-    if (descripcion) {
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion FROM reportes WHERE descripcion = ? ', [descripcion]);
-        res.status(200).json(rows);
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-      return;
     }
 
     // Caso para obtener reportes por usuario_id
@@ -124,8 +87,9 @@ export default async function handler(req, res) {
         reportes.img5,
         reportes.img6
     FROM reportes
-    JOIN usuarios ON reportes.usuario_id = usuarios.id`
-      )
+    JOIN usuarios ON reportes.usuario_id = usuarios.id
+    ORDER BY reportes.updatedAt DESC
+    `)
       res.status(200).json(rows)
     } catch (error) {
       res.status(500).json({ error: error.message })

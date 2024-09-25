@@ -25,7 +25,7 @@ async function sendNotification(message) {
 }
 
 export default async function handler(req, res) {
-  const { id, usuario_id, folio, visitatecnica, descripcion, search } = req.query; // Agregamos 'search' al destructuring
+  const { id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
 
   if (req.method === 'GET') {
 
@@ -51,43 +51,6 @@ export default async function handler(req, res) {
         res.status(500).json({ error: 'Error al realizar la búsqueda' });
       }
       return
-    }
-
-    // Caso para obtener visitatecnica por folio
-    if (folio) {
-
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion FROM visitatecnica WHERE folio = ?', [folio]);
-        if (rows.length === 0) {
-          return res.status(404).json({ error: 'Visita Tecnica no encontrado' })
-        }
-        res.status(200).json(rows[0])
-      } catch (error) {
-        res.status(500).json({ error: error.message })
-      }
-      return
-    }
-
-    // Caso para obtener visitatecnica visitatecnica
-    if (visitatecnica) {
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion FROM visitatecnica WHERE visitatecnica = ?', [visitatecnica]);
-        res.status(200).json(rows)
-      } catch (error) {
-        res.status(500).json({ error: error.message })
-      }
-      return;
-    }
-
-    // Caso para obtener visitatecnica por descripcion
-    if (descripcion) {
-      try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion FROM visitatecnica WHERE descripcion = ? ', [descripcion]);
-        res.status(200).json(rows);
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-      return;
     }
 
     // Caso para obtener visitatecnica por usuario_id
@@ -123,8 +86,9 @@ export default async function handler(req, res) {
         visitatecnica.img3,
         visitatecnica.img4
     FROM visitatecnica
-    JOIN usuarios ON visitatecnica.usuario_id = usuarios.id`
-      )
+    JOIN usuarios ON visitatecnica.usuario_id = usuarios.id
+    ORDER BY visitatecnica.updatedAt DESC
+    `)
       res.status(200).json(rows)
     } catch (error) {
       res.status(500).json({ error: error.message })
