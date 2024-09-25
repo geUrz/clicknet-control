@@ -15,6 +15,7 @@ async function sendNotification(message) {
         app_id: ONE_SIGNAL_APP_ID,
         included_segments: ['All'],
         contents: { en: message },
+        url: url
     };
 
     try {

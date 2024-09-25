@@ -101,8 +101,9 @@ export default async function handler(req, res) {
       )
 
       // Enviar notificación después de crear el anuncio
-      const message = `Nuevo anuncio: ${anuncio}.`
-      await sendNotification(message)
+      const message = `Nueva anuncio: ${anuncio}`
+            const url = '/anuncios'
+            await sendNotification(message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)
