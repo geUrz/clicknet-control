@@ -82,8 +82,9 @@ export default async function handler(req, res) {
             )
 
             // Enviar notificación después de crear la visitaprovedor
-            const message = `Se ha creado una nueva visitaprovedor: ${visitaprovedor}.`
-            await sendNotification(message)
+            const message = `Nueva visita provedor: ${visitaprovedor}`
+            const url = '/visitaprovedores'
+            await sendNotification(message, url)
 
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)

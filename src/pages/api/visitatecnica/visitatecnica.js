@@ -106,8 +106,9 @@ export default async function handler(req, res) {
       )
 
       // Enviar notificación después de crear el visitatecnica
-      const message = `Se ha creado una nueva visita técnica: ${visitatecnica}.`
-      await sendNotification(message)
+      const message = `Nueva visita técnica: ${visitatecnica}`
+            const url = '/visitatecnica'
+            await sendNotification(message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)

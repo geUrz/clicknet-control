@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       )
 
       // Enviar notificación después de crear el anuncio
-      const message = `Se ha creado un nuevo anuncio: ${anuncio}.`
+      const message = `Nuevo anuncio: ${anuncio}.`
       await sendNotification(message)
 
       const newClient = { id: result.insertId }

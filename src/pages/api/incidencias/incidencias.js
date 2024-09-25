@@ -107,8 +107,9 @@ export default async function handler(req, res) {
             )
 
             // Enviar notificación después de crear la incidencia
-            const message = `Se ha creado una nueva incidencia: ${incidencia}.`
-            await sendNotification(message)
+            const message = `Nueva incidencia: ${incidencia}`
+            const url = '/incidencias'
+            await sendNotification(message, url)
 
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)

@@ -107,8 +107,9 @@ export default async function handler(req, res) {
       )
 
       // Enviar notificación después de crear el reporte
-      const message = `Se ha creado un nuevo reporte: ${reporte}.`
-      await sendNotification(message)
+      const message = `Nueva reporte: ${reporte}`
+      const url = '/reportes'
+      await sendNotification(message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)
