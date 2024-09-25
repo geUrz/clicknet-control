@@ -5,7 +5,7 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(message) {
+async function sendNotification(message, url) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
