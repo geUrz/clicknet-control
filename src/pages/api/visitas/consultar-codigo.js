@@ -34,9 +34,6 @@ export default async function handler(req, res) {
       const fromDate = visita.fromDate
       const toDate = visita.toDate
 
-      console.log(today);
-      
-
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
       
       const diasDeLaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']

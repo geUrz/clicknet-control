@@ -5,18 +5,18 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(message, url) {
+async function sendNotification(message, url, playerId) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-    };
+    }
 
     const data = {
         app_id: ONE_SIGNAL_APP_ID,
-        included_segments: ['All'],
+        include_player_ids: [playerId],
         contents: { en: message },
         url: url
-    };
+    }
 
     try {
         await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
@@ -25,9 +25,15 @@ async function sendNotification(message, url) {
     }
 }
 
+async function updatePlayerId(userId, playerId) {
+  await connection.execute(`
+      UPDATE usuarios SET onesignal_player_id = ? WHERE id = ?
+  `, [playerId, userId]);
+}
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { codigo, autorizo } = req.body;
+    const { codigo, autorizo, playerId } = req.body;
 
     // Validar si el código fue proporcionado
     if (!codigo) {
@@ -39,7 +45,8 @@ export default async function handler(req, res) {
       const [rows] = await connection.execute(`
         SELECT visitas.id, visitas.usuario_id, visitas.codigo, visitas.visita, visitas.tipovisita, 
                visitas.tipoacceso, visitas.nota, visitas.date, fromDate, toDate,visitas.hora, visitas.estado, visitas.countAcc,
-               usuarios.nombre AS usuario_nombre, usuarios.privada AS usuario_privada, usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa
+               usuarios.nombre AS usuario_nombre, usuarios.privada AS usuario_privada, usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa,
+               usuarios.onesignal_player_id AS player_id
         FROM visitas
         JOIN usuarios ON visitas.usuario_id = usuarios.id
         WHERE visitas.codigo = ?
@@ -53,6 +60,12 @@ export default async function handler(req, res) {
       // Verificar el estado de la visita
       const visita = rows[0]
       const countAcc = visita.countAcc || 0
+      
+      if (playerId) {
+        await updatePlayerId(visita.usuario_id, playerId);
+      } else {
+        console.warn('Player ID no proporcionado');
+      }
 
       if (visita.estado === 'Sin ingresar') {
         // Actualizar el estado a 'Ingresado' y establecer countAcc a 1
@@ -60,7 +73,7 @@ export default async function handler(req, res) {
 
         const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
         const url = '/visitas'
-        await sendNotification(message, url)
+        await sendNotification(message, url, visita.player_id)
 
         return res.status(200).json({
           message: `¡ Código ${visita.tipoacceso} validado !`,
@@ -73,7 +86,7 @@ export default async function handler(req, res) {
 
           const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
           const url = '/visitas'
-          await sendNotification(message, url)
+          await sendNotification(message, url, visita.player_id)
 
           return res.status(200).json({
             message: `¡ Código ${visita.tipoacceso} válido !\n El visitante ha ingresado ${countAcc + 1} veces.`,
