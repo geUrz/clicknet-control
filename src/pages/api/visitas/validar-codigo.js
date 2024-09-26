@@ -14,21 +14,17 @@ async function sendNotification(message, url, playerId) {
     const data = {
         app_id: ONE_SIGNAL_APP_ID,
         include_player_ids: [playerId],
-        contents: { en: message },
+        contents: { es: message },
         url: url
     }
+
+    console.log('Datos de la notificación:', data)
 
     try {
         await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
     } catch (error) {
         console.error('Error sending notification:', error.message)
     }
-}
-
-async function updatePlayerId(userId, playerId) {
-  await connection.execute(`
-      UPDATE usuarios SET onesignal_player_id = ? WHERE id = ?
-  `, [playerId, userId]);
 }
 
 export default async function handler(req, res) {
@@ -62,9 +58,7 @@ export default async function handler(req, res) {
       const countAcc = visita.countAcc || 0
       
       if (playerId) {
-        await updatePlayerId(visita.usuario_id, playerId);
-      } else {
-        console.warn('Player ID no proporcionado');
+        await connection.execute('UPDATE usuarios SET onesignal_player_id = ? WHERE id = ?', [playerId, visita.usuario_id]);
       }
 
       if (visita.estado === 'Sin ingresar') {
