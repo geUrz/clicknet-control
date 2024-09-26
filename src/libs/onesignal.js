@@ -3,40 +3,37 @@ export const initializeOneSignal = () => {
   OneSignal.push(function() {
     OneSignal.init({
       appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-      // Otras configuraciones que necesites
     });
 
-    OneSignal.getUserId().then((playerId) => {
-      console.log('Player ID:', playerId);
+    OneSignal.push(() => {
+      OneSignal.registerForPushNotifications(); // Registra al usuario para notificaciones
 
-      // Obtener el userId desde las cookies
-      const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-      };
+      OneSignal.getUserId().then((playerId) => {
+        if (!playerId) {
+          console.error('Player ID no disponible. Asegúrate de que el usuario haya aceptado las notificaciones.');
+          return;
+        }
 
-      const userId = getCookie('userId'); // Asegúrate de que 'userId' está en las cookies
-      console.log('User ID from cookies:', userId)
-      if (playerId && userId) {
-        // Enviar el playerId y el userId al servidor
-        fetch('/api/savePlayerId', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ playerId, userId }), // Aquí se envía el userId obtenido de las cookies
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.message);
-        })
-        .catch(error => {
-          console.error('Error al enviar Player ID:', error);
-        });
-      } else {
-        console.error('Player ID o User ID no disponible');
-      }
+        const userId = getCookie('userId'); // Asegúrate de que 'userId' esté en las cookies
+        if (userId) {
+          fetch('/api/savePlayerId', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ playerId, userId }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message);
+          })
+          .catch(error => {
+            console.error('Error al enviar Player ID:', error);
+          });
+        } else {
+          console.error('User ID no disponible en las cookies');
+        }
+      });
     });
   });
 };

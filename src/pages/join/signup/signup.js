@@ -48,6 +48,10 @@ export default function Signup() {
       newErrors.usuario = 'El campo es requerido'
     }
 
+    if (!credentials.email) {
+      newErrors.email = 'El campo es requerido'
+    }
+
     if (!credentials.isadmin) {
       newErrors.isadmin = 'El campo es requerido'
     }
@@ -177,7 +181,7 @@ export default function Signup() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField>
+              <FormField error={!!errors.email}>
                 <Label>Correo</Label>
                 <Input
                   name='email'
@@ -185,6 +189,7 @@ export default function Signup() {
                   value={credentials.email}
                   onChange={handleChange}
                 />
+                {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
               <FormField error={!!errors.isadmin}>
                 <Label>

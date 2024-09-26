@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
-import connection from '@/libs/db'; // Asegúrate de que la configuración de la base de datos está correctamente importada
+import connection from '@/libs/db';
 import bcrypt from 'bcrypt';
 
 export default async function loginHandler(req, res) {
@@ -31,7 +31,7 @@ export default async function loginHandler(req, res) {
         email: user.email,
       },
       'secret'
-    )
+    );
 
     const serialized = serialize('myToken', token, {
       httpOnly: true,
@@ -41,7 +41,15 @@ export default async function loginHandler(req, res) {
       path: '/'
     });
 
-    res.setHeader('Set-Cookie', serialized);
+    const serializedUserId = serialize('userId', user.id.toString(), {
+      httpOnly: false, // Permitir acceso desde el cliente
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 30, 
+      path: '/'
+    });
+
+    res.setHeader('Set-Cookie', [serialized, serializedUserId]);
     return res.json({ user: { usuario: user.usuario, email: user.email } });
   } catch (error) {
     console.error('Error al autenticar el usuario:', error);
