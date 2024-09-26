@@ -5,22 +5,23 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(message) {
+async function sendNotification(message, url) {
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-  };
+  }
 
   const data = {
     app_id: ONE_SIGNAL_APP_ID,
     included_segments: ['All'],
     contents: { en: message },
-  };
+    url: url
+  }
 
   try {
-    await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+    await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
   } catch (error) {
-    console.error('Error sending notification:', error.message);
+    console.error('Error sending notification:', error.message)
   }
 }
 
@@ -43,12 +44,12 @@ export default async function handler(req, res) {
         )
 
         if (rows.length === 0) {
-          return res.status(404).json({ message: 'No se encontraron visitatecnica' });
+          return res.status(404).json({ message: 'No se encontraron visitatecnica' })
         }
 
-        res.status(200).json(rows);
+        res.status(200).json(rows)
       } catch (error) {
-        res.status(500).json({ error: 'Error al realizar la búsqueda' });
+        res.status(500).json({ error: 'Error al realizar la búsqueda' })
       }
       return
     }
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
     // Caso para obtener visitatecnica por usuario_id
     if (usuario_id) {
       try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion, date, hora, estado, img1, img2, img3, img4 FROM visitatecnica WHERE usuario_id = ?', [usuario_id]);
+        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion, date, hora, estado, img1, img2, img3, img4 FROM visitatecnica WHERE usuario_id = ?', [usuario_id])
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Visita Tecnica no encontrada' })
         }
@@ -120,47 +121,47 @@ export default async function handler(req, res) {
     const { visitatecnica, descripcion, date, hora, estado } = req.body;
 
     if (!visitatecnica || !descripcion || !date || !hora || !estado || !id) {
-      return res.status(400).json({ error: 'ID, visitatecnica y descripción son obligatorios' });
+      return res.status(400).json({ error: 'ID, visitatecnica y descripción son obligatorios' })
     }
 
     try {
       const [result] = await connection.query(
         'UPDATE visitatecnica SET visitatecnica = ?, descripcion = ?, date = ?, hora = ?, estado = ? WHERE id = ?',
         [visitatecnica, descripcion, date, hora, estado, id]
-      );
+      )
 
         if (result.affectedRows === 0) {
-          return res.status(404).json({ error: 'Visita Tecnica no encontrado' });
+          return res.status(404).json({ error: 'Visita Tecnica no encontrado' })
         }
 
-        res.status(200).json({ message: 'Visita técnica actualizado correctamente' });
+        res.status(200).json({ message: 'Visita técnica actualizado correctamente' })
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message })
       }
   } else if (req.method === 'DELETE') {
     
     if (!id) {
-      return res.status(400).json({ error: 'ID de de la visita técnica es obligatorio' });
+      return res.status(400).json({ error: 'ID de de la visita técnica es obligatorio' })
     }
 
     else {
       // Eliminar la incidencia por ID
       try {
-        const [result] = await connection.query('DELETE FROM visitatecnica WHERE id = ?', [id]);
+        const [result] = await connection.query('DELETE FROM visitatecnica WHERE id = ?', [id])
 
         // Verificar si el anuncio fue eliminado
         if (result.affectedRows === 0) {
-          return res.status(404).json({ error: 'Visita técnica no encontrada' });
+          return res.status(404).json({ error: 'Visita técnica no encontrada' })
         }
 
-        res.status(200).json({ message: 'Visita técnica eliminada correctamente' });
+        res.status(200).json({ message: 'Visita técnica eliminada correctamente' })
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message })
       }
     }
 
   } else {
     res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE'])
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

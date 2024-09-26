@@ -1,30 +1,6 @@
-import { generateCode } from "@/helpers/generateCode/generateCode";
-import connection from "@/libs/db";
-import axios from "axios";
-import QRCode from 'qrcode';
-
-const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
-const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
-
-// Función para enviar notificación
-async function sendNotification(message) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-    };
-
-    const data = {
-        app_id: ONE_SIGNAL_APP_ID,
-        included_segments: ['All'],
-        contents: { en: message },
-    };
-
-    try {
-        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
-    } catch (error) {
-        console.error('Error sending notification:', error.message)
-    }
-}
+import { generateCode } from "@/helpers/generateCode/generateCode"
+import connection from "@/libs/db"
+import QRCode from 'qrcode'
 
 export default async function handler(req, res) {
     const { id, usuario_id, search } = req.query;
