@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         // Actualizar el estado a 'Ingresado' y establecer countAcc a 1
         await connection.execute('UPDATE visitas SET estado = ?, countAcc = ?, autorizo = ? WHERE codigo = ?', ['Ingresado', 1, autorizo, codigo])
 
-        const message = `Tu visita acaba de ingresar: ${visita.visita}`
+        const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
         const url = '/visitas'
         await sendNotification(message, url)
 
@@ -70,6 +70,10 @@ export default async function handler(req, res) {
         if (visita.tipoacceso === 'frecuente') {
           // Incrementar countAcc si el tipo de acceso es frecuente
           await connection.execute('UPDATE visitas SET countAcc = ? WHERE codigo = ?', [countAcc + 1, codigo])
+
+          const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
+          const url = '/visitas'
+          await sendNotification(message, url)
 
           return res.status(200).json({
             message: `¡ Código ${visita.tipoacceso} válido !\n El visitante ha ingresado ${countAcc + 1} veces.`,

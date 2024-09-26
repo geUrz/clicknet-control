@@ -1,3 +1,4 @@
+import { formatDateInc } from "@/helpers";
 import connection from "@/libs/db"; // Tu conexión a la base de datos
 
 export default async function handler(req, res) {
@@ -27,10 +28,14 @@ export default async function handler(req, res) {
 
       // Verificar el estado de la visita
       const visita = rows[0]
-      const today = new Date().toISOString().split('T')[0]
+      const todayFormat = new Date().toLocaleDateString().split('T')[0]
+      const today = formatDateInc(todayFormat)
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
+
+      console.log(today);
+      
 
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
       
@@ -64,12 +69,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: `¡ Código ${msjTipoAcceso} no válido !\n La fecha de ingreso no está disponible` });
           }
       } else if (visita.estado === 'Ingresado' && visita.tipoacceso === 'frecuente') {
-        const todayDate = new Date(today);
-        const fromDateObj = new Date(fromDate);
-        const toDateObj = new Date(toDate);
       
         // Verificar si el día actual está en el rango de fechas
-        if (todayDate >= fromDateObj && todayDate <= toDateObj) {
+        if (today >= fromDate && today <= toDate) {
           // Validar si el día actual está en los días seleccionados
           if (diasSeleccionados.includes(diaActual)) {
             return res.status(200).json({
