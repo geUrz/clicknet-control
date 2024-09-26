@@ -1,4 +1,4 @@
-/* import mysql from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -11,10 +11,10 @@ const connection = mysql.createPool({
   queueLimit: 0
 });
 
-export default connection  */
+export default connection  
 
 
-import mysql from 'mysql2/promise';
+/* import mysql from 'mysql2/promise';
 
 // Configura la conexión a la base de datos
 const connection  = mysql.createPool({
@@ -27,5 +27,5 @@ const connection  = mysql.createPool({
   queueLimit: 0
 });
 
-export default connection  
+export default connection   */
 
