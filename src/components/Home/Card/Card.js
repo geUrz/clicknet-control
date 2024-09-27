@@ -20,7 +20,7 @@ export function Card(props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false)
-    }, 800) 
+    }, 600) 
 
     return () => clearTimeout(timer)
   }, [])

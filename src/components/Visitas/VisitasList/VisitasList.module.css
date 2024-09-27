@@ -79,7 +79,7 @@
 }
 
 .column1 svg, .column1 path{
-  font-size: 28px;
+  font-size: 20px;
   color: var(--clrBL1);
   cursor: pointer;
 }

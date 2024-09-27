@@ -43,7 +43,7 @@ export function VisitaProvsList(props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false)
-    }, 1000) 
+    }, 800) 
 
     return () => clearTimeout(timer)
   }, [])

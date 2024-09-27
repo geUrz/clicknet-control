@@ -45,7 +45,7 @@
   width: 100%;
   height: auto;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   background-color: rgb(224, 255, 255);
   border-radius: 5px;
@@ -78,7 +78,7 @@
 }
 
 .column1 svg, .column1 path{
-  font-size: 32px;
+  font-size: 20px;
   color: var(--clrBL1);
   cursor: pointer;
 }

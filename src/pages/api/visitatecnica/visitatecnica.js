@@ -5,7 +5,7 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(header, message, url) {
+async function sendNotification(usuario_id, header, message, url) {
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
@@ -21,6 +21,12 @@ async function sendNotification(header, message, url) {
 
   try {
     await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
+
+    await connection.query(
+      'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
+      [usuario_id, header, message, url]
+  )
+
   } catch (error) {
     console.error('Error sending notification:', error.message)
   }
@@ -107,10 +113,10 @@ export default async function handler(req, res) {
         [usuario_id, folio, visitatecnica, descripcion, date, hora, estado]
       )
 
-      const header = 'Incidencia'
-      const message = `Nueva visita técnica: ${visitatecnica}`
+      const header = 'Visita técnica'
+      const message = `${visitatecnica}`
       const url = '/visitatecnica'
-      await sendNotification(header, message, url)
+      await sendNotification(usuario_id, header, message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)

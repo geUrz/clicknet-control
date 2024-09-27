@@ -28,19 +28,32 @@
   align-items: center;
 }
 
-.notificationIcon {
+.mainNoti{
+  margin-left: 30px;
+  width: 30px;
+  height: auto;
   position: relative;
-  font-size: 24px;
-  margin-right: 16px;
 }
 
-.unreadCount {
+.mainNoti svg, .mainNoti path{
+  margin: 0px;
+  font-size: 20px; 
+  cursor: pointer;
+}
+
+.notiCount {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: red;
+  top: -5px;
+  right: 2px;
+  background-color: red;
   color: white;
   border-radius: 50%;
-  padding: 4px 8px;
-  font-size: 12px;
+  font-size: 8.5px;
+  font-weight: 600 !important;
+  cursor: pointer;
 }
