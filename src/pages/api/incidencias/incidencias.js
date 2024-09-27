@@ -5,7 +5,7 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(message, url) {
+async function sendNotification(header, message, url) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
@@ -14,6 +14,7 @@ async function sendNotification(message, url) {
     const data = {
         app_id: ONE_SIGNAL_APP_ID,
         included_segments: ['All'],
+        headings: { en: header },
         contents: { en: message },
         url: url
     }
@@ -107,10 +108,10 @@ export default async function handler(req, res) {
                 [usuario_id, folio, incidencia, descripcion, zona, estado, image]
             )
 
-            // Enviar notificación después de crear la incidencia
+            const header = 'Incidencia'
             const message = `Nueva incidencia: ${incidencia}`
             const url = '/incidencias'
-            await sendNotification(message, url)
+            await sendNotification(header, message, url)
 
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)

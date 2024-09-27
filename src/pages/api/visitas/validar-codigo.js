@@ -5,7 +5,7 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(message, url, playerId) {
+async function sendNotification(header, message, url, playerId) {
   const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
@@ -14,6 +14,7 @@ async function sendNotification(message, url, playerId) {
   const data = {
       app_id: ONE_SIGNAL_APP_ID,
       include_player_ids: [playerId],
+      headings: { en: header },
       contents: { en: message },
       url: url
   };
@@ -71,12 +72,10 @@ export default async function handler(req, res) {
         // Actualizar el estado a 'Ingresado' y establecer countAcc a 1
         await connection.execute('UPDATE visitas SET estado = ?, countAcc = ?, autorizo = ? WHERE codigo = ?', ['Ingresado', 1, autorizo, codigo])
 
+        const header = 'Visita'
         const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
         const url = '/visitas'
-
-        console.log('Player ID para notificación:', visita.player_id)
-
-        await sendNotification(message, url, visita.player_id)
+        await sendNotification(header, message, url, visita.player_id)
 
         return res.status(200).json({
           message: `¡ Código ${visita.tipoacceso} validado !`,
@@ -87,9 +86,10 @@ export default async function handler(req, res) {
           // Incrementar countAcc si el tipo de acceso es frecuente
           await connection.execute('UPDATE visitas SET countAcc = ? WHERE codigo = ?', [countAcc + 1, codigo])
 
+          const header = 'Visita'
           const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
           const url = '/visitas'
-          await sendNotification(message, url, visita.player_id)
+          await sendNotification(header, message, url, visita.player_id)
 
           return res.status(200).json({
             message: `¡ Código ${visita.tipoacceso} válido !\n El visitante ha ingresado ${countAcc + 1} veces.`,
