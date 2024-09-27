@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaUserCog } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { VisitaTecnicaDetalles } from '../VisitaTecnicaDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { convertTo12HourFormat, formatDate, formatDateInc } from '@/helpers'
@@ -20,6 +20,7 @@ export function VisitaTecnicaList(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitatecnicaSeleccionada, setVisitatecnicaSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (visitatecnica) => {
     setVisitatecnicaSeleccionada(visitatecnica)
@@ -38,6 +39,14 @@ export function VisitaTecnicaList(props) {
       (filterFecha === null || visitatecnica.date === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -70,7 +79,7 @@ export function VisitaTecnicaList(props) {
         </Form>
       </div>
 
-      {!visitatecnicas ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredVisitatecnica) === 0 ? (

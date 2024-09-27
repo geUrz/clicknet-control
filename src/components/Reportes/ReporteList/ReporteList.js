@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaClipboard, FaUserCog } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { ReporteDetalles } from '../ReporteDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
 import { formatDate, formatDateInc } from '@/helpers'
@@ -20,6 +20,7 @@ export function ReporteList(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [reporteSeleccionada, setReporteSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (reporte) => {
     setReporteSeleccionada(reporte)
@@ -38,6 +39,14 @@ export function ReporteList(props) {
       (filterFecha === null || reporte.date === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -70,7 +79,7 @@ export function ReporteList(props) {
         </Form>
       </div>
 
-      {!reportes ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredReporte) === 0 ? (

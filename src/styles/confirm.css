@@ -1,14 +1,16 @@
 .ui.mini.modal{
   padding: 20PX 0 25px 0;
   max-width: 350px !important;
-  background-color: var(--bg1) !important;
+  background-color: var(--body) !important;
 } 
 
 .content, .actions{
+  color: var(--clrBL0000) !important;
+  font-weight: 600 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background-color: var(--bg1) !important;
+  background-color: var(--body) !important;
 }  
 
 .ui.button, .ui.button.primary{

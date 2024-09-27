@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaUserFriends } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { VisitaDetalles } from '../VisitaDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc } from '@/helpers'
@@ -15,11 +15,12 @@ import styles from './VisitasList.module.css'
 export function VisitasList(props) {
 
   const { reload, onReload, visitas, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props
-
+  
   const { loading } = useAuth()
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitaSeleccionada, setVisitaSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (visita) => {
     setVisitaSeleccionada(visita)
@@ -35,7 +36,7 @@ export function VisitasList(props) {
   const [filterTipoacceso, setFilterTipoacceso] = useState('')
   const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
-
+  
   const filteredVisitas = (visitas || []).filter((visita) => {
     return (
       (filterTipovisita === '' || visita.tipovisita === filterTipovisita) &&
@@ -44,6 +45,14 @@ export function VisitasList(props) {
       (filterFecha === null || visita.date === formatDateInc(filterFecha) || visita.fromDate === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -113,7 +122,7 @@ export function VisitasList(props) {
         </Form>
       </div>
 
-      {!filteredVisitas ? (
+      {showLoading  ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredVisitas) === 0 ? (

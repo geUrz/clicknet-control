@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaFileAlt } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { IncidenciaDetalles } from '../IncidenciaDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc } from '@/helpers'
@@ -20,6 +20,7 @@ export function IncidenciasList(props) {
   
   const [showDetalles, setShowDetalles] = useState(false)
   const [incidenciaSeleccionada, setIncidenciaSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (incidencia) => {
     setIncidenciaSeleccionada(incidencia)
@@ -43,6 +44,14 @@ export function IncidenciasList(props) {
       (filterFecha === null || formatDateInc(incidencia.createdAt) === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -101,7 +110,7 @@ export function IncidenciasList(props) {
         </Form>
       </div>
 
-      {!incidencias ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredIncidencias) === 0 ? (

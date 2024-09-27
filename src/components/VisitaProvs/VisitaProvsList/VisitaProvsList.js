@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaFileAlt, FaUserMd } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { VisitaProvDetalles } from '../VisitaProvDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
 import { formatDateInc, formatDateVT } from '@/helpers'
@@ -20,6 +20,7 @@ export function VisitaProvsList(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitaprovSeleccionada, setVisitaprovSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (visitaprov) => {
     setVisitaprovSeleccionada(visitaprov)
@@ -38,6 +39,14 @@ export function VisitaProvsList(props) {
       (filterFecha === null || formatDateInc(visitaprov.createdAt) === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -70,7 +79,7 @@ export function VisitaProvsList(props) {
         </Form>
       </div>
 
-      {!visitaprovs ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredVisitaprov) === 0 ? (

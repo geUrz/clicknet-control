@@ -1,10 +1,10 @@
 import { Button, Input } from 'semantic-ui-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import QrScanner from 'react-qr-scanner';
 import styles from './ValidarCodigo.module.css';
 import { BasicModal } from '@/layouts';
-import { IconClose } from '@/components/Layouts';
+import { IconClose, Loading } from '@/components/Layouts';
 import { FaEraser, FaQrcode } from 'react-icons/fa';
 import { IoIosReverseCamera } from 'react-icons/io';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,8 +20,20 @@ export function ValidarCodigo(props) {
   const [showCam, setShowCam] = useState(false)
   const [icon, setIcon] = useState(<FaQrcode />)
   const [facingMode, setFacingMode] = useState('environment')
+  const [showLoading, setShowLoading] = useState(true)
+  const [showScanner, setShowScanner] = useState(false)
 
-  const onOpenCloseCam = () => setShowCam(prevState => !prevState)
+  const onOpenCloseCam = () => {
+    setShowCam(prevState => !prevState)
+    if (!showCam) {
+      setShowLoading(true)
+      setShowScanner(false)
+      setTimeout(() => {
+        setShowLoading(false)
+        setShowScanner(true)
+      }, 1000)
+    }
+  }
 
   const handleChange = (e) => {
     setCodigo(e.target.value)
@@ -164,18 +176,24 @@ export function ValidarCodigo(props) {
         <BasicModal title='escanear código' show={showCam} onClose={onOpenCloseCam}>
           <IconClose onOpenClose={onOpenCloseCam} />
           <div className={styles.sectionCamera}>
-          <QrScanner
-            delay={300}
-            onError={handleError}
-            onScan={handleScan}
-            className={styles.qrScanner}
-            constraints={{
-              video: { facingMode: facingMode }
-            }}
-          />
-          <div className={styles.iconCam} onClick={toggleCamera}>
-            <IoIosReverseCamera />
-          </div>
+            {showLoading ? (
+              <Loading size={45} loading={2} />
+            ) : (
+              showScanner && ( // Solo muestra el escáner si showScanner es true
+                <QrScanner
+                  delay={0}
+                  onError={handleError}
+                  onScan={handleScan}
+                  className={styles.qrScanner}
+                  constraints={{
+                    video: { facingMode: facingMode }
+                  }}
+                />
+              )
+            )}
+            <div className={styles.iconCam} onClick={toggleCamera}>
+              <IoIosReverseCamera />
+            </div>
           </div>
         </BasicModal>
       </div>

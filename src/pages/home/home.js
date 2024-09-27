@@ -63,73 +63,23 @@ export default function Home() {
         <div className={styles.main}>
           <div className={styles.section}>
             <Card link='/incidencias' title='Incidencias'
-              countIncidencias={
-                !countData ? (
-                  <LoadingMini />
-                ) : (
-                  countData.incidencias === 0 ? (
-                    '0'
-                  ) : (
-                    countData.incidencias
-                  )
-                )
-              }>
+              countIncidencias={countData.incidencias}>
               <FaCarCrash />
             </Card>
             <Card link='/anuncios' title='Anuncios'
-              countAnuncios={
-                !countData ? (
-                  <LoadingMini />
-                ) : (
-                  countData.anuncios === 0 ? (
-                    '0'
-                  ) : (
-                    countData.anuncios
-                  )
-                )
-              }>
+              countAnuncios={countData.anuncios}>
               <FaBullhorn />
             </Card>
             <Card link='/visitatecnica' title='Visita Técnica'
-              countVisitatecnica={
-                !countData ? (
-                  <LoadingMini />
-                ) : (
-                  countData.visitatecnica === 0 ? (
-                    '0'
-                  ) : (
-                    countData.visitatecnica
-                  )
-                )
-              }>
+              countVisitatecnica={countData.visitatecnica}>
               <FaUserCog />
             </Card>
             <Card link='/reportes' title='Reportes'
-              countReportes={
-                !countData ? (
-                  <LoadingMini />
-                ) : (
-                  countData.reportes === 0 ? (
-                    '0'
-                  ) : (
-                    countData.reportes
-                  )
-                )
-              }>
+              countReportes={countData.reportes}>
               <FaClipboard />
             </Card>
             <Card link='/visitaprovedores' title='Visita Provedores'
-              countVisitaprovedores={
-                !countData ? (
-                  <LoadingMini />
-                ) : (
-                  countData.visitaprovedores === 0 ? (
-                    '0'
-                  ) : (
-                    countData.visitaprovedores
-                  )
-                )
-              }>
+              countVisitaprovedores={countData.visitaprovedores}>
               <FaUserMd />
             </Card>
 

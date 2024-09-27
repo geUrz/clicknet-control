@@ -3,7 +3,7 @@ import { map, size } from 'lodash'
 import { FaBullhorn } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { AnuncioDetalles } from '../AnuncioDetalles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { convertTo12HourFormat, formatDate, formatDateInc } from '@/helpers'
@@ -19,6 +19,7 @@ export function AnunciosList(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [anuncioseleccionada, setAnuncioSeleccionada] = useState(null)
+  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (anuncio) => {
     setAnuncioSeleccionada(anuncio)
@@ -37,6 +38,14 @@ export function AnunciosList(props) {
       (filterFecha === null || anuncio.date === formatDateInc(filterFecha))
     )
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1000) 
+
+    return () => clearTimeout(timer)
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />
@@ -69,7 +78,7 @@ export function AnunciosList(props) {
         </Form>
       </div>
 
-      {!anuncios ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredanuncios) === 0 ? (
