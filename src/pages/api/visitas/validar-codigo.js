@@ -6,25 +6,31 @@ const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
 async function sendNotification(message, url, playerId) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-    }
+  const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
+  };
 
-    const data = {
-        app_id: ONE_SIGNAL_APP_ID,
-        include_player_ids: [playerId],
-        contents: { es: message },
-        url: url
-    }
+  const data = {
+      app_id: ONE_SIGNAL_APP_ID,
+      include_player_ids: [playerId],
+      contents: { en: message },
+      url: url
+  };
 
-    console.log('Datos de la notificación:', data)
+  console.log('Datos de la notificación:', data);
 
-    try {
-        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
-    } catch (error) {
-        console.error('Error sending notification:', error.message)
-    }
+  try {
+      const response = await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+      console.log('Notificación enviada:', response.data);
+  } catch (error) {
+      if (error.response) {
+          console.error('Error en respuesta de OneSignal:', error.response.data);
+          console.error('Código de estado:', error.response.status);
+      } else {
+          console.error('Error en la solicitud:', error.message);
+      }
+  }
 }
 
 export default async function handler(req, res) {
@@ -67,6 +73,9 @@ export default async function handler(req, res) {
 
         const message = `Tu visita ${visita.tipoacceso} acaba de ingresar: ${visita.visita}`
         const url = '/visitas'
+
+        console.log('Player ID para notificación:', visita.player_id)
+
         await sendNotification(message, url, visita.player_id)
 
         return res.status(200).json({
