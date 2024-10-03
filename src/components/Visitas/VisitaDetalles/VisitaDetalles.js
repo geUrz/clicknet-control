@@ -12,7 +12,6 @@ import styles from './VisitaDetalles.module.css';
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-  console.log(formatDate(visita.date));
   
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
