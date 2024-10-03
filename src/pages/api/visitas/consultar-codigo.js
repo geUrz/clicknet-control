@@ -1,4 +1,4 @@
-import { formatDate } from "@/helpers"
+import { formatDate, formatDateInc } from "@/helpers"
 import connection from "@/libs/db"
 
 export default async function handler(req, res) {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       // Verificar el estado de la visita
       const visita = rows[0]
       const todayFormat = new Date().toLocaleDateString().split('T')[0]
-      const today = formatDate(todayFormat)
+      const today = formatDateInc(todayFormat)
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
