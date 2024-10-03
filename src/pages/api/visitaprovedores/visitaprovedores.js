@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         // Caso para obtener visitaprovedores por usuario_id
         if (usuario_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, visitaprovedor, descripcion, createdAt FROM visitaprovedores WHERE usuario_id = ?', [usuario_id])
+                const [rows] = await connection.query('SELECT id, usuario_id, folio, visitaprovedor, descripcion, estado,  createdAt FROM visitaprovedores WHERE usuario_id = ?', [usuario_id])
                 if (rows.length === 0) {
                     return res.status(404).json({ error: 'Negocio no encontrado' })
                 }
@@ -66,6 +66,7 @@ export default async function handler(req, res) {
                     visitaprovedores.folio,
                     visitaprovedores.visitaprovedor,
                     visitaprovedores.descripcion,
+                    visitaprovedores.estado,
                     autorizo_usuario.usuario AS autorizo_usuario,
                     visitaprovedores.createdAt
                 FROM visitaprovedores
@@ -79,14 +80,14 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            const { usuario_id, folio, visitaprovedor, descripcion, autorizo } = req.body;
-            if (!usuario_id || !visitaprovedor || !descripcion) {
+            const { usuario_id, folio, visitaprovedor, descripcion, estado, autorizo } = req.body;
+            if (!usuario_id || !visitaprovedor || !descripcion || !estado) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
             const [result] = await connection.query(
-                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion, autorizo) VALUES (?, ?, ?, ?, ?)',
-                [usuario_id, folio, visitaprovedor, descripcion, autorizo]
+                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion, estado, autorizo) VALUES (?, ?, ?, ?, ?, ?)',
+                [usuario_id, folio, visitaprovedor, descripcion, estado, autorizo]
             )
 
             // Enviar notificación después de crear la visitaprovedor
@@ -105,15 +106,15 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'ID de la visitaprovedor es obligatorio' })
         }
 
-        const { visitaprovedor, descripcion } = req.body;
+        const { visitaprovedor, descripcion, estado } = req.body;
 
-        if (visitaprovedor && descripcion) {
+        if (visitaprovedor && descripcion && estado) {
             // Actualización completa del negocio
             try {
 
                 const [result] = await connection.query(
-                    'UPDATE visitaprovedores SET visitaprovedor = ?, descripcion = ?',
-                    [visitaprovedor, descripcion]
+                    'UPDATE visitaprovedores SET visitaprovedor = ?, descripcion = ?, estado = ?',
+                    [visitaprovedor, descripcion, estado]
                 )
 
                 if (result.affectedRows === 0) {

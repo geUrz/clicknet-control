@@ -65,6 +65,10 @@ export function VisitaProvDetalles(props) {
               <h1>Fecha</h1>
               <h2>{formatDateVT(visitaprov.createdAt)}</h2>
             </div>
+            <div>
+              <h1>Estado</h1>
+              <h2>{visitaprov.estado}</h2>
+            </div>
           </div>
         </div>
 

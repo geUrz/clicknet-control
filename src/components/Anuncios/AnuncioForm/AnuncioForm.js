@@ -1,4 +1,4 @@
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
@@ -109,7 +109,7 @@ export function AnuncioForm(props) {
                   value={anuncio}
                   onChange={handleAnuncioChange}
                 />
-                {errors.anuncio && <span className={styles.error}>{errors.anuncio}</span>}
+                {errors.anuncio && <Message negative>{errors.anuncio}</Message>}
               </FormField>
               <FormField error={!!errors.descripcion}>
                 <Label>
@@ -121,7 +121,7 @@ export function AnuncioForm(props) {
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
                 />
-                {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+                {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
               </FormField>
               <FormField error={!!errors.date}>
                 <Label>
@@ -137,7 +137,7 @@ export function AnuncioForm(props) {
                   showPopperArrow={false}
                   popperPlacement="top"
                 />
-                {errors.date && <span className={styles.error}>{errors.date}</span>}
+                {errors.date && <Message negative>{errors.date}</Message>}
               </FormField>
               <FormField error={!!errors.hora}>
                 <Label>
@@ -149,7 +149,7 @@ export function AnuncioForm(props) {
                   value={hora}
                   onChange={(e) => setHora(e.target.value)}
                 />
-                {errors.hora && <span className={styles.error}>{errors.hora}</span>}
+                {errors.hora && <Message negative>{errors.hora}</Message>}
               </FormField>
             </FormGroup>
             <Button

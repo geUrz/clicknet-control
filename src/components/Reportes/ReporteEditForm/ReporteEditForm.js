@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useAuth } from '@/contexts/AuthContext'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -93,7 +93,7 @@ export function ReporteEditForm(props) {
               value={formData.reporte}
               onChange={handleChange}
             />
-            {errors.reporte && <span className={styles.error}>{errors.reporte}</span>}
+            {errors.reporte && <Message negative>{errors.reporte}</Message>}
           </FormField>
           <FormField error={!!errors.descripcion}>
             <Label>
@@ -104,7 +104,7 @@ export function ReporteEditForm(props) {
               value={formData.descripcion}
               onChange={handleChange}
             />
-            {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+            {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
           </FormField>
           <FormField error={!!errors.date}>
             <Label>
@@ -120,7 +120,7 @@ export function ReporteEditForm(props) {
               showPopperArrow={false}
               popperPlacement="top"
             />
-            {errors.date && <span className={styles.error}>{errors.date}</span>}
+            {errors.date && <Message negative>{errors.date}</Message>}
           </FormField>
           <FormField error={!!errors.estado}>
             <Label>
@@ -138,7 +138,7 @@ export function ReporteEditForm(props) {
               <option value='En proceso'>En proceso</option>
               <option value='Realizada'>Realizada</option>
             </FormField>
-            {errors.estado && <span className={styles.error}>{errors.estado}</span>}
+            {errors.estado && <Message negative>{errors.estado}</Message>}
           </FormField>
         </FormGroup>
         <Button primary onClick={handleSubmit}>

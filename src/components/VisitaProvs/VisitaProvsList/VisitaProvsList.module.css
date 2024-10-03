@@ -60,6 +60,13 @@
   background-color: rgb(204, 255, 255);
 }
 
+.retirado{
+  background-color: var(--inProcess) !important;
+}
+
+.ingresado{
+  background-color: var(--finish) !important;
+}
 
 .column1{
   width: 10%;

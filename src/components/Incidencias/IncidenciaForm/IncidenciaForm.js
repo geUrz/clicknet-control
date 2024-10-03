@@ -1,4 +1,4 @@
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
@@ -101,7 +101,7 @@ export function IncidenciaForm(props) {
                   value={incidencia}
                   onChange={handleIncidenciaChange}
                 />
-                {errors.incidencia && <span className={styles.error}>{errors.incidencia}</span>}
+                {errors.incidencia && <Message negative>{errors.incidencia}</Message>}
               </FormField>
               <FormField error={!!errors.descripcion}>
                 <Label>
@@ -113,27 +113,19 @@ export function IncidenciaForm(props) {
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
                 />
-                {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+                {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
               </FormField>
               <FormField error={!!errors.zona}>
                 <Label>
                   Zona
                 </Label>
-                <FormField
+                <TextArea
                   name='zona'
                   type="text"
-                  control='select'
                   value={zona}
                   onChange={(e) => setZona(e.target.value)}
-                >
-                  <option value=''></option>
-                  <option value='Caseta'>Caseta</option>
-                  <option value='León'>León</option>
-                  <option value='Calet'>Calet</option>
-                  <option value='Yza'>Yza</option>
-                  <option value='Páramo'>Paramo</option>
-                </FormField>
-                {errors.zona && <span className={styles.error}>{errors.zona}</span>}
+                />
+                {errors.zona && <Message negative>{errors.zona}</Message>}
               </FormField>
             </FormGroup>
             <Button

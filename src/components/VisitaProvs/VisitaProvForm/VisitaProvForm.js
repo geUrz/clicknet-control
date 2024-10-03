@@ -1,4 +1,4 @@
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
@@ -48,6 +48,7 @@ export function VisitaProvForm(props) {
     }
 
     const folio = genVPId(4)
+    const estado = 'Sin ingresar'
 
     try {
       await axios.post('/api/visitaprovedores/visitaprovedores', {
@@ -55,6 +56,7 @@ export function VisitaProvForm(props) {
         folio,
         visitaprovedor,
         descripcion, 
+        estado,
         autorizo: user.id
       })
 
@@ -93,7 +95,7 @@ export function VisitaProvForm(props) {
                   value={visitaprovedor}
                   onChange={handleVisitaprovChange}
                 />
-                {errors.visitaprovedor && <span className={styles.error}>{errors.visitaprovedor}</span>}
+                {errors.visitaprovedor && <Message negative>{errors.visitaprovedor}</Message>}
               </FormField>
               <FormField error={!!errors.descripcion}>
                 <Label>
@@ -105,7 +107,7 @@ export function VisitaProvForm(props) {
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
                 />
-                {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+                {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
               </FormField>
             </FormGroup>
             <Button

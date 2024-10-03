@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useAuth } from '@/contexts/AuthContext'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -98,7 +98,7 @@ export function VisitaTecnicaEditForm(props) {
               value={formData.visitatecnica}
               onChange={handleChange}
             />
-            {errors.visitatecnica && <span className={styles.error}>{errors.visitatecnica}</span>}
+            {errors.visitatecnica && <Message negative>{errors.visitatecnica}</Message>}
           </FormField>
           <FormField error={!!errors.descripcion}>
             <Label>
@@ -109,7 +109,7 @@ export function VisitaTecnicaEditForm(props) {
               value={formData.descripcion}
               onChange={handleChange}
             />
-            {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+            {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
           </FormField>
           <FormField error={!!errors.date}>
             <Label>
@@ -125,7 +125,7 @@ export function VisitaTecnicaEditForm(props) {
               showPopperArrow={false}
               popperPlacement="top"
             />
-            {errors.date && <span className={styles.error}>{errors.date}</span>}
+            {errors.date && <Message negative>{errors.date}</Message>}
           </FormField>
           <FormField error={!!errors.hora}>
             <Label>
@@ -137,7 +137,7 @@ export function VisitaTecnicaEditForm(props) {
               value={formData.hora}
               onChange={handleChange}
             />
-            {errors.hora && <span className={styles.error}>{errors.hora}</span>}
+            {errors.hora && <Message negative>{errors.hora}</Message>}
           </FormField>
           <FormField error={!!errors.estado}>
             <Label>

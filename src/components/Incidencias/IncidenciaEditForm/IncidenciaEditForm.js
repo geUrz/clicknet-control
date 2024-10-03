@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import styles from './IncidenciaEditForm.module.css'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -9,7 +9,7 @@ export function IncidenciaEditForm(props) {
 
   const { reload, onReload, incidencia, onOpenEditIncidencia, onToastSuccessIncidenciaMod } = props
 
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   const [formData, setFormData] = useState({
     incidencia: incidencia.incidencia,
@@ -18,6 +18,33 @@ export function IncidenciaEditForm(props) {
     estado: incidencia.estado
   })
 
+  const [errors, setErrors] = useState({})
+
+  const validarForm = () => {
+    const newErrors = {}
+
+    if (!formData.incidencia) {
+      newErrors.incidencia = 'El campo es requerido'
+    }
+
+    if (!formData.descripcion) {
+      newErrors.descripcion = 'El campo es requerido'
+    }
+
+    if (!formData.zona) {
+      newErrors.zona = 'El campo es requerido'
+    }
+
+    if (!formData.estado) {
+      newErrors.estado = 'El campo es requerido'
+    }
+
+    setErrors(newErrors)
+
+    return Object.keys(newErrors).length === 0
+
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -25,7 +52,13 @@ export function IncidenciaEditForm(props) {
 
   // Enviar los datos actualizados
   const handleSubmit = async (e) => {
+    
     e.preventDefault()
+
+    if (!validarForm()) {
+      return
+    }
+
     try {
       await axios.put(`/api/incidencias/incidencias?id=${incidencia.id}`, formData)
       onReload()
@@ -72,8 +105,8 @@ export function IncidenciaEditForm(props) {
       <IconClose onOpenClose={onOpenEditIncidencia} />
 
       <Form onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <FormGroup>
-          <FormField>
+        <FormGroup widths='equal'>
+          <FormField error={!!errors.incidencia}>
             <Label>
               Incidencia
             </Label>
@@ -83,8 +116,9 @@ export function IncidenciaEditForm(props) {
               value={formData.incidencia}
               onChange={handleChange}
             />
+            {errors.incidencia && <Message negative>{errors.incidencia}</Message>}
           </FormField>
-          <FormField>
+          <FormField error={!!errors.descripcion}>
             <Label>
               Descripción
             </Label>
@@ -93,56 +127,50 @@ export function IncidenciaEditForm(props) {
               value={formData.descripcion}
               onChange={handleChange}
             />
+            {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
           </FormField>
-          <FormField>
+          <FormField error={!!errors.zona}>
             <Label>
               Zona
             </Label>
-            <FormField
+            <TextArea
               name='zona'
               type="text"
-              control='select'
               value={formData.zona}
               onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Caseta'>Caseta</option>
-              <option value='León'>León</option>
-              <option value='Calet'>Calet</option>
-              <option value='Yza'>Yza</option>
-              <option value='Páramo'>Páramo</option>
-            </FormField>
+            />
+            {errors.zona && <Message negative>{errors.zona}</Message>}
           </FormField>
-          {user.isadmin === 'Admin' && activate ? (
-            <>
-
-              <FormField>
-                <Label>
-                  Estatus
-                </Label>
-                <FormField
-                  name='estado'
-                  type="text"
-                  control='select'
-                  value={formData.estado}
-                  onChange={handleChange}
-                >
-                  <option value=''></option>
-                  <option value='Pendiente'>Pendiente</option>
-                  <option value='En proceso'>En proceso</option>
-                  <option value='Realizada'>Realizada</option>
-                </FormField>
+        {user.isadmin === 'Admin' && activate ? (
+          <>
+            <FormField>
+              <Label>
+                Estatus
+              </Label>
+              <FormField
+                name='estado'
+                type="text"
+                control='select'
+                value={formData.estado}
+                onChange={handleChange}
+              >
+                <option value=''></option>
+                <option value='Pendiente'>Pendiente</option>
+                <option value='En proceso'>En proceso</option>
+                <option value='Realizada'>Realizada</option>
               </FormField>
+              {errors.estado && <Message negative>{errors.estado}</Message>}
+            </FormField>
 
-            </>
-          ) : (
-            ''
-          )}
-        </FormGroup>
-        <Button primary onClick={handleSubmit}>
-          Guardar
-        </Button>
-      </Form>
+          </>
+        ) : (
+          ''
+        )}
+      </FormGroup>
+      <Button primary onClick={handleSubmit}>
+        Guardar
+      </Button>
+    </Form >
 
     </>
 

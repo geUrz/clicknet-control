@@ -1,13 +1,13 @@
 import { ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
-import { FaFileAlt, FaUserMd } from 'react-icons/fa'
+import { FaUserMd } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { VisitaProvDetalles } from '../VisitaProvDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
+import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc, formatDateVT } from '@/helpers'
-import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
+import { getStatusClassVisita } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './VisitaProvsList.module.css'
@@ -86,9 +86,12 @@ export function VisitaProvsList(props) {
           <ListEmpty />
         ) : (
           <div className={styles.main}>
-            {map(filteredVisitaprov, (visitaprov) => (
+            {map(filteredVisitaprov, (visitaprov) => {
+              const statusClass = getStatusClassVisita(visitaprov.estado)
+
+              return (
               <div key={visitaprov.id} className={styles.section} onClick={() => onOpenDetalles(visitaprov)}>
-                <div>
+                <div className={`${styles[statusClass]}`}>
                   <div className={styles.column1}>
                     <FaUserMd />
                   </div>
@@ -108,7 +111,8 @@ export function VisitaProvsList(props) {
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )
       )}

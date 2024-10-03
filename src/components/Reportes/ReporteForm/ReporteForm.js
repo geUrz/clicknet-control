@@ -1,4 +1,4 @@
-import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
@@ -104,7 +104,7 @@ export function ReporteForm(props) {
                   value={reporte}
                   onChange={handleReporteChange}
                 />
-                {errors.reporte && <span className={styles.error}>{errors.reporte}</span>}
+                {errors.reporte && <Message negative>{errors.reporte}</Message>}
               </FormField>
               <FormField error={!!errors.descripcion}>
                 <Label>
@@ -116,7 +116,7 @@ export function ReporteForm(props) {
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
                 />
-                {errors.descripcion && <span className={styles.error}>{errors.descripcion}</span>}
+                {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
               </FormField>
               <FormField error={!!errors.date}>
                 <Label>
@@ -132,7 +132,7 @@ export function ReporteForm(props) {
                   showPopperArrow={false}
                   popperPlacement="top"
                 />
-                {errors.date && <span className={styles.error}>{errors.date}</span>}
+                {errors.date && <Message negative>{errors.date}</Message>}
               </FormField>
             </FormGroup>
             <Button
