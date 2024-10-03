@@ -1,5 +1,5 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
-import { formatDate, formatDateInc, formatDateIncDet } from '@/helpers';
+import { formatDate } from '@/helpers';
 import { BasicModal } from '@/layouts';
 import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
@@ -12,7 +12,8 @@ import styles from './VisitaDetalles.module.css';
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-
+  console.log(formatDate(visita.date));
+  
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)
@@ -38,7 +39,7 @@ export function VisitaDetalles(props) {
     } else {
       console.error('Visita o ID no disponible')
     }
-  };
+  }
 
   const handleDownloadQRCode = async () => {
     if (!visita || !visita.qrCode) {

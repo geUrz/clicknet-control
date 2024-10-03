@@ -147,7 +147,7 @@ export default async function handler(req, res) {
     }
 
     else {
-      // Eliminar la incidencia por ID
+      // Eliminar el anuncio por ID
       try {
         const [result] = await connection.query('DELETE FROM anuncios WHERE id = ?', [id]);
 
