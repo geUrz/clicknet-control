@@ -1,4 +1,4 @@
-import { parseISO, isSameDay } from 'date-fns';
+import { parseISO, isSameDay, format } from 'date-fns';
 import connection from "@/libs/db";
 
 export default async function handler(req, res) {
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
       // Verificar el estado de la visita
       const visita = rows[0];
-      const today = new Date(); // Fecha actual
+      const today = format(new Date(), 'yyyy-MM-dd')
       const visitaDate = parseISO(visita.date);
 
       const msjTipoAcceso = visita.tipoacceso === 'eventual' || visita.tipoacceso === 'frecuente'
