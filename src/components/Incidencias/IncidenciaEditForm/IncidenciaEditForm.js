@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
+import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import styles from './IncidenciaEditForm.module.css'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -68,6 +68,12 @@ export function IncidenciaEditForm(props) {
       console.error('Error actualizando la incidencia:', error)
     }
   }
+
+  const opcionesEstado = [
+    { key: 1, text: 'Pendiente', value: 'Pendiente' },
+    { key: 2, text: 'En proceso', value: 'En proceso' },
+    { key: 3, text: 'Realizada', value: 'Realizada' }
+  ]
 
   const [activate, setActivate] = useState(false)
 
@@ -147,21 +153,16 @@ export function IncidenciaEditForm(props) {
               <Label>
                 Estatus
               </Label>
-              <FormField
-                name='estado'
-                type="text"
-                control='select'
+              <Dropdown
+                placeholder='Selecciona una opción'
+                fluid
+                selection
+                options={opcionesEstado}
                 value={formData.estado}
-                onChange={handleChange}
-              >
-                <option value=''></option>
-                <option value='Pendiente'>Pendiente</option>
-                <option value='En proceso'>En proceso</option>
-                <option value='Realizada'>Realizada</option>
-              </FormField>
+                onChange={(e, { value }) => setFormData({ ...formData, estado: value })}
+              />
               {errors.estado && <Message negative>{errors.estado}</Message>}
             </FormField>
-
           </>
         ) : (
           ''

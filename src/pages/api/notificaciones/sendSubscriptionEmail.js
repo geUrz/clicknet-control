@@ -25,6 +25,8 @@ export default async function handler(req, res) {
   };
 
   try {
+
+    console.log('Intentando enviar correo a:', mailOptions.to)
     // Enviar correo
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado exitosamente' });

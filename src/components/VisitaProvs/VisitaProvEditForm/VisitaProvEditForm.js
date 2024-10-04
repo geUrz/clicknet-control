@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
+import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import styles from './VisitaProvEditForm.module.css'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -63,6 +63,12 @@ export function VisitaProvEditForm(props) {
       console.error('Error actualizando la visita provedor:', error)
     }
   }
+
+  const opcionesEstado = [
+    { key: 1, text: 'Sin ingresar', value: 'Sin ingresar' },
+    { key: 2, text: 'Ingresado', value: 'Ingresado' },
+    { key: 3, text: 'Retirado', value: 'Retirado' }
+  ]
 
   const [activate, setActivate] = useState(false)
 
@@ -131,18 +137,14 @@ export function VisitaProvEditForm(props) {
               <Label>
                 Estatus
               </Label>
-              <FormField
-                name='estado'
-                type="text"
-                control='select'
+              <Dropdown
+                placeholder='Selecciona una opción'
+                fluid
+                selection
+                options={opcionesEstado}
                 value={formData.estado}
-                onChange={handleChange}
-              >
-                <option value=''></option>
-                <option value='Sin ingresar'>Sin ingresar</option>
-                <option value='Ingresado'>Ingresado</option>
-                <option value='Retirado'>Retirado</option>
-              </FormField>
+                onChange={(e, { value }) => setFormData({ ...formData, estado: value })}
+              />
               {errors.estado && <Message negative>{errors.estado}</Message>}
             </FormField>
 

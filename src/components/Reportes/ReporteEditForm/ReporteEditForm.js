@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useState } from 'react'
 import axios from 'axios'
-import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
+import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useAuth } from '@/contexts/AuthContext'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -74,6 +74,12 @@ export function ReporteEditForm(props) {
     }
   }
 
+  const opcionesEstado = [
+    { key: 1, text: 'Pendiente', value: 'Pendiente' },
+    { key: 2, text: 'En proceso', value: 'En proceso' },
+    { key: 3, text: 'Realizada', value: 'Realizada' }
+  ]
+
 
   return (
 
@@ -82,7 +88,7 @@ export function ReporteEditForm(props) {
       <IconClose onOpenClose={onOpenEditReporte} />
 
       <Form>
-        <FormGroup>
+        <FormGroup widths='equal'>
         <FormField error={!!errors.reporte}>
             <Label>
               Reporte
@@ -126,18 +132,14 @@ export function ReporteEditForm(props) {
             <Label>
               Estatus
             </Label>
-            <FormField
-              name='estado'
-              type="text"
-              control='select'
-              value={formData.estado}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Pendiente'>Pendiente</option>
-              <option value='En proceso'>En proceso</option>
-              <option value='Realizada'>Realizada</option>
-            </FormField>
+            <Dropdown
+                placeholder='Selecciona una opción'
+                fluid
+                selection
+                options={opcionesEstado}
+                value={formData.estado}
+                onChange={(e, { value }) => setFormData({ ...formData, estado: value })}
+              />
             {errors.estado && <Message negative>{errors.estado}</Message>}
           </FormField>
         </FormGroup>
