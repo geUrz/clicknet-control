@@ -11,12 +11,14 @@ export const initializeOneSignal = () => {
       OneSignal.registerForPushNotifications(); // Registra al usuario para notificaciones
 
       OneSignal.getUserId().then((playerId) => {
+        console.log('Player ID:', playerId)
         if (!playerId) {
           console.error('Player ID no disponible. Asegúrate de que el usuario haya aceptado las notificaciones.');
           return;
         }
 
-        const userId = getCookie('userId'); // Asegúrate de que 'userId' esté en las cookies
+        const userId = getCookie('userId')
+        console.log('User ID:', userId) // Asegúrate de que 'userId' esté en las cookies
         if (userId) {
           // Enviar Player ID al backend
           fetch('/api/savePlayerId', {

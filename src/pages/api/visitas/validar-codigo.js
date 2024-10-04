@@ -22,8 +22,7 @@ async function sendNotification(header, message, url, playerId) {
   console.log('Datos de la notificación:', data);
 
   try {
-      const response = await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
-      console.log('Notificación enviada:', response.data);
+      await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
   } catch (error) {
       if (error.response) {
           console.error('Error en respuesta de OneSignal:', error.response.data);
