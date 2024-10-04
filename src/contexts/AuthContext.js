@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { initializeOneSignal } from '@/libs/onesignal'
 
 const AuthContext = createContext()
 
@@ -28,10 +29,11 @@ export function AuthProvider({ children }) {
 
   const login = async (emailOrUsuario, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { emailOrUsuario, password });
+      await axios.post('/api/auth/login', { emailOrUsuario, password });
       const userResponse = await axios.get('/api/auth/me'); // Obtener el usuario actualizado
       setUser(userResponse.data.user); // Asegúrate de que `user` incluya el `id`
       router.push('/'); // Redirigir después de iniciar sesión
+      initializeOneSignal()
     } catch (error) {
       if (error.response) {
         throw error.response;
