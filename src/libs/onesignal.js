@@ -112,7 +112,9 @@ export const initializeOneSignal = () => {
           
           // Obtén el nombre y el usuario del contexto o de donde los tengas almacenados
           const userName = getCookie('userName'); // Supongamos que tienes el nombre en las cookies
+          console.log('UserNme:', userName);
           const userUsername = getCookie('userUsername'); // Supongamos que tienes el usuario en las cookies
+          console.log('Usuario:', userUsername);
 
           if (userId) {
             // Enviar Player ID al backend
