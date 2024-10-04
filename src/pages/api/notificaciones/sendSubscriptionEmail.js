@@ -5,7 +5,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Método no permitido' });
   }
 
-  const { playerId, userId } = req.body;
+  const { playerId, userId, userName, userUsername } = req.body;
+
+  if (!playerId || !userId || !userName || !userUsername) {
+    return res.status(400).json({ message: 'Faltan datos necesarios para enviar el correo.' });
+  }
 
   // Configurar transporte de correo
   const transporter = nodemailer.createTransport({
@@ -16,13 +20,16 @@ export default async function handler(req, res) {
     },
   });
 
-  // Configurar correo
   const mailOptions = {
     from: process.env.EMAIL_USER, // Remitente
     to: 'devcactus.soporte@gmail.com',   // Correo donde recibirás la notificación
     subject: 'Nuevo dispositivo suscrito a notificaciones',
-    text: `Un nuevo dispositivo se ha suscrito. Player ID: ${playerId}, User ID: ${userId}`,
-  };
+    text: `Un nuevo dispositivo se ha suscrito.
+          \nNombre: ${userName},
+          \nUsuario: ${userUsername},
+          \nUser ID: ${userId},
+          \nPlayer ID: ${playerId}`
+  }
 
   try {
 
