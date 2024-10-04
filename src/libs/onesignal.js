@@ -9,14 +9,9 @@ export const initializeOneSignal = () => {
     // Solicitar permiso para notificaciones
     OneSignal.push(() => {
       OneSignal.registerForPushNotifications().then(() => {
-        // Este bloque se ejecuta si el usuario acepta las notificaciones
-        OneSignal.getUserId().then((playerId) => {
+        // Intentar obtener el Player ID después de que se ha registrado para notificaciones
+        getPlayerIdWithRetry().then((playerId) => {
           console.log('Player ID:', playerId);
-          if (!playerId) {
-            console.error('Player ID no disponible. Asegúrate de que el usuario haya aceptado las notificaciones.');
-            return;
-          }
-
           const userId = getCookie('userId');
           console.log('User ID:', userId); // Asegúrate de que 'userId' esté en las cookies
           if (userId) {
@@ -38,6 +33,8 @@ export const initializeOneSignal = () => {
           } else {
             console.error('User ID no disponible en las cookies');
           }
+        }).catch((error) => {
+          console.error(error); // Manejar el error de reintentos
         });
       }).catch(error => {
         console.error('Error al registrar para notificaciones:', error);
@@ -47,35 +44,45 @@ export const initializeOneSignal = () => {
     // Captura cuando un usuario se suscribe
     OneSignal.on('subscriptionChange', function(isSubscribed) {
       if (isSubscribed) {
-        OneSignal.getUserId().then((playerId) => {
-          if (playerId) {
-            const userId = getCookie('userId');
-            if (userId) {
-              // Enviar solicitud al backend para enviar correo
-              fetch('/api/notificaciones/sendSubscriptionEmail', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ playerId, userId }),
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Correo de suscripción enviado:', data.message);
-              })
-              .catch(error => {
-                console.error('Error al enviar correo de suscripción:', error);
-              });
-            } else {
-              console.error('User ID no disponible en las cookies');
-            }
+        getPlayerIdWithRetry().then((playerId) => {
+          const userId = getCookie('userId');
+          if (userId) {
+            // Enviar solicitud al backend para enviar correo
+            fetch('/api/notificaciones/sendSubscriptionEmail', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ playerId, userId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Correo de suscripción enviado:', data.message);
+            })
+            .catch(error => {
+              console.error('Error al enviar correo de suscripción:', error);
+            });
           } else {
-            console.error('Player ID no disponible.');
+            console.error('User ID no disponible en las cookies');
           }
+        }).catch((error) => {
+          console.error(error); // Manejar el error de reintentos
         });
       }
     });
   });
+};
+
+// Función para obtener el Player ID con reintentos
+const getPlayerIdWithRetry = async (retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    const playerId = await window.OneSignal.getUserId(); // Obtener el Player ID
+    if (playerId) {
+      return playerId; // Si obtienes el playerId, retorna
+    }
+    await new Promise(res => setTimeout(res, delay)); // Espera antes de reintentar
+  }
+  throw new Error('Player ID no disponible después de varios intentos'); // Lanza un error si no se obtiene el playerId
 };
 
 // Función para obtener cookies
