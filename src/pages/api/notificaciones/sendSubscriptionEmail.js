@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   // Configurar correo
   const mailOptions = {
     from: process.env.EMAIL_USER, // Remitente
-    to: 'gerardourzua20@gmail.com',   // Correo donde recibirás la notificación
+    to: 'devcactus.soporte@gmail.com',   // Correo donde recibirás la notificación
     subject: 'Nuevo dispositivo suscrito a notificaciones',
     text: `Un nuevo dispositivo se ha suscrito. Player ID: ${playerId}, User ID: ${userId}`,
   };
