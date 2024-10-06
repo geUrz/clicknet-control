@@ -1,11 +1,11 @@
 import { ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
-import { FaClipboard, FaUserCog } from 'react-icons/fa'
+import { FaClipboard } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { ReporteDetalles } from '../ReporteDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
+import { Dropdown, Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDate, formatDateInc } from '@/helpers'
 import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
@@ -32,13 +32,22 @@ export function ReporteList(props) {
     setShowDetalles(false)
   }
 
+  const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
 
   const filteredReporte = (reportes || []).filter((reporte) => {
     return (
+      (filterEstado === '' || filterEstado === 'Todas' || reporte.estado === filterEstado) &&
       (filterFecha === null || reporte.date === formatDateInc(filterFecha))
     )
   })
+
+  const opcionesEstado = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Pendiente', value: 'Pendiente' },
+    { key: 3, text: 'En proceso', value: 'En proceso' },
+    { key: 4, text: 'Realizada', value: 'Realizada' }
+  ]
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,6 +71,15 @@ export function ReporteList(props) {
 
         <Form>
           <FormGroup>
+          <Label className={styles.label}>Estatus</Label>
+            <Dropdown
+                placeholder='Todas'
+                fluid
+                selection
+                options={opcionesEstado}
+                value={filterEstado}
+                onChange={(e, data) => setFilterEstado(data.value)}
+              />
             <Label className={styles.label}>Fecha</Label>
             <FormField>
               <DatePicker
@@ -117,7 +135,7 @@ export function ReporteList(props) {
         )
       )}
 
-      <BasicModal title='detalles de la visita técnica' show={showDetalles} onClose={onCloseDetalles}>
+      <BasicModal title='detalles del reporte' show={showDetalles} onClose={onCloseDetalles}>
         {reporteSeleccionada && (
           <ReporteDetalles
             reload={reload}

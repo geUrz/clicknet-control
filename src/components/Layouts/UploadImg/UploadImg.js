@@ -2,16 +2,15 @@ import { Button, Form, FormField, FormGroup, Image, Message } from 'semantic-ui-
 import { useState } from 'react';
 import { IconClose } from '@/components/Layouts';
 import axios from 'axios';
-import styles from './ReporteUpImg.module.css';
+import styles from './UploadImg.module.css';
 
-export function ReporteUpImg(props) {
-
-  const { reload, onReload, reporte, onShowSubirImg, selectedImageKey } = props;
+export function UploadImg(props) {
+  const { reload, onReload, itemId, onShowSubirImg, selectedImageKey, endpoint } = props;
   const [fileName, setFileName] = useState('No se ha seleccionado ningún archivo');
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState('');
   const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-  const maxSize = 2 * 1000 * 1500
+  const maxSize = 2 * 1000 * 1500; // Máximo tamaño permitido (2MB)
 
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
@@ -49,7 +48,8 @@ export function ReporteUpImg(props) {
       // Crear el objeto dinámicamente con la imagen seleccionada (img1, img2, etc.)
       const updatedImage = { [selectedImageKey]: imageUrl };
 
-      await axios.put(`/api/reportes/updateImage?id=${reporte.id}`, updatedImage)
+      // Usar la prop `endpoint` para decidir si el archivo se sube a "reportes" o "incidencias"
+      await axios.put(`/api/${endpoint}/updateImage?id=${itemId}`, updatedImage);
 
       setError('');
       onReload();

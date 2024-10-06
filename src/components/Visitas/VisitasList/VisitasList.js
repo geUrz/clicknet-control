@@ -5,7 +5,7 @@ import { BasicModal } from '@/layouts'
 import { VisitaDetalles } from '../VisitaDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
+import { Dropdown, Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc } from '@/helpers'
 import { getStatusClassVisita } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
@@ -15,7 +15,7 @@ import styles from './VisitasList.module.css'
 export function VisitasList(props) {
 
   const { reload, onReload, visitas, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props
-  
+
   const { loading } = useAuth()
 
   const [showDetalles, setShowDetalles] = useState(false)
@@ -36,20 +36,41 @@ export function VisitasList(props) {
   const [filterTipoacceso, setFilterTipoacceso] = useState('')
   const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
-  
+
   const filteredVisitas = (visitas || []).filter((visita) => {
     return (
-      (filterTipovisita === '' || visita.tipovisita === filterTipovisita) &&
-      (filterTipoacceso === '' || visita.tipoacceso === filterTipoacceso) &&
-      (filterEstado === '' || visita.estado === filterEstado) &&
+      (filterTipovisita === '' || filterTipovisita === 'Todas' || visita.tipovisita === filterTipovisita) &&
+      (filterTipoacceso === '' || filterTipoacceso === 'Todas' || visita.tipoacceso === filterTipoacceso) &&
+      (filterEstado === '' || filterEstado === 'Todas' || visita.estado === filterEstado) &&
       (filterFecha === null || visita.date === formatDateInc(filterFecha) || visita.fromDate === formatDateInc(filterFecha))
     )
   })
 
+  const opcionesTipovisita = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Familia', value: 'Familia' },
+    { key: 3, text: 'Amigo', value: 'Amigo' },
+    { key: 4, text: 'Proveedor', value: 'Proveedor' },
+    { key: 5, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
+  ]
+
+  const opcionesTipoacceso = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Eventual', value: 'eventual' },
+    { key: 3, text: 'Frecuente', value: 'frecuente' }
+  ]
+
+  const opcionesEstado = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Sin ingresar', value: 'Sin ingresar' },
+    { key: 3, text: 'Ingresado', value: 'Ingresado' },
+    { key: 4, text: 'Retirado', value: 'Retirado' }
+  ]
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false)
-    }, 800) 
+    }, 800)
 
     return () => clearTimeout(timer)
   }, [])
@@ -68,42 +89,35 @@ export function VisitasList(props) {
 
         <Form>
           <FormGroup>
-            <Label className={styles.label}>Tipo de visita</Label>
-            <FormField
-              control='select'
+            <Label className={styles.label}>Tipo visita</Label>
+            <Dropdown
+              placeholder='Todas'
+              fluid
+              selection
+              options={opcionesTipovisita}
               value={filterTipovisita}
-              onChange={(e) => setFilterTipovisita(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value='Familiar'>Familiar</option>
-              <option value='Amigo'>Amigo</option>
-              <option value='Proveedor'>Proveedor</option>
-              <option value='Paquetería'>Paquetería</option>
-              <option value='Didi, Uber, Rappi'>Didi, Uber, Rappi</option>
-            </FormField>
+              onChange={(e, data) => setFilterTipovisita(data.value)}
+            />
 
-            <Label className={styles.label}>Tipo de acceso</Label>
-            <FormField
-              control='select'
+            <Label className={styles.label}>Tipo acceso</Label>
+            <Dropdown
+              placeholder='Todas'
+              fluid
+              selection
+              options={opcionesTipoacceso}
               value={filterTipoacceso}
-              onChange={(e) => setFilterTipoacceso(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value='eventual'>Eventual</option>
-              <option value='frecuente'>Frecuente</option>
-            </FormField>
+              onChange={(e, data) => setFilterTipoacceso(data.value)}
+            />
 
             <Label className={styles.label}>Estatus</Label>
-            <FormField
-              control='select'
+            <Dropdown
+              placeholder='Todas'
+              fluid
+              selection
+              options={opcionesEstado}
               value={filterEstado}
-              onChange={(e) => setFilterEstado(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value="Sin ingresar">Sin ingresar</option>
-              <option value="Ingresado">Ingresado</option>
-              <option value="Retirado">Retirado</option>
-            </FormField>
+              onChange={(e, data) => setFilterEstado(data.value)}
+            />
 
             <Label className={styles.label}>Fecha</Label>
             <FormField>
@@ -122,7 +136,7 @@ export function VisitasList(props) {
         </Form>
       </div>
 
-      {showLoading  ? (
+      {showLoading ? (
         <Loading size={45} loading={2} />
       ) : (
         size(filteredVisitas) === 0 ? (

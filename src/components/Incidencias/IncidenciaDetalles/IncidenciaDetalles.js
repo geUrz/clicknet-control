@@ -1,44 +1,54 @@
-import { IconClose, Confirm, DatosRes } from '@/components/Layouts';
-import { formatDate, formatDateIncDet } from '@/helpers';
+import { IconClose, Confirm } from '@/components/Layouts';
+import { formatDateIncDet } from '@/helpers';
 import { BasicModal } from '@/layouts';
-import { FaCheck, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaEdit, FaImage, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { IncidenciaEditForm } from '../IncidenciaEditForm/IncidenciaEditForm';
 import axios from 'axios';
+import { UploadImg } from '@/components/Layouts/UploadImg';
 import styles from './IncidenciaDetalles.module.css';
 import { useAuth } from '@/contexts/AuthContext';
+import { Image } from 'semantic-ui-react';
 
 export function IncidenciaDetalles(props) {
-  const { reload, onReload, incidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props
-  
-  const { user } = useAuth()
+  const { reload, onReload, incidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props;
 
-  const [showEditIncidencia, setShowEditIncidencia] = useState(false)
+  const { user } = useAuth();
 
-  const onOpenEditIncidencia = () => setShowEditIncidencia((prevState) => !prevState)
+  const [showEditIncidencia, setShowEditIncidencia] = useState(false);
+  const [showSubirImg, setShowSubirImg] = useState(false);
+  const [selectedImageKey, setSelectedImageKey] = useState(null);
 
-  const [showRes, setShowRes] = useState(false)
+  const onOpenEditIncidencia = () => setShowEditIncidencia((prevState) => !prevState);
 
-  const onOpenCloseRes = () => setShowRes((prevState) => !prevState)
+  const [showConfirmDel, setShowConfirmDel] = useState(false);
 
-  const [showConfirmDel, setShowConfirmDel] = useState(false)
+  const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState);
 
-  const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
+  const onShowSubirImg = (imgKey) => {
+    setSelectedImageKey(imgKey);
+    setShowSubirImg(true);
+  };
+
+  const onCloseSubirImg = () => {
+    setShowSubirImg(false);
+    setSelectedImageKey(null);
+  };
 
   const handleDeleteIncidencia = async () => {
     if (incidencia?.id) {
       try {
-        await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`)
-        onReload()
-        onToastSuccessIncidenciaMDel()
-        onOpenCloseDetalles()
+        await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`);
+        onReload();
+        onToastSuccessIncidenciaMDel();
+        onOpenCloseDetalles();
       } catch (error) {
-        console.error('Error al eliminar la incidencia:', error)
+        console.error('Error al eliminar la incidencia:', error);
       }
     } else {
-      console.error('Incidencia o ID no disponible')
+      console.error('Incidencia o ID no disponible');
     }
-  }
+  };
 
   return (
     <>
@@ -54,13 +64,6 @@ export function IncidenciaDetalles(props) {
             <div>
               <h1>Descripción</h1>
               <h2>{incidencia.descripcion}</h2>
-            </div>
-            <div className={styles.reporta}>
-              <h1>Reporta</h1>
-              <div onClick={onOpenCloseRes}>
-                <h2>{incidencia.usuario_nombre}</h2>
-                <FaInfoCircle />
-              </div>
             </div>
             <div>
               <h1>Zona</h1>
@@ -83,9 +86,40 @@ export function IncidenciaDetalles(props) {
           </div>
         </div>
 
+        {/* Imágenes de evidencia */}
+        <div className={styles.img}>
+          <h1>Evidencias</h1>
+          <div>
+            {!incidencia.img1 ? (
+              <div className={styles.noImg} onClick={() => onShowSubirImg("img1")}>
+                <div>
+                  <FaImage />
+                </div>
+              </div>
+            ) : (
+              <div className={styles.imgDel}>
+                <Image src={incidencia.img1} alt="Incidencia imagen 1" onClick={() => onShowSubirImg("img1")} />
+                <FaTrash onClick={() => onShowSubirImg("img1")} />
+              </div>
+            )}
+
+            {!incidencia.img2 ? (
+              <div className={styles.noImg} onClick={() => onShowSubirImg("img2")}>
+                <div>
+                  <FaImage />
+                </div>
+              </div>
+            ) : (
+              <div className={styles.imgDel}>
+                <Image src={incidencia.img2} alt="Incidencia imagen 2" onClick={() => onShowSubirImg("img2")} />
+                <FaTrash onClick={() => onShowSubirImg("img2")} />
+              </div>
+            )}
+          </div>
+        </div>
+
         {user.isadmin === 'Admin' || incidencia.usuario_id === user.id ? (
           <>
-
             <div className={styles.iconEdit}>
               <FaEdit onClick={onOpenEditIncidencia} />
             </div>
@@ -97,7 +131,6 @@ export function IncidenciaDetalles(props) {
             ) : (
               ''
             )}
-
           </>
         ) : (
           ''
@@ -108,13 +141,18 @@ export function IncidenciaDetalles(props) {
         <IncidenciaEditForm reload={reload} onReload={onReload} incidencia={incidencia} onOpenEditIncidencia={onOpenEditIncidencia} onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod} />
       </BasicModal>
 
-      <BasicModal title='datos de residente' show={showRes} onClose={onOpenCloseRes}>
-        <DatosRes 
-          usuario={incidencia.usuario_nombre} 
-          priv={incidencia.usuario_privada} 
-          calle={incidencia.usuario_calle} 
-          casa={incidencia.usuario_casa} 
-          onOpenCloseRes={onOpenCloseRes} />
+      {/* Modal para subir imágenes */}
+      <BasicModal title='Subir imagen' show={showSubirImg} onClose={onCloseSubirImg}>
+        {selectedImageKey && (
+          <UploadImg
+            reload={reload}
+            onReload={onReload}
+            itemId={incidencia.id}
+            onShowSubirImg={onCloseSubirImg}
+            selectedImageKey={selectedImageKey}
+            endpoint="incidencias"  // Especificar el endpoint para incidencias
+          />
+        )}
       </BasicModal>
 
       <Confirm
@@ -133,7 +171,6 @@ export function IncidenciaDetalles(props) {
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar la incidencia ?'
       />
-
     </>
-  )
+  );
 }

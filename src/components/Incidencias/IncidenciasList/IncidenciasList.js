@@ -5,7 +5,7 @@ import { BasicModal } from '@/layouts'
 import { IncidenciaDetalles } from '../IncidenciaDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
+import { Dropdown, Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc } from '@/helpers'
 import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
@@ -17,7 +17,7 @@ export function IncidenciasList(props) {
   const { reload, onReload, incidencias, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props
 
   const { loading } = useAuth()
-  
+
   const [showDetalles, setShowDetalles] = useState(false)
   const [incidenciaSeleccionada, setIncidenciaSeleccionada] = useState(null)
   const [showLoading, setShowLoading] = useState(true)
@@ -32,23 +32,28 @@ export function IncidenciasList(props) {
     setShowDetalles(false)
   }
 
-  const [filterZona, setFilterZona] = useState('')
   const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
 
   const filteredIncidencias = (incidencias || []).filter((incidencia) => {
-    
     return (
-      (filterZona === '' || incidencia.zona === filterZona) &&
-      (filterEstado === '' || incidencia.estado === filterEstado) &&
+      (filterEstado === '' || filterEstado === 'Todas' || incidencia.estado === filterEstado) &&
       (filterFecha === null || formatDateInc(incidencia.createdAt) === formatDateInc(filterFecha))
     )
   })
 
+  const opcionesEstado = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Pendiente', value: 'Pendiente' },
+    { key: 3, text: 'En proceso', value: 'En proceso' },
+    { key: 4, text: 'Realizada', value: 'Realizada' }
+  ]
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false)
-    }, 800) 
+    }, 800)
 
     return () => clearTimeout(timer)
   }, [])
@@ -67,32 +72,15 @@ export function IncidenciasList(props) {
 
         <Form>
           <FormGroup>
-            <Label className={styles.label}>Zona</Label>
-            <FormField
-              control='select'
-              value={filterZona}
-              onChange={(e) => setFilterZona(e.target.value)}
-            >
-              <option value="">Todas</option>
-              <option value='Caseta'>Caseta</option>
-              <option value="León">León</option>
-              <option value="Calet">Calet</option>
-              <option value="Yza">Yza</option>
-              <option value="Páramo">Páramo</option>
-            </FormField>
-
             <Label className={styles.label}>Estatus</Label>
-            <FormField
-              control='select'
+            <Dropdown
+              placeholder='Todas'
+              fluid
+              selection
+              options={opcionesEstado}
               value={filterEstado}
-              onChange={(e) => setFilterEstado(e.target.value)}
-            >
-              <option value="">Todas</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Realizada">Realizada</option>
-            </FormField>
-
+              onChange={(e, data) => setFilterEstado(data.value)}
+            />
             <Label className={styles.label}>Fecha</Label>
             <FormField>
               <DatePicker

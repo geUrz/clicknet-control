@@ -5,7 +5,7 @@ import { BasicModal } from '@/layouts'
 import { VisitaProvDetalles } from '../VisitaProvDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
+import { Dropdown, Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDateInc, formatDateVT } from '@/helpers'
 import { getStatusClassVisita } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
@@ -32,18 +32,27 @@ export function VisitaProvsList(props) {
     setShowDetalles(false)
   }
 
+  const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
 
   const filteredVisitaprov = (visitaprovs || []).filter((visitaprov) => {
     return (
+      (filterEstado === '' || filterEstado === 'Todas' || visitaprov.estado === filterEstado) &&
       (filterFecha === null || formatDateInc(visitaprov.createdAt) === formatDateInc(filterFecha))
     )
   })
 
+  const opcionesEstado = [
+    { key: 1, text: 'Todas', value: 'Todas' },
+    { key: 2, text: 'Sin ingresar', value: 'Sin ingresar' },
+    { key: 3, text: 'Ingresado', value: 'Ingresado' },
+    { key: 4, text: 'Retirado', value: 'Retirado' }
+  ]
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false)
-    }, 800) 
+    }, 800)
 
     return () => clearTimeout(timer)
   }, [])
@@ -62,6 +71,14 @@ export function VisitaProvsList(props) {
 
         <Form>
           <FormGroup>
+            <Dropdown
+              placeholder='Todas'
+              fluid
+              selection
+              options={opcionesEstado}
+              value={filterEstado}
+              onChange={(e, data) => setFilterEstado(data.value)}
+            />
             <Label className={styles.label}>Fecha</Label>
             <FormField>
               <DatePicker
@@ -90,27 +107,27 @@ export function VisitaProvsList(props) {
               const statusClass = getStatusClassVisita(visitaprov.estado)
 
               return (
-              <div key={visitaprov.id} className={styles.section} onClick={() => onOpenDetalles(visitaprov)}>
-                <div className={`${styles[statusClass]}`}>
-                  <div className={styles.column1}>
-                    <FaUserMd />
-                  </div>
-                  <div className={styles.column2}>
-                    <div >
-                      <h1>Visita provedor</h1>
-                      <h2>{visitaprov.visitaprovedor}</h2>
+                <div key={visitaprov.id} className={styles.section} onClick={() => onOpenDetalles(visitaprov)}>
+                  <div className={`${styles[statusClass]}`}>
+                    <div className={styles.column1}>
+                      <FaUserMd />
                     </div>
-                    <div>
-                      <h1>Fecha</h1>
-                      <h2>{formatDateVT(visitaprov.createdAt)}</h2>
-                    </div>
-                    <div>
-                      <h1>Autorizó</h1>
-                      <h2>{visitaprov.usuario_nombre}</h2>
+                    <div className={styles.column2}>
+                      <div >
+                        <h1>Visita provedor</h1>
+                        <h2>{visitaprov.visitaprovedor}</h2>
+                      </div>
+                      <div>
+                        <h1>Fecha</h1>
+                        <h2>{formatDateVT(visitaprov.createdAt)}</h2>
+                      </div>
+                      <div>
+                        <h1>Autorizó</h1>
+                        <h2>{visitaprov.usuario_nombre}</h2>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               )
             })}
           </div>

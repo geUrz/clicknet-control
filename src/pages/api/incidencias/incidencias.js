@@ -42,7 +42,7 @@ export default async function handler(req, res) {
             const searchQuery = `%${search.toLowerCase()}%`; // Convertimos la búsqueda a minúsculas
             try {
                 const [rows] = await connection.query(
-                    `SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, image 
+                    `SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado 
                     FROM incidencias 
                     WHERE LOWER(incidencia) LIKE ?
                     OR LOWER(folio) LIKE ? 
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
         // Caso para obtener incidencia por usuario_id
         if (usuario_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, image, createdAt FROM incidencias WHERE usuario_id = ?', [usuario_id])
+                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, createdAt FROM incidencias WHERE usuario_id = ?', [usuario_id])
                 if (rows.length === 0) {
                     return res.status(404).json({ error: 'Negocio no encontrado' })
                 }
@@ -92,7 +92,8 @@ export default async function handler(req, res) {
             incidencias.descripcion,
             incidencias.zona,
             incidencias.estado,
-            incidencias.image,
+            incidencias.img1,
+            incidencias.img2,
             incidencias.createdAt
         FROM incidencias
         JOIN usuarios ON incidencias.usuario_id = usuarios.id
@@ -104,14 +105,14 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            const { usuario_id, folio, incidencia, descripcion, zona, estado, image } = req.body;
+            const { usuario_id, folio, incidencia, descripcion, zona, estado } = req.body;
             if (!usuario_id || !incidencia || !descripcion) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
             const [result] = await connection.query(
-                'INSERT INTO incidencias (usuario_id, folio, incidencia, descripcion, zona, estado, image) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [usuario_id, folio, incidencia, descripcion, zona, estado, image]
+                'INSERT INTO incidencias (usuario_id, folio, incidencia, descripcion, zona, estado) VALUES (?, ?, ?, ?, ?, ?)',
+                [usuario_id, folio, incidencia, descripcion, zona, estado]
             )
 
             const header = 'Incidencia'
@@ -129,31 +130,17 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'ID de la incidencia es obligatorio' })
         }
 
-        const { incidencia, descripcion, zona, estado, image } = req.body;
+        const { incidencia, descripcion, zona, estado } = req.body;
 
-        if (image) {
-            // Actualización solo de la imagen
-            try {
-                const [result] = await connection.query(
-                    'UPDATE incidencias SET image = ? WHERE id = ?',
-                    [image, id]
-                )
-
-                if (result.affectedRows === 0) {
-                    return res.status(404).json({ error: 'Incidencia no encontrada' })
-                }
-
-                res.status(200).json({ message: 'Imagen actualizada correctamente' })
-            } catch (error) {
-                res.status(500).json({ error: error.message })
-            }
-        } else if (incidencia && descripcion) {
-            // Actualización completa del negocio
+        if (!incidencia || !descripcion || !zona || !estado || !id) {
+            return res.status(400).json({ error: 'ID, visitatecnica y descripción son obligatorios' })
+          }
+        
             try {
 
                 const [result] = await connection.query(
-                    'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ?, image = ? WHERE id = ?',
-                    [incidencia, descripcion, zona, estado, image, id]
+                    'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ? WHERE id = ?',
+                    [incidencia, descripcion, zona, estado, id]
                 )
 
                 if (result.affectedRows === 0) {
@@ -164,9 +151,6 @@ export default async function handler(req, res) {
             } catch (error) {
                 res.status(500).json({ error: error.message })
             }
-        } else {
-            return res.status(400).json({ error: 'Datos insuficientes para actualizar la incidencia' })
-        }
     } else if (req.method === 'DELETE') {
         if (!id) {
             return res.status(400).json({ error: 'ID de la incidencia es obligatorio' })
