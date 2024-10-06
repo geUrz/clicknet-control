@@ -115,7 +115,7 @@ export default async function handler(req, res) {
                 [usuario_id, folio, incidencia, descripcion, zona, estado]
             )
 
-            const header = 'Incidencia'
+            const header = 'Incidencia creada'
             const message = `${incidencia}`
             const url = '/incidencias'
             await sendNotification(usuario_id, header, message, url)
@@ -142,6 +142,11 @@ export default async function handler(req, res) {
                     'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ? WHERE id = ?',
                     [incidencia, descripcion, zona, estado, id]
                 )
+
+                const header = 'Incidencia modificada'
+                const message = `${incidencia}`
+                const url = '/incidencias'
+                await sendNotification(usuario_id, header, message, url)
 
                 if (result.affectedRows === 0) {
                     return res.status(404).json({ error: 'Incidencia no encontrada' })
@@ -178,7 +183,11 @@ export default async function handler(req, res) {
             try {
                 const [result] = await connection.query('DELETE FROM incidencias WHERE id = ?', [id])
 
-                // Verificar si el negocio fue eliminado
+                const header = 'Incidencia eliminada'
+                const message = `${incidencia}`
+                const url = '/incidencias'
+                await sendNotification(usuario_id, header, message, url)
+                
                 if (result.affectedRows === 0) {
                     return res.status(404).json({ error: 'Incidencia no encontrada' })
                 }

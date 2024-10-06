@@ -137,6 +137,10 @@ export function IncidenciaForm(props) {
 
           </Form>
 
+          <div className={styles.mensajeImg}>
+            <h1>* Podrás subir imagenes despues de crear la incidencia</h1>
+          </div>
+        
         </div>
 
       </div>

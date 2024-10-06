@@ -63,9 +63,17 @@
   background-color: azure !important;
 }
 
-.error{
-  margin-top: 5px;
-  font-size: 11.5px;
-  color: red;
+.mensajeImg{
+  padding: 0 10px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.mensajeImg h1{
+  font-size: 11.5px;
+  font-weight: 600 !important;
+  color: var(--clrGR000);
+}

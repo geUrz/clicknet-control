@@ -11,44 +11,70 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Image } from 'semantic-ui-react';
 
 export function IncidenciaDetalles(props) {
-  const { reload, onReload, incidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props;
+  const { reload, onReload, incidencia: initialIncidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props;
 
-  const { user } = useAuth();
+  const { user } = useAuth()
 
-  const [showEditIncidencia, setShowEditIncidencia] = useState(false);
-  const [showSubirImg, setShowSubirImg] = useState(false);
-  const [selectedImageKey, setSelectedImageKey] = useState(null);
+  const [incidencia, setIncidencia] = useState(initialIncidencia)
+  const [showEditIncidencia, setShowEditIncidencia] = useState(false)
+  const [showSubirImg, setShowSubirImg] = useState(false)
+  const [selectedImageKey, setSelectedImageKey] = useState(null)
 
-  const onOpenEditIncidencia = () => setShowEditIncidencia((prevState) => !prevState);
+  const onOpenEditIncidencia = () => setShowEditIncidencia((prevState) => !prevState)
 
-  const [showConfirmDel, setShowConfirmDel] = useState(false);
+  const [showConfirmDel, setShowConfirmDel] = useState(false)
 
-  const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState);
+  const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
 
   const onShowSubirImg = (imgKey) => {
-    setSelectedImageKey(imgKey);
-    setShowSubirImg(true);
-  };
+    setSelectedImageKey(imgKey)
+    setShowSubirImg(true)
+  }
 
   const onCloseSubirImg = () => {
-    setShowSubirImg(false);
-    setSelectedImageKey(null);
-  };
+    setShowSubirImg(false)
+    setSelectedImageKey(null)
+  }
+
+  const [showConfirmDelImg, setShowConfirmDelImg] = useState(null)
+  const [imageToDelete, setImageToDelete] = useState(null)
 
   const handleDeleteIncidencia = async () => {
     if (incidencia?.id) {
       try {
-        await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`);
-        onReload();
-        onToastSuccessIncidenciaMDel();
-        onOpenCloseDetalles();
+        await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`)
+        onReload()
+        onToastSuccessIncidenciaMDel()
+        onOpenCloseDetalles()
       } catch (error) {
-        console.error('Error al eliminar la incidencia:', error);
+        console.error('Error al eliminar la incidencia:', error)
       }
     } else {
-      console.error('Incidencia o ID no disponible');
+      console.error('Incidencia o ID no disponible')
     }
-  };
+  }
+
+  const deleteImage = async () => {
+    try {
+      if (imageToDelete) {
+        await axios.put(`/api/incidencias/updateImage?id=${incidencia.id}`, { [imageToDelete]: null })
+        setIncidencia({ ...incidencia, [imageToDelete]: null })
+        setShowConfirmDelImg(false)
+      }
+    } catch (error) {
+      console.error('Error al eliminar la imagen:', error)
+    }
+  }
+
+  const onShowConfirmDelImg = (imgKey) => {
+    setImageToDelete(imgKey) 
+    setShowConfirmDelImg(true) 
+  }
+
+  const handleImageUploadSuccess = (imageKey, imageUrl) => {
+    setIncidencia({ ...incidencia, [imageKey]: imageUrl });
+    setShowSubirImg(false);
+  }
 
   return (
     <>
@@ -86,8 +112,7 @@ export function IncidenciaDetalles(props) {
           </div>
         </div>
 
-        {/* Imágenes de evidencia */}
-        <div className={styles.img}>
+        <div className={styles.img} onReload={onReload}>
           <h1>Evidencias</h1>
           <div>
             {!incidencia.img1 ? (
@@ -99,7 +124,7 @@ export function IncidenciaDetalles(props) {
             ) : (
               <div className={styles.imgDel}>
                 <Image src={incidencia.img1} alt="Incidencia imagen 1" onClick={() => onShowSubirImg("img1")} />
-                <FaTrash onClick={() => onShowSubirImg("img1")} />
+                <FaTrash onClick={() => onShowConfirmDelImg("img1")} />
               </div>
             )}
 
@@ -112,7 +137,7 @@ export function IncidenciaDetalles(props) {
             ) : (
               <div className={styles.imgDel}>
                 <Image src={incidencia.img2} alt="Incidencia imagen 2" onClick={() => onShowSubirImg("img2")} />
-                <FaTrash onClick={() => onShowSubirImg("img2")} />
+                <FaTrash onClick={() => onShowConfirmDelImg("img2")} />
               </div>
             )}
           </div>
@@ -150,7 +175,8 @@ export function IncidenciaDetalles(props) {
             itemId={incidencia.id}
             onShowSubirImg={onCloseSubirImg}
             selectedImageKey={selectedImageKey}
-            endpoint="incidencias"  // Especificar el endpoint para incidencias
+            endpoint="incidencias"
+            onSuccess={handleImageUploadSuccess}
           />
         )}
       </BasicModal>
@@ -171,6 +197,24 @@ export function IncidenciaDetalles(props) {
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar la incidencia ?'
       />
+
+      <Confirm
+        open={showConfirmDelImg}
+        cancelButton={
+          <div className={styles.iconClose}>
+            <FaTimes />
+          </div>
+        }
+        confirmButton={
+          <div className={styles.iconCheck}>
+            <FaCheck />
+          </div>
+        }
+        onConfirm={deleteImage}
+        onCancel={() => setShowConfirmDelImg(false)}
+        content='¿ Estás seguro de eliminar la imagen ?'
+      />
+
     </>
-  );
+  )
 }
