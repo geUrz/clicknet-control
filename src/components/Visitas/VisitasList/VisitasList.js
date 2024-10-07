@@ -14,7 +14,7 @@ import styles from './VisitasList.module.css'
 
 export function VisitasList(props) {
 
-  const { reload, onReload, visitas, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props
+  const { reload, onReload, visitas, onToastSuccessVisitaMod, onToastSuccessVisitaDel, activateFilter=true } = props
 
   const { loading } = useAuth()
 
@@ -83,58 +83,62 @@ export function VisitasList(props) {
 
     <>
 
-      <div className={styles.filters}>
+      {activateFilter ? 
+        <>
+          <div className={styles.filters}>
 
-        <h1>Buscar por:</h1>
+<h1>Buscar por:</h1>
 
-        <Form>
-          <FormGroup>
-            <Label className={styles.label}>Tipo visita</Label>
-            <Dropdown
-              placeholder='Todas'
-              fluid
-              selection
-              options={opcionesTipovisita}
-              value={filterTipovisita}
-              onChange={(e, data) => setFilterTipovisita(data.value)}
-            />
+<Form>
+  <FormGroup>
+    <Label className={styles.label}>Tipo visita</Label>
+    <Dropdown
+      placeholder='Todas'
+      fluid
+      selection
+      options={opcionesTipovisita}
+      value={filterTipovisita}
+      onChange={(e, data) => setFilterTipovisita(data.value)}
+    />
 
-            <Label className={styles.label}>Tipo acceso</Label>
-            <Dropdown
-              placeholder='Todas'
-              fluid
-              selection
-              options={opcionesTipoacceso}
-              value={filterTipoacceso}
-              onChange={(e, data) => setFilterTipoacceso(data.value)}
-            />
+    <Label className={styles.label}>Tipo acceso</Label>
+    <Dropdown
+      placeholder='Todas'
+      fluid
+      selection
+      options={opcionesTipoacceso}
+      value={filterTipoacceso}
+      onChange={(e, data) => setFilterTipoacceso(data.value)}
+    />
 
-            <Label className={styles.label}>Estatus</Label>
-            <Dropdown
-              placeholder='Todas'
-              fluid
-              selection
-              options={opcionesEstado}
-              value={filterEstado}
-              onChange={(e, data) => setFilterEstado(data.value)}
-            />
+    <Label className={styles.label}>Estatus</Label>
+    <Dropdown
+      placeholder='Todas'
+      fluid
+      selection
+      options={opcionesEstado}
+      value={filterEstado}
+      onChange={(e, data) => setFilterEstado(data.value)}
+    />
 
-            <Label className={styles.label}>Fecha</Label>
-            <FormField>
-              <DatePicker
-                selected={filterFecha}
-                onChange={(date) => setFilterFecha(date)}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="dd/mm/aaaa"
-                locale="es"
-                isClearable
-                showPopperArrow={false}
-                popperPlacement="bottom"
-              />
-            </FormField>
-          </FormGroup>
-        </Form>
-      </div>
+    <Label className={styles.label}>Fecha</Label>
+    <FormField>
+      <DatePicker
+        selected={filterFecha}
+        onChange={(date) => setFilterFecha(date)}
+        dateFormat="dd/MM/yyyy"
+        placeholderText="dd/mm/aaaa"
+        locale="es"
+        isClearable
+        showPopperArrow={false}
+        popperPlacement="bottom"
+      />
+    </FormField>
+  </FormGroup>
+</Form>
+</div>
+        </>
+      : ''}
 
       {showLoading ? (
         <Loading size={45} loading={2} />

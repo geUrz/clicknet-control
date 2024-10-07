@@ -93,6 +93,14 @@ export function ModResidenteForm(props) {
       }
     }
   }
+  
+  const opcionesNivel = [
+    { key: 1, text: 'Admin', value: 'Admin' },
+    { key: 2, text: 'Comité', value: 'Comité' },
+    { key: 3, text: 'Residente', value: 'Residente' },
+    { key: 4, text: 'Caseta', value: 'Caseta' },
+    { key: 5, text: 'Técnico', value: 'Técnico' }
+  ]
 
   const [activate, setActivate] = useState(false)
 
@@ -196,20 +204,14 @@ export function ModResidenteForm(props) {
             <Label>
               Nivel
             </Label>
-            <FormField
-              name='newIsAdmin'
-              type="text"
-              control='select'
-              value={formData.newIsAdmin}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Admin'>Admin</option>
-              <option value='Comité'>Comité</option>
-              <option value='Residente'>Residente</option>
-              <option value='Caseta'>Caseta</option>
-              <option value='Técnico'>Técnico</option>
-            </FormField>
+            <Dropdown
+                placeholder='Selecciona una opción'
+                fluid
+                selection
+                options={opcionesNivel}
+                value={formData.newIsAdmin}
+                onChange={(e, { value }) => setFormData({ ...formData, newIsAdmin: value })}
+              />
             {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
           </FormField>
           ) : ''}

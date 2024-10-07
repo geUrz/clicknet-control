@@ -90,6 +90,8 @@ export default async function handler(req, res) {
                         autorizo_usuario.nombre AS autorizo_nombre,
                         autorizo_usuario.usuario AS autorizo_usuario,
                         autorizo_usuario.isAdmin AS autorizo_isAdmin,
+                        visitas.img1,
+                        visitas.img2,
                         visitas.createdAt
                     FROM visitas
                     JOIN usuarios ON visitas.usuario_id = usuarios.id
@@ -139,6 +141,8 @@ export default async function handler(req, res) {
                     autorizo_usuario.nombre AS autorizo_nombre,
                     autorizo_usuario.usuario AS autorizo_usuario,
                     autorizo_usuario.isAdmin AS autorizo_isAdmin,
+                    visitas.img1,
+                    visitas.img2,
                     visitas.createdAt
                 FROM visitas
                 JOIN usuarios ON visitas.usuario_id = usuarios.id

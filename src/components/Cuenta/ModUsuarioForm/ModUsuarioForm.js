@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, Button, Input, Label, FormGroup, FormField, Message } from 'semantic-ui-react'
-import { FaCheck, FaTimes } from 'react-icons/fa'
+import { Form, Button, Input, Label, FormGroup, FormField, Message, Dropdown } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './ModUsuarioForm.module.css'
-import { Confirm } from '@/components/Layouts'
 
 export function ModUsuarioForm(props) {
 
@@ -88,6 +86,14 @@ export function ModUsuarioForm(props) {
     }
   }
 
+  const opcionesNivel = [
+    { key: 1, text: 'Admin', value: 'Admin' },
+    { key: 2, text: 'Comité', value: 'Comité' },
+    { key: 3, text: 'Residente', value: 'Residente' },
+    { key: 4, text: 'Caseta', value: 'Caseta' },
+    { key: 5, text: 'Técnico', value: 'Técnico' }
+  ]
+
   const [activate, setActivate] = useState(false)
 
   const timer = useRef(null)
@@ -153,28 +159,22 @@ export function ModUsuarioForm(props) {
               onChange={handleChange}
             />
           </FormField>
-          
+
           {activate ? (
             <FormField error={!!errors.newIsAdmin}>
-            <Label>
-              Nivel
-            </Label>
-            <FormField
-              name='newIsAdmin'
-              type="text"
-              control='select'
-              value={formData.newIsAdmin}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Admin'>Admin</option>
-              <option value='Comité'>Comité</option>
-              <option value='Residente'>Residente</option>
-              <option value='Caseta'>Caseta</option>
-              <option value='Técnico'>Técnico</option>
+              <Label>
+                Nivel
+              </Label>
+              <Dropdown
+                placeholder='Selecciona una opción'
+                fluid
+                selection
+                options={opcionesNivel}
+                value={formData.newIsAdmin}
+                onChange={(e, { value }) => setFormData({ ...formData, newIsAdmin: value })}
+              />
+              {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
             </FormField>
-            {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
-          </FormField>
           ) : ''}
 
           <FormField>

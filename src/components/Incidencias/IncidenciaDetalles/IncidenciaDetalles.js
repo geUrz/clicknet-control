@@ -112,7 +112,7 @@ export function IncidenciaDetalles(props) {
           </div>
         </div>
 
-        <div className={styles.img} onReload={onReload}>
+        <div className={styles.img}>
           <h1>Evidencias</h1>
           <div>
             {!incidencia.img1 ? (
@@ -166,7 +166,6 @@ export function IncidenciaDetalles(props) {
         <IncidenciaEditForm reload={reload} onReload={onReload} incidencia={incidencia} onOpenEditIncidencia={onOpenEditIncidencia} onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod} />
       </BasicModal>
 
-      {/* Modal para subir imágenes */}
       <BasicModal title='Subir imagen' show={showSubirImg} onClose={onCloseSubirImg}>
         {selectedImageKey && (
           <UploadImg

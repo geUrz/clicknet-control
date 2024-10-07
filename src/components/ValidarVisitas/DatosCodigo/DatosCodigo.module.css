@@ -32,15 +32,16 @@
   justify-content: space-between;
 }
 
-.datos div div{
-  margin: 10px 0;
+.datos div{
+  margin-top: 10px;
 }
 
-.datos div:nth-child(2) div h2, .datos div:nth-child(2) div h3{
+.datos div:nth-child(2) h2, .datos div:nth-child(2) h3{
   text-align: right;
 }
 
 .datos h2{
+  margin-top: 5px;
   font-size: 14px;
   font-weight: 600 !important;
   color: var(--clrBL0000);
@@ -53,4 +54,121 @@
 
 .tipoAcc{
   text-transform: capitalize;
+}
+
+.uploadImg{
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadImg div{
+  margin: 0 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.noImg{
+  width: 160px;
+  height: 250px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  cursor: pointer;
+}
+
+.noImg div{
+  cursor: pointer;
+}
+
+.noImg svg, .noImg path{
+  font-size: 65px;
+  color: var(--clrGR0);
+  cursor: pointer;
+}
+
+.noImg div svg:hover, .noImg:hover div path{
+  color: var(--clrGR1);
+}
+
+.imgDel{
+  margin: 0 2.5px;
+  width: 135px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.imgDel img{
+  margin-top: 20px;
+  width: 135px;
+  box-sizing: border-box;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: 4px solid var(--clrGR1);
+  cursor: pointer;
+}
+
+.imgDel svg, .imgDel path{
+  margin-top: 10px;
+  font-size: 18px;
+  color: var(--clrGR0);
+  cursor: pointer;
+}
+
+.imgDel div svg:hover, .imgDel div:hover path{
+  color: var(--clrGR1);
+}
+
+.imgDel div svg:active, .imgDel div:active path{
+  color: var(--clrGR2);
+}
+
+.iconClose svg, .iconClose path{
+  padding: 8px;
+  font-size: 34px;
+  color: var(--clrGR00);
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.iconClose svg:hover,.iconClose path:hover{
+  background-color: var(--clrGR3);
+}
+
+.iconClose svg:active,.iconClose path:active{
+  background-color: var(--clrGR4);
+}
+
+.iconCheck{
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--clrGR2);
+}
+
+.iconCheck:active{
+  background-color: var(--clrGR3);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 22px;
+  color: var(--clrBL1);
+  cursor: pointer;
 }

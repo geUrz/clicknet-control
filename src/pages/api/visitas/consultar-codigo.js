@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       // Obtener la visita asociada al código proporcionado
       const [rows] = await connection.execute(`
         SELECT visitas.id, visitas.usuario_id, visitas.codigo, visitas.visita, visitas.tipovisita, 
-               visitas.tipoacceso, visitas.nota, visitas.date, visitas.fromDate, visitas.toDate, visitas.hora, visitas.estado, visitas.dias, visitas.countAcc, 
+               visitas.tipoacceso, visitas.nota, visitas.date, visitas.fromDate, visitas.toDate, visitas.hora, visitas.estado, visitas.dias, visitas.countAcc, visitas.img1, visitas.img2, 
                usuarios.nombre AS usuario_nombre, usuarios.privada AS usuario_privada, usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa
         FROM visitas
         JOIN usuarios ON visitas.usuario_id = usuarios.id

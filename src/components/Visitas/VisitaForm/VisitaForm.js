@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
+import { Button, Checkbox, Dropdown, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
@@ -74,21 +74,21 @@ export function VisitaForm(props) {
 
   const crearVisita = async (e) => {
     e.preventDefault()
-  
+
     if (!validarForm()) {
       return
     }
-  
+
     const estado = 'Sin ingresar'
-  
+
     const formattedDate = date ? date.toISOString().split('T')[0] : null
     const formattedFromDate = fromDate ? fromDate.toISOString().split('T')[0] : null
     const formattedToDate = toDate ? toDate.toISOString().split('T')[0] : null
-  
+
     const diasOrdenadosSeleccionados = diasSeleccionados.sort((a, b) =>
       diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b)
     )
-  
+
     try {
       await axios.post('/api/visitas/visitas', {
         usuario_id: user.id,
@@ -102,7 +102,7 @@ export function VisitaForm(props) {
         estado,
         dias: tipoacceso === 'frecuente' ? diasOrdenadosSeleccionados.join(', ') : null,
       })
-  
+
       setVisita('')
       setTipovisita('')
       setTipoacceso('')
@@ -111,15 +111,26 @@ export function VisitaForm(props) {
       setToDate(null)
       setHora('')
       setDiasSeleccionados([])
-  
+
       onReload()
       onOpenCloseForm()
       onToastSuccessVisita()
     } catch (error) {
       console.error('Error al crear el visita:', error)
     }
-  };
-  
+  }
+
+  const opcionesTipovisita = [
+    { key: 1, text: 'Familia', value: 'Familia' },
+    { key: 2, text: 'Amigo', value: 'Amigo' },
+    { key: 3, text: 'Proveedor', value: 'Proveedor' },
+    { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
+  ]
+
+  const opcionesTipoacceso = [
+    { key: 1, text: 'Eventual', value: 'eventual' },
+    { key: 2, text: 'Frecuente', value: 'frecuente' }
+  ]
 
   return (
 
@@ -149,34 +160,26 @@ export function VisitaForm(props) {
                 <Label>
                   Tipo de visita
                 </Label>
-                <FormField
-                  name='tipovisita'
-                  type="text"
-                  control='select'
+                <Dropdown
+                  placeholder='Seleccionar una opción'
+                  fluid
+                  selection
+                  options={opcionesTipovisita}
                   value={tipovisita}
                   onChange={(e) => setTipovisita(e.target.value)}
-                >
-                  <option value=''></option>
-                  <option value='Familiar'>Familiar</option>
-                  <option value='Amigo'>Amigo</option>
-                  <option value='Proveedor'>Proveedor</option>
-                  <option value='Paquetería'>Paquetería</option>
-                  <option value='Didi, Uber, Rappi'>Didi, Uber, Rappi</option>
-                </FormField>
+                />
                 {errors.tipovisita && <span className={styles.error}>{errors.tipovisita}</span>}
               </FormField>
               <FormField error={!!errors.tipoacceso}>
                 <Label>Tipo de acceso</Label>
-                <FormField
-                  name='tipoacceso'
-                  control='select'
+                <Dropdown
+                  placeholder='Seleccionar una opción'
+                  fluid
+                  selection
+                  options={opcionesTipoacceso}
                   value={tipoacceso}
                   onChange={(e) => setTipoacceso(e.target.value)}
-                >
-                  <option value=''></option>
-                  <option value='eventual'>Eventual</option>
-                  <option value='frecuente'>Frecuente</option>
-                </FormField>
+                />
                 {errors.tipoacceso && <span className={styles.error}>{errors.tipoacceso}</span>}
               </FormField>
             </FormGroup>

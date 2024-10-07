@@ -1,7 +1,7 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { Button, Checkbox, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
+import { Button, Checkbox, Dropdown, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
 import { useAuth } from '@/contexts/AuthContext'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -113,6 +113,24 @@ export function VisitaEditForm(props) {
     }
   }
 
+  const opcionesTipovisita = [
+    { key: 1, text: 'Familia', value: 'Familia' },
+    { key: 2, text: 'Amigo', value: 'Amigo' },
+    { key: 3, text: 'Proveedor', value: 'Proveedor' },
+    { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
+  ]
+
+  const opcionesTipoacceso = [
+    { key: 1, text: 'Eventual', value: 'eventual' },
+    { key: 2, text: 'Frecuente', value: 'frecuente' }
+  ]
+
+  const opcionesEstado = [
+    { key: 1, text: 'Sin ingresar', value: 'Sin ingresar' },
+    { key: 2, text: 'Ingresado', value: 'Ingresado' },
+    { key: 3, text: 'Realizado', value: 'Realizado' }
+  ]
+
   const [activate, setActivate] = useState(false)
 
   const timer = useRef(null)
@@ -166,37 +184,28 @@ export function VisitaEditForm(props) {
             <Label>
               Tipo de visita
             </Label>
-            <FormField
-              name='tipovisita'
-              type="text"
-              control='select'
+            <Dropdown
+              placeholder='Seleccionar una opción'
+              fluid
+              selection
+              options={opcionesTipovisita}
               value={formData.tipovisita}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Familiar'>Familiar</option>
-              <option value='Amigo'>Amigo</option>
-              <option value='Proveedor'>Proveedor</option>
-              <option value='Paquetería'>Paquetería</option>
-              <option value='Didi, Uber, Rappi'>Didi, Uber, Rappi</option>
-            </FormField>
+              onChange={(e, { value }) => setFormData({ ...formData, tipovisita: value })}
+            />
             {errors.tipovisita && <span className={styles.error}>{errors.tipovisita}</span>}
           </FormField>
           <FormField error={!!errors.tipoacceso}>
             <Label>
               Tipo de acceso
             </Label>
-            <FormField
-              name='tipoacceso'
-              type="text"
-              control='select'
+            <Dropdown
+              placeholder='Seleccionar una opción'
+              fluid
+              selection
+              options={opcionesTipoacceso}
               value={formData.tipoacceso}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='eventual'>Eventual</option>
-              <option value='frecuente'>Frecuente</option>
-            </FormField>
+              onChange={(e, { value }) => setFormData({ ...formData, tipoacceso: value })}
+            />
             {errors.tipoacceso && <span className={styles.error}>{errors.tipoacceso}</span>}
           </FormField>
 
@@ -276,18 +285,14 @@ export function VisitaEditForm(props) {
             <Label>
               Estatus
             </Label>
-            <FormField
-              name='estado'
-              type="text"
-              control='select'
+            <Dropdown
+              placeholder='Seleccionar una opción'
+              fluid
+              selection
+              options={opcionesEstado}
               value={formData.estado}
-              onChange={handleChange}
-            >
-              <option value=''></option>
-              <option value='Sin ingresar'>Sin ingresar</option>
-              <option value='Ingresado'>Ingresado</option>
-              <option value='Retirado'>Retirado</option>
-            </FormField>
+              onChange={(e, { value }) => setFormData({ ...formData, estado: value })}
+            />
             {errors.estado && <span className={styles.error}>{errors.estado}</span>}
           </FormField>
 

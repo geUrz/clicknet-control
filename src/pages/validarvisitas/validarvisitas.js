@@ -4,7 +4,7 @@ import { ValidarCodigo } from '@/components/ValidarVisitas/ValidarCodigo/Validar
 import { DatosCodigo } from '@/components/ValidarVisitas'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { SearchVisitas, ToastDelete, ToastSuccess, VisitasListSearch } from '@/components/Layouts'
+import { SearchVisitas, ToastDelete, ToastSuccess, ToastWarning, VisitasListSearch } from '@/components/Layouts'
 import { VisitasList } from '@/components/Visitas'
 import styles from './validarvisitas.module.css'
 import { FaSearch } from 'react-icons/fa'
@@ -95,7 +95,7 @@ export default function Validarvisitas() {
           ''
         )}
 
-        <VisitasList visitas={visitas} reload={reload} onReload={onReload} onToastSuccessVisitaMod={onToastSuccessVisitaMod} onToastSuccessVisitaDel={onToastSuccessVisitaDel} />
+        <VisitasList visitas={visitas} reload={reload} onReload={onReload} onToastSuccessVisitaMod={onToastSuccessVisitaMod} onToastSuccessVisitaDel={onToastSuccessVisitaDel} activateFilter={false} />
 
       </BasicLayout>
 
