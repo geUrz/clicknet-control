@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 
 export function TopMenu(props) {
 
-  const {title} = props
+  const { title } = props
 
   const { user } = useAuth()
 
@@ -33,14 +33,16 @@ export function TopMenu(props) {
   return (
 
     <div className={styles.main}>
-      <Link href='/notificaciones' className={styles.mainNoti}>
-        <FaBell />
-        {unreadCount > 0 && <span className={styles.notiCount}>{unreadCount}</span>}
-      </Link>
-      <h1>{title}</h1>
-      <Link href='/cuenta'>
-        <FaUser />
-      </Link>
+      <div className={styles.section}>
+        <Link href='/notificaciones' className={styles.mainNoti}>
+          <FaBell />
+          {unreadCount > 0 && <span className={styles.notiCount}>{unreadCount}</span>}
+        </Link>
+        <h1>{title}</h1>
+        <Link href='/cuenta'>
+          <FaUser />
+        </Link>
+      </div>
     </div>
 
   )

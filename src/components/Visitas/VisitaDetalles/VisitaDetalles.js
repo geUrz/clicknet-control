@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
-import { Image as SemanticImage } from 'semantic-ui-react';
+import { Image, Image as SemanticImage } from 'semantic-ui-react';
 import styles from './VisitaDetalles.module.css';
 
 export function VisitaDetalles(props) {
@@ -185,6 +185,26 @@ export function VisitaDetalles(props) {
             <SemanticImage src={visita.qrCode} />
           )}
         </div>
+
+        {visita.img1 || visita.img2 ? 
+          <div className={styles.mainImg}>
+            <div className={styles.sectionImg}>
+              {visita.img1 ?
+                <div>
+                  <Image src={visita.img1} />
+                </div>
+                : ''
+              }
+              {visita.img2 ?
+                <div>
+                  <Image src={visita.img2} />
+                </div>
+                : ''
+              }
+            </div>
+          </div>
+          : ''
+        }
 
         {user.isadmin === 'Admin' || visita.usuario_id === user.id ? (
           <>

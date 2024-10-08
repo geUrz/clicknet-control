@@ -108,6 +108,33 @@
   color: var(--clrBL000);
 }
 
+.mainImg{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sectionImg{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sectionImg div{
+  margin: 0 4px;
+  width: 135px;
+}
+
+.sectionImg div img{
+  width: 135px;
+  box-sizing: border-box;
+  border: 4px solid var(--clrGR1);
+}
+
 .iconEdit{
   margin-top: 30px;
   width: 100%;

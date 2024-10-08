@@ -3,16 +3,17 @@ import styles from './Add.module.css'
 
 export function Add(props) {
 
-  const { titulo, onOpenClose } = props
+  const { onOpenClose } = props
 
   return (
 
-    <div className={styles.iconMain}>
-      <div onClick={onOpenClose}>
-        <FaPlus />
+    <div className={styles.main}>
+      <div className={styles.section}>
+        <div onClick={onOpenClose}>
+          <FaPlus />
+        </div>
       </div>
     </div>
-
 
   )
 }
