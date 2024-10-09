@@ -14,7 +14,7 @@ export function BottomMenu() {
         <Link href='/' className={styles.tab}>
           <div>
             <FaHome />
-            <h1>Inicio</h1>
+            <h1>Panel</h1>
           </div>
         </Link>
         <Link href='/incidencias' className={styles.tab}>
