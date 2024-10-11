@@ -14,7 +14,7 @@ async function sendNotificationToResidentialUsers(residencial_id, header, messag
     try {
         // Obtener todos los usuarios logueados con el mismo residencial_id
         const [users] = await connection.query(
-            'SELECT player_id FROM usuarios WHERE residencial_id = ? AND player_id IS NOT NULL',
+            'SELECT onesignal_player_id FROM usuarios WHERE residencial_id = ? AND onesignal_player_id IS NOT NULL',
             [residencial_id]
         );
 
@@ -24,7 +24,7 @@ async function sendNotificationToResidentialUsers(residencial_id, header, messag
         }
 
         // Extraer los player_ids de los usuarios
-        const playerIds = users.map(user => user.player_id);
+        const playerIds = users.map(user => user.onesignal_player_id);
 
         const data = {
             app_id: ONE_SIGNAL_APP_ID,
@@ -36,14 +36,6 @@ async function sendNotificationToResidentialUsers(residencial_id, header, messag
 
         // Enviar la notificación a OneSignal
         await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
-
-        // Registrar la notificación en la base de datos para cada usuario
-        for (const user of users) {
-            await connection.query(
-                'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
-                [user.player_id, header, message, url]
-            );
-        }
 
     } catch (error) {
         console.error('Error sending notification:', error.message);
