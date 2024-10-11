@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Image } from 'semantic-ui-react';
 
 export function IncidenciaDetalles(props) {
-  const { reload, onReload, incidencia: initialIncidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props;
+  const { reload, onReload, incidencia: initialIncidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaDel } = props;
 
   const { user } = useAuth()
 
@@ -44,7 +44,7 @@ export function IncidenciaDetalles(props) {
       try {
         await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`)
         onReload()
-        onToastSuccessIncidenciaMDel()
+        onToastSuccessIncidenciaDel()
         onOpenCloseDetalles()
       } catch (error) {
         console.error('Error al eliminar la incidencia:', error)

@@ -1,34 +1,52 @@
-import connection from "@/libs/db"
+import connection from "@/libs/db";
 import axios from "axios";
 
 const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(usuario_id, header, message, url) {
+async function sendNotificationToResidentialUsers(residencial_id, header, message, url) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-    }
-
-    const data = {
-        app_id: ONE_SIGNAL_APP_ID,
-        included_segments: ['All'],
-        headings: { en: header },
-        contents: { en: message },
-        url: url
-    }
+    };
 
     try {
-        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
+        // Obtener todos los usuarios logueados con el mismo residencial_id
+        const [users] = await connection.query(
+            'SELECT player_id FROM usuarios WHERE residencial_id = ? AND player_id IS NOT NULL',
+            [residencial_id]
+        );
 
-        await connection.query(
-            'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
-            [usuario_id, header, message, url]
-        )
+        if (users.length === 0) {
+            console.log('No se encontraron usuarios para enviar notificaciones.');
+            return;
+        }
+
+        // Extraer los player_ids de los usuarios
+        const playerIds = users.map(user => user.player_id);
+
+        const data = {
+            app_id: ONE_SIGNAL_APP_ID,
+            include_player_ids: playerIds,  // Enviar notificación solo a estos usuarios
+            headings: { en: header },
+            contents: { en: message },
+            url: url,
+        };
+
+        // Enviar la notificación a OneSignal
+        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+
+        // Registrar la notificación en la base de datos para cada usuario
+        for (const user of users) {
+            await connection.query(
+                'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
+                [user.player_id, header, message, url]
+            );
+        }
 
     } catch (error) {
-        console.error('Error sending notification:', error.message)
+        console.error('Error sending notification:', error.message);
     }
 }
 
@@ -66,7 +84,7 @@ export default async function handler(req, res) {
             try {
                 const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id createdAt FROM incidencias WHERE residencial_id = ?', [residencial_id])
                 if (rows.length === 0) {
-                    return res.status(404).json({ error: 'Negocio no encontrado' })
+                    return res.status(404).json({ error: 'Incidencia no encontrada' })
                 }
                 res.status(200).json(rows)
             } catch (error) {
@@ -116,10 +134,10 @@ export default async function handler(req, res) {
                 [usuario_id, folio, incidencia, descripcion, zona, estado, residencial_id]
             )
 
-            const header = 'Incidencia creada'
+            const header = 'Incidencia'
             const message = `${incidencia}`
             const url = '/incidencias'
-            await sendNotification(usuario_id, header, message, url)
+            await sendNotificationToResidentialUsers(residencial_id, header, message, url)
 
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)

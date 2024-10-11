@@ -14,7 +14,7 @@ import styles from './IncidenciasList.module.css'
 
 export function IncidenciasList(props) {
 
-  const { reload, onReload, incidencias, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaMDel } = props
+  const { reload, onReload, incidencias, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaDel } = props
 
   const { loading } = useAuth()
 
@@ -144,7 +144,7 @@ export function IncidenciasList(props) {
             incidencia={incidenciaSeleccionada}
             onOpenCloseDetalles={onCloseDetalles}
             onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod}
-            onToastSuccessIncidenciaMDel={onToastSuccessIncidenciaMDel}
+            onToastSuccessIncidenciaDel={onToastSuccessIncidenciaDel}
           />
         )}
       </BasicModal>

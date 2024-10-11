@@ -53,7 +53,7 @@ export default function Incidencias() {
     }, 3000)
   }
 
-  const onToastSuccessIncidenciaMDel = () => {
+  const onToastSuccessIncidenciaDel = () => {
     setToastSuccessIncidenciaDel(true)
     setTimeout(() => {
       setToastSuccessIncidenciaDel(false)
@@ -76,7 +76,7 @@ export default function Incidencias() {
 
         {toastSuccessIncidenciaDel && <ToastDelete contain='Incidencia eliminada exitosamente' onClose={() => setToastSuccessIncidenciaDel(false)} />}
 
-        <IncidenciasList reload={reload} onReload={onReload} incidencias={incidencias} onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod} onToastSuccessIncidenciaMDel={onToastSuccessIncidenciaMDel} />
+        <IncidenciasList reload={reload} onReload={onReload} incidencias={incidencias} onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod} onToastSuccessIncidenciaDel={onToastSuccessIncidenciaDel} />
 
         <Add titulo='crear incidencia' onOpenClose={onOpenCloseForm} />
 
