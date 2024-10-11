@@ -9,7 +9,7 @@ import { genIncId } from '@/helpers'
 export function IncidenciaForm(props) {
 
   const { user } = useAuth()
-
+  
   const [incidencia, setIncidencia] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [zona, setZona] = useState('')
@@ -62,7 +62,8 @@ export function IncidenciaForm(props) {
         incidencia,
         descripcion,
         zona,
-        estado
+        estado, 
+        residencial_id: user.residencial_id
       })
 
       setIncidencia('')

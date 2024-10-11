@@ -1,5 +1,5 @@
 import { IconClose, Confirm } from '@/components/Layouts';
-import { convertTo12HourFormat, formatDate } from '@/helpers';
+import { formatDate } from '@/helpers';
 import { BasicModal } from '@/layouts';
 import { FaCheck, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
@@ -71,85 +71,7 @@ export function ReporteDetalles(props) {
           </div>
         </div>
 
-        {/* <div className={styles.img}>
-          <h1>Evidencias</h1>
-          <div>
-            {!reporte.img1 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img1")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!reporte.img1 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={reporte.img1} onClick={() => onShowSubirImg("img1")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img1")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!reporte.img2 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img2")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!reporte.img2 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={reporte.img2} onClick={() => onShowSubirImg("img2")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img2")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!reporte.img3 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img3")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!reporte.img3 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={reporte.img3} onClick={() => onShowSubirImg("img3")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img3")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!reporte.img4 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img4")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!reporte.img4 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={reporte.img4} onClick={() => onShowSubirImg("img4")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img4")} />
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        </div> */}
-
-        {user.isadmin === 'Admin' || reporte.usuario_id === user.id ? (
+        {user.isadmin === 'Admin' ? (
           <>
 
             <div className={styles.iconEdit}>

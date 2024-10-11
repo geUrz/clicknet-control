@@ -1,6 +1,6 @@
 export function genIncId(length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = 'INC-0'; // Prefijo para el folio
+  let result = 'I-0'; // Prefijo para el folio
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -18,7 +18,7 @@ export function genVTId(length) {
 
 export function genAnuId(length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = 'ANU-0'; // Prefijo para el folio
+  let result = 'A-0'; // Prefijo para el folio
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -27,7 +27,16 @@ export function genAnuId(length) {
 
 export function genRepId(length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = 'REP-0'; // Prefijo para el folio
+  let result = 'R-0'; // Prefijo para el folio
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+export function genResId(length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = 'RE-0'; // Prefijo para el folio
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -36,7 +45,7 @@ export function genRepId(length) {
 
 export function genVId(length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = 'VI-0'; // Prefijo para el folio
+  let result = 'V-0'; // Prefijo para el folio
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }

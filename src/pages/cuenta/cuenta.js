@@ -19,7 +19,7 @@ export default function Cuenta() {
   const onOpenClose = () => setShow((prevState) => !prevState)
 
   const { user, loading, logout } = useAuth()
-
+  
   if (loading || !user) {
     return <Loading size={45} loading={0} />
   }
@@ -79,6 +79,10 @@ export default function Cuenta() {
                     <div>
                       <h1>Correo:</h1>
                       <h2>{user.email}</h2>
+                    </div>
+                    <div>
+                      <h1>Residencial:</h1>
+                      <h2>{user.nombre_residencial}</h2>
                     </div>
                     <div>
                       <h1>Nivel:</h1>

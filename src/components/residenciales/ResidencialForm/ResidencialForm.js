@@ -3,7 +3,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
-import { genRepId } from '@/helpers'
+import { genRepId, genResId } from '@/helpers'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ResidencialForm.module.css'
@@ -12,27 +12,22 @@ export function ResidencialForm(props) {
 
   const { user } = useAuth()
 
-  const [reporte, setReporte] = useState('')
-  const [descripcion, setDescripcion] = useState('')
-  const [date, setDate] = useState(null)
+  const [nombre, setNombre] = useState('')
+  const [direccion, setDireccion] = useState('')
 
-  const { reload, onReload, onOpenCloseForm, onToastSuccessReporte } = props
+  const { reload, onReload, onOpenCloseForm, onToastSuccessResidencial } = props
 
   const [errors, setErrors] = useState({})
 
   const validarForm = () => {
     const newErrors = {}
 
-    if (!reporte) {
-      newErrors.reporte = 'El campo es requerido'
+    if (!nombre) {
+      newErrors.nombre = 'El campo es requerido'
     }
 
-    if (!descripcion) {
-      newErrors.descripcion = 'El campo es requerido'
-    }
-
-    if (!date) {
-      newErrors.date = 'El campo es requerido'
+    if (!direccion) {
+      newErrors.direccion = 'El campo es requerido'
     }
 
     setErrors(newErrors)
@@ -43,10 +38,10 @@ export function ResidencialForm(props) {
 
   const handleReporteChange = (e) => {
     const value = e.target.value
-    setReporte(value)
+    setNombre(value)
   }
 
-  const crearReporte = async (e) => {
+  const crearResidencial = async (e) => {
 
     e.preventDefault()
 
@@ -54,30 +49,25 @@ export function ResidencialForm(props) {
       return
     }
 
-    const folio = genRepId(4)
-    const formattedDate = date ? date.toISOString().split('T')[0] : null
-    const estado = 'Pendiente'
+    const folio = genResId(4)
 
     try {
-      await axios.post('/api/reportes/reportes', {
+      await axios.post('/api/residenciales/residenciales', {
         usuario_id: user.id,
         folio,
-        reporte,
-        descripcion,
-        date: formattedDate,
-        estado
+        nombre,
+        direccion
       })
 
-      setReporte('')
-      setDescripcion('')
-      setDate(null)
+      setNombre('')
+      setDireccion('')
 
       onReload()
       onOpenCloseForm()
-      onToastSuccessReporte()
+      onToastSuccessResidencial()
 
     } catch (error) {
-      console.error('Error al crear la reporte:', error)
+      console.error('Error al crear el residencial:', error)
     }
 
   }
@@ -94,50 +84,34 @@ export function ResidencialForm(props) {
 
           <Form>
             <FormGroup widths='equal'>
-              <FormField error={!!errors.reporte}>
+              <FormField error={!!errors.nombre}>
                 <Label>
-                  Reporte
+                  Residencial
                 </Label>
                 <Input
-                  name='reporte'
+                  name='nombre'
                   type="text"
-                  value={reporte}
+                  value={nombre}
                   onChange={handleReporteChange}
                 />
-                {errors.reporte && <Message negative>{errors.reporte}</Message>}
+                {errors.nombre && <Message negative>{errors.nombre}</Message>}
               </FormField>
-              <FormField error={!!errors.descripcion}>
+              <FormField error={!!errors.direccion}>
                 <Label>
-                  Descripción
+                  Dirección
                 </Label>
                 <TextArea
-                  name='descripcion'
+                  name='direccion'
                   type="text"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
+                  value={direccion}
+                  onChange={(e) => setDireccion(e.target.value)}
                 />
-                {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
-              </FormField>
-              <FormField error={!!errors.date}>
-                <Label>
-                  Fecha
-                </Label>
-                <DatePicker
-                  selected={date}
-                  onChange={(date) => setDate(date)}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/aaaa"
-                  locale="es"
-                  isClearable
-                  showPopperArrow={false}
-                  popperPlacement="top"
-                />
-                {errors.date && <Message negative>{errors.date}</Message>}
+                {errors.direccion && <Message negative>{errors.direccion}</Message>}
               </FormField>
             </FormGroup>
             <Button
               primary
-              onClick={crearReporte}
+              onClick={crearResidencial}
             >
               Crear
             </Button>

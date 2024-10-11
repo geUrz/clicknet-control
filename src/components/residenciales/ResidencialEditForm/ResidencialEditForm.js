@@ -1,23 +1,18 @@
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import { useState } from 'react'
 import axios from 'axios'
-import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useAuth } from '@/contexts/AuthContext'
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ResidencialEditForm.module.css'
 
 export function ResidencialEditForm(props) {
 
-  const { reload, onReload, reporte, onOpenEditReporte, onToastSuccessReportesMod } = props
-
-  const { user } = useAuth()
+  const { reload, onReload, residencial, onOpenEditResidencial, onToastSuccessResidencialMod } = props
 
   const [formData, setFormData] = useState({
-    reporte: reporte.reporte,
-    descripcion: reporte.descripcion,
-    date: reporte.date ? new Date(reporte.date + 'T00:00:00') : null,
-    estado: reporte.estado
+    nombre: residencial.nombre,
+    direccion: residencial.direccion,
   })
 
   const [errors, setErrors] = useState({})
@@ -25,20 +20,12 @@ export function ResidencialEditForm(props) {
   const validarForm = () => {
     const newErrors = {}
 
-    if (!formData.reporte) {
-      newErrors.reporte = 'El campo es requerido'
+    if (!formData.nombre) {
+      newErrors.nombre = 'El campo es requerido'
     }
 
-    if (!formData.descripcion) {
-      newErrors.descripcion = 'El campo es requerido'
-    }
-
-    if (!formData.date) {
-      newErrors.date = 'El campo es requerido'
-    }
-
-    if (!formData.estado) {
-      newErrors.estado = 'El campo es requerido'
+    if (!formData.direccion) {
+      newErrors.direccion = 'El campo es requerido'
     }
 
     setErrors(newErrors)
@@ -62,15 +49,15 @@ export function ResidencialEditForm(props) {
     }
 
     try {
-      await axios.put(`/api/reportes/reportes?id=${reporte.id}`, {
+      await axios.put(`/api/residenciales/residenciales?id=${residencial.id}`, {
         ...formData,
         date: formData.date ? formData.date.toISOString().split('T')[0] : null
       })
       onReload()
-      onOpenEditReporte()
-      onToastSuccessReportesMod()
+      onOpenEditResidencial()
+      onToastSuccessResidencialMod()
     } catch (error) {
-      console.error('Error actualizando el reporte:', error)
+      console.error('Error actualizando el residencial:', error)
     }
   }
 
@@ -85,62 +72,32 @@ export function ResidencialEditForm(props) {
 
     <>
 
-      <IconClose onOpenClose={onOpenEditReporte} />
+      <IconClose onOpenClose={onOpenEditResidencial} />
 
       <Form>
         <FormGroup widths='equal'>
-        <FormField error={!!errors.reporte}>
+        <FormField error={!!errors.nombre}>
             <Label>
-              Reporte
+              Residencial
             </Label>
             <Input
               type="text"
-              name="reporte"
-              value={formData.reporte}
+              name="nombre"
+              value={formData.nombre}
               onChange={handleChange}
             />
-            {errors.reporte && <Message negative>{errors.reporte}</Message>}
+            {errors.nombre && <Message negative>{errors.nombre}</Message>}
           </FormField>
-          <FormField error={!!errors.descripcion}>
+          <FormField error={!!errors.direccion}>
             <Label>
               Descripción
             </Label>
             <TextArea
-              name="descripcion"
-              value={formData.descripcion}
+              name="direccion"
+              value={formData.direccion}
               onChange={handleChange}
             />
-            {errors.descripcion && <Message negative>{errors.descripcion}</Message>}
-          </FormField>
-          <FormField error={!!errors.date}>
-            <Label>
-              Fecha
-            </Label>
-            <DatePicker
-              selected={formData.date}
-              onChange={(date) => setFormData({ ...formData, date })}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="dd/mm/aaaa"
-              locale="es"
-              isClearable
-              showPopperArrow={false}
-              popperPlacement="top"
-            />
-            {errors.date && <Message negative>{errors.date}</Message>}
-          </FormField>
-          <FormField error={!!errors.estado}>
-            <Label>
-              Estatus
-            </Label>
-            <Dropdown
-                placeholder='Selecciona una opción'
-                fluid
-                selection
-                options={opcionesEstado}
-                value={formData.estado}
-                onChange={(e, { value }) => setFormData({ ...formData, estado: value })}
-              />
-            {errors.estado && <Message negative>{errors.estado}</Message>}
+            {errors.direccion && <Message negative>{errors.direccion}</Message>}
           </FormField>
         </FormGroup>
         <Button primary onClick={handleSubmit}>

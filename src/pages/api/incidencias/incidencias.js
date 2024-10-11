@@ -33,7 +33,7 @@ async function sendNotification(usuario_id, header, message, url) {
 }
 
 export default async function handler(req, res) {
-    const { id, usuario_id, search, deleteImage } = req.query; // Agregamos 'search' al destructuring
+    const { id, residencial_id, usuario_id, search, deleteImage } = req.query; // Agregamos 'search' al destructuring
 
     if (req.method === 'GET') {
 
@@ -62,9 +62,9 @@ export default async function handler(req, res) {
             return
         }
         // Caso para obtener incidencia por usuario_id
-        if (usuario_id) {
+        if (residencial_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, createdAt FROM incidencias WHERE usuario_id = ?', [usuario_id])
+                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id createdAt FROM incidencias WHERE residencial_id = ?', [residencial_id])
                 if (rows.length === 0) {
                     return res.status(404).json({ error: 'Negocio no encontrado' })
                 }
@@ -94,6 +94,7 @@ export default async function handler(req, res) {
             incidencias.estado,
             incidencias.img1,
             incidencias.img2,
+            incidencias.residencial_id,
             incidencias.createdAt
         FROM incidencias
         JOIN usuarios ON incidencias.usuario_id = usuarios.id
@@ -105,14 +106,14 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            const { usuario_id, folio, incidencia, descripcion, zona, estado } = req.body;
-            if (!usuario_id || !incidencia || !descripcion) {
+            const { usuario_id, folio, incidencia, descripcion, zona, estado, residencial_id } = req.body;
+            if (!usuario_id || !incidencia || !descripcion || !residencial_id) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
             const [result] = await connection.query(
-                'INSERT INTO incidencias (usuario_id, folio, incidencia, descripcion, zona, estado) VALUES (?, ?, ?, ?, ?, ?)',
-                [usuario_id, folio, incidencia, descripcion, zona, estado]
+                'INSERT INTO incidencias (usuario_id, folio, incidencia, descripcion, zona, estado, residencial_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [usuario_id, folio, incidencia, descripcion, zona, estado, residencial_id]
             )
 
             const header = 'Incidencia creada'

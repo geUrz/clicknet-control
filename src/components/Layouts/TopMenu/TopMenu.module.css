@@ -21,18 +21,65 @@
   z-index: 1000;
 }
 
-.section h1{
-  font-size: 26px;
-  font-family: 'Bebas' !important;
+.residencial{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.section svg, .section path{
-  margin: 0 30px;
-  font-size: 20px; 
+.residencial h2{
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600 !important;
+}
+
+.h1{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.h1 h1{
+  font-size: 24px;
+  font-family: 'Bebas' !important;
+  text-align: center;
+}
+
+.user{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user a{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-.topMenu {
+.user svg, .user path{
+  font-size: 16px; 
+  cursor: pointer;
+}
+
+.user h2{
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.topMenu{
   display: flex;
   align-items: center;
 }
@@ -71,6 +118,14 @@
 
   .section{
     max-width: 650px;
+  }
+
+  .residencial svg, .residencial path{
+    font-size: 18px; 
+  }
+
+  .user svg, .user path{
+    font-size: 18px; 
   }
 
 }

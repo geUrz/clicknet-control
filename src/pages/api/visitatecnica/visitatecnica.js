@@ -33,7 +33,7 @@ async function sendNotification(usuario_id, header, message, url) {
 }
 
 export default async function handler(req, res) {
-  const { id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
+  const { id, residencial_id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
 
   if (req.method === 'GET') {
 
@@ -62,13 +62,35 @@ export default async function handler(req, res) {
     }
 
     // Caso para obtener visitatecnica por usuario_id
-    if (usuario_id) {
+    if (residencial_id) {
       try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, visitatecnica, descripcion, date, hora, estado, img1, img2, img3, img4 FROM visitatecnica WHERE usuario_id = ?', [usuario_id])
+        const [rows] = await connection.query(
+          `SELECT
+        visitatecnica.id,
+        visitatecnica.usuario_id,
+        usuarios.nombre AS usuario_nombre,
+        usuarios.isadmin AS usuario_isadmin,
+        visitatecnica.folio,
+        visitatecnica.visitatecnica,
+        visitatecnica.descripcion,
+        visitatecnica.date,
+        visitatecnica.hora,
+        visitatecnica.estado,
+        visitatecnica.img1,
+        visitatecnica.img2,
+        visitatecnica.img3,
+        visitatecnica.img4,
+        visitatecnica.residencial_id
+    FROM visitatecnica
+    JOIN usuarios ON visitatecnica.usuario_id = usuarios.id
+    WHERE visitatecnica.residencial_id = ?
+    ORDER BY visitatecnica.updatedAt DESC`, 
+          [residencial_id])
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Visita Tecnica no encontrada' })
         }
-        res.status(200).json(rows[0])
+        res.status(200).json(rows)
+        //res.status(200).json(rows[0])
       } catch (error) {
         res.status(500).json({ error: error.message })
       }
@@ -92,7 +114,8 @@ export default async function handler(req, res) {
         visitatecnica.img1,
         visitatecnica.img2,
         visitatecnica.img3,
-        visitatecnica.img4
+        visitatecnica.img4,
+        visitatecnica.residencial_id
     FROM visitatecnica
     JOIN usuarios ON visitatecnica.usuario_id = usuarios.id
     ORDER BY visitatecnica.updatedAt DESC
@@ -103,14 +126,14 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { usuario_id, folio, visitatecnica, descripcion, date, hora, estado } = req.body;
-      if (!usuario_id || !visitatecnica || !descripcion) {
+      const { usuario_id, folio, visitatecnica, descripcion, date, hora, estado, residencial_id } = req.body;
+      if (!usuario_id || !visitatecnica || !descripcion || !residencial_id) {
         return res.status(400).json({ error: 'Todos los datos son obligatorios' })
       }
 
       const [result] = await connection.query(
-        'INSERT INTO visitatecnica (usuario_id, folio, visitatecnica, descripcion, date, hora, estado) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [usuario_id, folio, visitatecnica, descripcion, date, hora, estado]
+        'INSERT INTO visitatecnica (usuario_id, folio, visitatecnica, descripcion, date, hora, estado, residencial_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [usuario_id, folio, visitatecnica, descripcion, date, hora, estado, residencial_id]
       )
 
       const header = 'Visita técnica'

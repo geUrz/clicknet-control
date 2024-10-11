@@ -17,7 +17,7 @@ export function VisitaProvsList(props) {
   const { reload, onReload, visitaprovs, onToastSuccessVisitaprovMod, onToastSuccessVisitaprovDel } = props
 
   const { loading } = useAuth()
-
+  
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitaprovSeleccionada, setVisitaprovSeleccionada] = useState(null)
   const [showLoading, setShowLoading] = useState(true)
@@ -114,7 +114,7 @@ export function VisitaProvsList(props) {
                     </div>
                     <div className={styles.column2}>
                       <div >
-                        <h1>Visita provedor</h1>
+                        <h1>Visita proveedor</h1>
                         <h2>{visitaprov.visitaprovedor}</h2>
                       </div>
                       <div>
@@ -134,7 +134,7 @@ export function VisitaProvsList(props) {
         )
       )}
 
-      <BasicModal title='detalles de la visita provedor' show={showDetalles} onClose={onCloseDetalles}>
+      <BasicModal title='detalles de la visita proveedor' show={showDetalles} onClose={onCloseDetalles}>
         {visitaprovSeleccionada && (
           <VisitaProvDetalles
             reload={reload}

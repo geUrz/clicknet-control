@@ -1,4 +1,4 @@
-import { Add, Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, ToastSuccess } from '@/components/Layouts'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import { useAuth } from '@/contexts/AuthContext'
 import { BasicLayout, BasicModal } from '@/layouts'
@@ -35,7 +35,6 @@ export default function Residenciales() {
 
   const [toastSuccessResidenciales, setToastSuccessResidenciales] = useState(false)
   const [toastSuccessResidencialesMod, setToastSuccessResidencialesMod] = useState(false)
-  const [toastSuccessResidencialesDel, setToastSuccessResidencialesDel] = useState(false)
 
   const onToastSuccessResidencial = () => {
     setToastSuccessResidenciales(true)
@@ -51,13 +50,6 @@ export default function Residenciales() {
     }, 3000)
   }
 
-  const onToastSuccessResidencialDel = () => {
-    setToastSuccessResidencialesDel(true)
-    setTimeout(() => {
-      setToastSuccessResidencialesDel(false)
-    }, 3000)
-  }
-
   if (loading) {
     return <Loading size={45} loading={0} />
   }
@@ -68,13 +60,11 @@ export default function Residenciales() {
 
       <BasicLayout title='Residenciales' relative onReload={onReload}>
 
-        {toastSuccessResidenciales && <ToastSuccess csidenciales='Residencial creado exitosamente' onClose={() => setToastSuccessResidenciales(false)} />}
+        {toastSuccessResidenciales && <ToastSuccess contain='Residencial creado exitosamente' onClose={() => setToastSuccessResidenciales(false)} />}
 
         {toastSuccessResidencialesMod && <ToastSuccess contain='Residencial modificado exitosamente' onClose={() => setToastSuccessResidencialesMod(false)} />}
 
-        {toastSuccessResidencialesDel && <ToastDelete contain='Residencial eliminado exitosamente' onClose={() => setToastSuccessResidencialesDel(false)} />}
-
-        <ResidencialList reload={reload} onReload={onReload} residenciales={residenciales} onToastSuccessResidencialMod={onToastSuccessResidencialMod} onToastSuccessResidencialDel={onToastSuccessResidencialDel} />
+        <ResidencialList reload={reload} onReload={onReload} residenciales={residenciales} onToastSuccessResidencialMod={onToastSuccessResidencialMod} />
 
         {user.isadmin === 'Admin' ? (
           <Add titulo='crear reporte' onOpenClose={onOpenCloseForm} />

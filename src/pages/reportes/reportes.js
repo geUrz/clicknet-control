@@ -23,15 +23,17 @@ export default function Reportes() {
   const [reportes, setReportes] = useState(null)
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get('/api/reportes/reportes')
-        setReportes(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [reload])
+    if (user && user.residencial_id) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/reportes/reportes?residencial_id=${user.residencial_id}`);
+          setReportes(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [reload, user])
 
   const [toastSuccessReportes, setToastSuccessReportes] = useState(false)
   const [toastSuccessReportesMod, setToastSuccessReportesMod] = useState(false)

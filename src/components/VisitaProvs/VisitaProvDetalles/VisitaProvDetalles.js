@@ -29,10 +29,10 @@ export function VisitaProvDetalles(props) {
         onToastSuccessVisitaprovDel()
         onOpenCloseDetalles()
       } catch (error) {
-        console.error('Error al eliminar el visita provedor:', error)
+        console.error('Error al eliminar el visita proveedor:', error)
       }
     } else {
-      console.error('Visita provedor o ID no disponible')
+      console.error('Visita proveedor o ID no disponible')
     }
   }
 
@@ -44,7 +44,7 @@ export function VisitaProvDetalles(props) {
         <div className={styles.box1}>
           <div className={styles.box1_1}>
             <div>
-              <h1>Visita provedor</h1>
+              <h1>Visita proveedor</h1>
               <h2>{visitaprov.visitaprovedor}</h2>
             </div>
             <div>
@@ -72,7 +72,7 @@ export function VisitaProvDetalles(props) {
           </div>
         </div>
 
-        {user.isadmin === 'Admin' || visitaprov.usuario_id === user.id ? (
+        {user.isadmin === 'Admin' || user.isadmin === 'Caseta' || user.isadmin === 'Comité' ? (
           <>
 
             <div className={styles.iconEdit}>
@@ -93,7 +93,7 @@ export function VisitaProvDetalles(props) {
         )}
       </div>
 
-      <BasicModal title='Editar visita provedor' show={showEditVisitaprov} onClose={onOpenEditVisitaprov}>
+      <BasicModal title='Editar visita proveedor' show={showEditVisitaprov} onClose={onOpenEditVisitaprov}>
         <VisitaProvEditForm reload={reload} onReload={onReload} visitaprov={visitaprov} onOpenEditVisitaprov={onOpenEditVisitaprov} onToastSuccessVisitaprovMod={onToastSuccessVisitaprovMod} />
       </BasicModal>
 
@@ -111,7 +111,7 @@ export function VisitaProvDetalles(props) {
         }
         onConfirm={handleDeleteVisitaprov}
         onCancel={onOpenCloseConfirmDel}
-        content='¿ Estas seguro de eliminar la visita provedor ?'
+        content='¿ Estas seguro de eliminar la visita proveedor ?'
       />
 
     </>

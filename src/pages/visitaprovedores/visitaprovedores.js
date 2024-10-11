@@ -21,15 +21,17 @@ export default function Visitaprovedores() {
   const [visitaprovs, setVisitaprovs] = useState(null)
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get('/api/visitaprovedores/visitaprovedores')
-        setVisitaprovs(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [reload])
+    if (user && user.residencial_id) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/visitaprovedores/visitaprovedores?residencial_id=${user.residencial_id}`);
+          setVisitaprovs(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [reload, user])
 
   const [toastSuccessVisitaprov, setToastSuccessVisitaprov] = useState(false)
   const [toastSuccessVisitaprovMod, setToastSuccessVisitaprovMod] = useState(false)
@@ -64,13 +66,13 @@ export default function Visitaprovedores() {
 
     <ProtectedRoute>
 
-      <BasicLayout title='visita provedores' relative onReload={onReload}>
+      <BasicLayout title='visita proveedores' relative onReload={onReload}>
 
-        {toastSuccessVisitaprov && <ToastSuccess contain='Visita provedor creado exitosamente' onClose={() => setToastSuccessVisitaprov(false)} />}
+        {toastSuccessVisitaprov && <ToastSuccess contain='Visita proveedor creado exitosamente' onClose={() => setToastSuccessVisitaprov(false)} />}
 
-        {toastSuccessVisitaprovMod && <ToastSuccess contain='Visita provedor modificado exitosamente' onClose={() => setToastSuccessVisitaprovMod(false)} />}
+        {toastSuccessVisitaprovMod && <ToastSuccess contain='Visita proveedor modificado exitosamente' onClose={() => setToastSuccessVisitaprovMod(false)} />}
 
-        {toastSuccessVisitaprovDel && <ToastDelete contain='Visita provedor eliminado exitosamente' onClose={() => setToastSuccessVisitaprovDel(false)} />}
+        {toastSuccessVisitaprovDel && <ToastDelete contain='Visita proveedor eliminado exitosamente' onClose={() => setToastSuccessVisitaprovDel(false)} />}
 
         <VisitaProvsList reload={reload} onReload={onReload} visitaprovs={visitaprovs} onToastSuccessVisitaprovMod={onToastSuccessVisitaprovMod} onToastSuccessVisitaprovDel={onToastSuccessVisitaprovDel} />
 
@@ -82,7 +84,7 @@ export default function Visitaprovedores() {
 
       </BasicLayout>
 
-      <BasicModal title='crear visita provedor' show={openForm} onClose={onOpenCloseForm}>
+      <BasicModal title='crear visita proveedor' show={openForm} onClose={onOpenCloseForm}>
         <VisitaProvForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccessVisitaprov={onToastSuccessVisitaprov} />
       </BasicModal>
 

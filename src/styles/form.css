@@ -76,6 +76,10 @@
   border: 2px solid rgb(167, 0, 0) !important;
 }
 
+.ui.selection.dropdown{
+  width: 300px !important;
+}
+
 .ui.dropdown .menu .item span, .ui.dropdown .text{
   color: black !important;
 }

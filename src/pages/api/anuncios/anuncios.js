@@ -33,7 +33,7 @@ async function sendNotification(usuario_id, header, message, url) {
 }
 
 export default async function handler(req, res) {
-  const { id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
+  const { id, residencial_id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
 
   if (req.method === 'GET') {
 
@@ -62,13 +62,14 @@ export default async function handler(req, res) {
     }
 
     // Caso para obtener anuncio por usuario_id
-    if (usuario_id) {
+    if (residencial_id) {
       try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, anuncio, descripcion, date, hora FROM anuncios WHERE usuario_id = ?', [usuario_id]);
+        const [rows] = await connection.query('SELECT id, usuario_id, folio, anuncio, descripcion, date, hora, residencial_id FROM anuncios WHERE residencial_id = ?', [residencial_id]);
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Anuncio no encontrado' })
         }
-        res.status(200).json(rows[0])
+        res.status(200).json(rows)
+        //res.status(200).json(rows[0])
       } catch (error) {
         res.status(500).json({ error: error.message })
       }
@@ -87,7 +88,8 @@ export default async function handler(req, res) {
         anuncios.anuncio,
         anuncios.descripcion,
         anuncios.date,
-        anuncios.hora
+        anuncios.hora,
+        anuncios.residencial_id
     FROM anuncios
     JOIN usuarios ON anuncios.usuario_id = usuarios.id
     ORDER BY anuncios.updatedAt DESC
@@ -98,14 +100,14 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { usuario_id, folio, anuncio, descripcion, date, hora } = req.body;
-      if (!usuario_id || !anuncio || !descripcion || !hora) {
+      const { usuario_id, folio, anuncio, descripcion, date, hora, residencial_id } = req.body;
+      if (!usuario_id || !anuncio || !descripcion || !hora || !residencial_id) {
         return res.status(400).json({ error: 'Todos los datos son obligatorios' })
       }
 
       const [result] = await connection.query(
-        'INSERT INTO anuncios (usuario_id, folio, anuncio, descripcion, date, hora) VALUES (?, ?, ?, ?, ?, ?)',
-        [usuario_id, folio, anuncio, descripcion, date, hora]
+        'INSERT INTO anuncios (usuario_id, folio, anuncio, descripcion, date, hora, residencial_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [usuario_id, folio, anuncio, descripcion, date, hora, residencial_id]
       )
 
       // Enviar notificación después de crear el anuncio
@@ -121,16 +123,16 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'PUT') {
     // Actualización del anuncio
-    const { anuncio, descripcion, date, hora } = req.body;
+    const { anuncio, descripcion, date, hora, residencial_id } = req.body;
 
-    if (!anuncio || !descripcion || !date || !hora || !id) {
+    if (!anuncio || !descripcion || !date || !hora || !residencial_id || !id) {
       return res.status(400).json({ error: 'ID, anuncio y descripción son obligatorios' });
     }
 
     try {
       const [result] = await connection.query(
-        'UPDATE anuncios SET anuncio = ?, descripcion = ?, date = ?, hora = ? WHERE id = ?',
-        [anuncio, descripcion, date, hora, id]
+        'UPDATE anuncios SET anuncio = ?, descripcion = ?, date = ?, hora = ?, residencial_id = ? WHERE id = ?',
+        [anuncio, descripcion, date, hora, residencial_id, id]
       );
 
       if (result.affectedRows === 0) {

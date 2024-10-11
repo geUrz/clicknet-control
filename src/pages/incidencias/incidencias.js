@@ -10,8 +10,8 @@ import styles from './incidencias.module.css'
 
 export default function Incidencias() {
 
-  const {loading} = useAuth()
-
+  const {user, loading} = useAuth()
+  
   const [reload, setReload] = useState(false)
 
   const onReload = () => setReload((prevState) => !prevState)
@@ -23,15 +23,17 @@ export default function Incidencias() {
   const [incidencias, setIncidencias] = useState(null)
   
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get('/api/incidencias/incidencias')
-        setIncidencias(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [reload])
+    if (user && user.residencial_id) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/incidencias/incidencias?residencial_id=${user.residencial_id}`);
+          setIncidencias(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [reload, user])
 
   const [toastSuccessIncidencia, setToastSuccessIncidencia] = useState(false)
   const [toastSuccessIncidenciaMod, setToastSuccessIncidenciaMod] = useState(false)

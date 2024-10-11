@@ -5,7 +5,7 @@ import { FaBuilding, FaBullhorn, FaCarCrash, FaClipboard, FaUserCheck, FaUserCog
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import axios from 'axios'
 import { size } from 'lodash'
-import { Loading, LoadingMini } from '@/components/Layouts'
+import { Loading } from '@/components/Layouts'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from './home.module.css'
 
@@ -39,13 +39,15 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetchData('/api/incidencias/incidencias', 'incidencias')
-    fetchData('/api/anuncios/anuncios', 'anuncios')
-    fetchData('/api/visitatecnica/visitatecnica', 'visitatecnica')
-    fetchData('/api/reportes/reportes', 'reportes')
-    fetchData('/api/visitaprovedores/visitaprovedores', 'visitaprovedores')
-    fetchData('/api/residenciales/residenciales', 'residenciales')
-  }, [reload])
+    if (user) {
+      fetchData(`/api/incidencias/incidencias?residencial_id=${user.residencial_id}`, 'incidencias')
+      fetchData(`/api/anuncios/anuncios?residencial_id=${user.residencial_id}`, 'anuncios')
+      fetchData(`/api/visitatecnica/visitatecnica?residencial_id=${user.residencial_id}`, 'visitatecnica')
+      fetchData(`/api/reportes/reportes?residencial_id=${user.residencial_id}`, 'reportes')
+      fetchData(`/api/visitaprovedores/visitaprovedores?residencial_id=${user.residencial_id}`, 'visitaprovedores')
+      fetchData('/api/residenciales/residenciales', 'residenciales')
+    }
+  }, [reload, user, fetchData])
 
   const countData = {
     incidencias: size(data.incidencias),
@@ -54,10 +56,12 @@ export default function Home() {
     reportes: size(data.reportes),
     visitaprovedores: size(data.visitaprovedores),
     residenciales: size(data.residenciales)
+    
   }
 
   if (loading) {
     return <Loading size={45} loading={0} />
+    
   }
 
   return (
@@ -81,7 +85,7 @@ export default function Home() {
               countReportes={countData.reportes}>
               <FaClipboard />
             </Card>
-            <Card link='/visitaprovedores' title='Visita Provedores'
+            <Card link='/visitaprovedores' title='Visita Proveedores'
               countVisitaprovedores={countData.visitaprovedores}>
               <FaUserMd />
             </Card>

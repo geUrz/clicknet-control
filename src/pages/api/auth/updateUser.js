@@ -2,7 +2,7 @@ import connection from '@/libs/db'; // Asegúrate de importar la configuración 
 import bcrypt from 'bcrypt';
 
 export default async function updateUserHandler(req, res) {
-  const { userId, newNombre, newUsuario, newPrivada, newCalle, newCasa, newIsAdmin, newEmail, newPassword  } = req.body;
+  const { userId, newNombre, newUsuario, newPrivada, newCalle, newCasa, newEmail, newIsAdmin, newResidencial, newPassword  } = req.body;
 
   try {
     // Verificar si el nuevo email o el nuevo nombre de usuario ya están registrados por otro usuario
@@ -40,15 +40,16 @@ export default async function updateUserHandler(req, res) {
     const updatedPrivada = newPrivada || currentUser[0].privada
     const updatedCalle = newCalle || currentUser[0].calle
     const updatedCasa = newCasa || currentUser[0].casa
-    const updatedIsAdmin = newIsAdmin || currentUser[0].isadmin
     const updatedEmail = newEmail || currentUser[0].email
+    const updatedResidencial = newResidencial || currentUser[0].residencial_id
+    const updatedIsAdmin = newIsAdmin || currentUser[0].isadmin
     const updatedPassword = newPassword ? hashedPassword : currentUser[0].password;
 
 
     // Actualizar el usuario en la base de datos
     await connection.query(
-      'UPDATE usuarios SET nombre = ?, usuario = ?, privada = ?, calle = ?, casa = ?, isadmin = ?, email = ?, password = ? WHERE id = ?',
-      [updatedNombre, updatedUsuario, updatedPrivada, updatedCalle, updatedCasa, updatedIsAdmin, updatedEmail, updatedPassword, userId]
+      'UPDATE usuarios SET nombre = ?, usuario = ?, privada = ?, calle = ?, casa = ?, email = ?, isadmin = ?, residencial_id = ?, password = ? WHERE id = ?',
+      [updatedNombre, updatedUsuario, updatedPrivada, updatedCalle, updatedCasa, updatedEmail, updatedIsAdmin, updatedResidencial, updatedPassword, userId]
     );
 
     // Devolver una respuesta exitosa

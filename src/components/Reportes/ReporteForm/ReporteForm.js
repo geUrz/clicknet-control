@@ -65,7 +65,8 @@ export function ReporteForm(props) {
         reporte,
         descripcion,
         date: formattedDate,
-        estado
+        estado,
+        residencial_id: user.residencial_id
       })
 
       setReporte('')

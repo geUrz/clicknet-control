@@ -69,7 +69,8 @@ export function AnuncioForm(props) {
         anuncio,
         descripcion,
         date: formattedDate,
-        hora
+        hora,
+        residencial_id: user.residencial_id
       })
 
       setAnuncio('')

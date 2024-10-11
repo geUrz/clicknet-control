@@ -109,7 +109,7 @@ export function VisitaProvEditForm(props) {
         <FormGroup widths='equal'>
           <FormField error={!!errors.visitaprovedor}>
             <Label>
-              Visita provedor
+              Visita proveedor
             </Label>
             <Input
               type="text"

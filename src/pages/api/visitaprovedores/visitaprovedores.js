@@ -33,16 +33,34 @@ async function sendNotification(usuario_id, header, message, url) {
 }
 
 export default async function handler(req, res) {
-    const { id, usuario_id } = req.query
+    const { id, residencial_id, usuario_id } = req.query
 
     if (req.method === 'GET') {
 
         // Caso para obtener visitaprovedores por usuario_id
-        if (usuario_id) {
+        if (residencial_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, visitaprovedor, descripcion, estado,  createdAt FROM visitaprovedores WHERE usuario_id = ?', [usuario_id])
+                const [rows] = await connection.query(
+                    `SELECT
+                    visitaprovedores.id,
+                    visitaprovedores.usuario_id,
+                    usuarios.nombre AS usuario_nombre,
+                    usuarios.usuario AS usuario_usuario,
+                    visitaprovedores.folio,
+                    visitaprovedores.visitaprovedor,
+                    visitaprovedores.descripcion,
+                    visitaprovedores.estado,
+                    visitaprovedores.residencial_id,
+                    autorizo_usuario.usuario AS autorizo_usuario,
+                    visitaprovedores.createdAt
+                FROM visitaprovedores
+                JOIN usuarios ON visitaprovedores.usuario_id = usuarios.id
+                LEFT JOIN usuarios AS autorizo_usuario ON visitaprovedores.autorizo = autorizo_usuario.id
+                WHERE visitaprovedores.residencial_id = ?
+                ORDER BY visitaprovedores.updatedAt DESC`, 
+                [residencial_id])
                 if (rows.length === 0) {
-                    return res.status(404).json({ error: 'Negocio no encontrado' })
+                    return res.status(404).json({ error: 'Visita provedor no encontrado' })
                 }
                 res.status(200).json(rows)
             } catch (error) {
@@ -59,14 +77,11 @@ export default async function handler(req, res) {
                     visitaprovedores.usuario_id,
                     usuarios.nombre AS usuario_nombre,
                     usuarios.usuario AS usuario_usuario,
-                    usuarios.privada AS usuario_privada,
-                    usuarios.calle AS usuario_calle,
-                    usuarios.casa AS usuario_casa,
-                    usuarios.usuario AS usuario_usuario,
                     visitaprovedores.folio,
                     visitaprovedores.visitaprovedor,
                     visitaprovedores.descripcion,
                     visitaprovedores.estado,
+                    visitaprovedores.residencial_id,
                     autorizo_usuario.usuario AS autorizo_usuario,
                     visitaprovedores.createdAt
                 FROM visitaprovedores
@@ -80,14 +95,14 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            const { usuario_id, folio, visitaprovedor, descripcion, estado, autorizo } = req.body;
-            if (!usuario_id || !visitaprovedor || !descripcion || !estado) {
+            const { usuario_id, folio, visitaprovedor, descripcion, estado, autorizo, residencial_id } = req.body;
+            if (!usuario_id || !visitaprovedor || !descripcion || !estado || !residencial_id) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
             const [result] = await connection.query(
-                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion, estado, autorizo) VALUES (?, ?, ?, ?, ?, ?)',
-                [usuario_id, folio, visitaprovedor, descripcion, estado, autorizo]
+                'INSERT INTO visitaprovedores (usuario_id, folio, visitaprovedor, descripcion, estado, autorizo, residencial_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [usuario_id, folio, visitaprovedor, descripcion, estado, autorizo, residencial_id]
             )
 
             // Enviar notificación después de crear la visitaprovedor

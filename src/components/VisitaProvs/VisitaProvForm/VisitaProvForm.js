@@ -57,7 +57,8 @@ export function VisitaProvForm(props) {
         visitaprovedor,
         descripcion, 
         estado,
-        autorizo: user.id
+        autorizo: user.id,
+        residencial_id: user.residencial_id
       })
 
       setVisitaprov('')
@@ -87,7 +88,7 @@ export function VisitaProvForm(props) {
             <FormGroup widths='equal'>
               <FormField error={!!errors.visitaprovedor}>
                 <Label>
-                  Visita provedor
+                  Visita proveedor
                 </Label>
                 <Input
                   name='visitaprovedor'

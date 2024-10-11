@@ -142,6 +142,7 @@
 .column2 div:nth-child(3) h2, .column2 div:nth-child(4) h2{
   font-size: 14px;
   text-align: center !important;
+  text-transform: capitalize;
   color: black;
   cursor: pointer;
 }

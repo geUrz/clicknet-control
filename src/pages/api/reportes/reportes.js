@@ -33,7 +33,7 @@ async function sendNotification(usuario_id, header, message, url) {
 }
 
 export default async function handler(req, res) {
-  const { id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
+  const { id, residencial_id, usuario_id, search } = req.query; // Agregamos 'search' al destructuring
 
   if (req.method === 'GET') {
 
@@ -62,13 +62,14 @@ export default async function handler(req, res) {
     }
 
     // Caso para obtener reportes por usuario_id
-    if (usuario_id) {
+    if (residencial_id) {
       try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion, date, estado, img1, img2, img3, img4, img5, img6 FROM reportes WHERE usuario_id = ?', [usuario_id])
+        const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion, date, estado, img1, img2, img3, img4, img5, img6, residencial_id FROM reportes WHERE residencial_id = ?', [residencial_id])
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Reporte no encontrado' })
         }
-        res.status(200).json(rows[0])
+        res.status(200).json(rows)
+        //res.status(200).json(rows[0])
       } catch (error) {
         res.status(500).json({ error: error.message })
       }
@@ -93,7 +94,8 @@ export default async function handler(req, res) {
         reportes.img3,
         reportes.img4,
         reportes.img5,
-        reportes.img6
+        reportes.img6,
+        reportes.residencial_id
     FROM reportes
     JOIN usuarios ON reportes.usuario_id = usuarios.id
     ORDER BY reportes.updatedAt DESC
@@ -104,14 +106,14 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { usuario_id, folio, reporte, descripcion, date, estado } = req.body;
-      if (!usuario_id || !reporte || !descripcion) {
+      const { usuario_id, folio, reporte, descripcion, date, estado, residencial_id } = req.body;
+      if (!usuario_id || !reporte || !descripcion || !residencial_id) {
         return res.status(400).json({ error: 'Todos los datos son obligatorios' })
       }
 
       const [result] = await connection.query(
-        'INSERT INTO reportes (usuario_id, folio, reporte, descripcion, date, estado) VALUES (?, ?, ?, ?, ?, ?)',
-        [usuario_id, folio, reporte, descripcion, date, estado]
+        'INSERT INTO reportes (usuario_id, folio, reporte, descripcion, date, estado, residencial_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [usuario_id, folio, reporte, descripcion, date, estado, residencial_id]
       )
 
       // Enviar notificación después de crear el reporte

@@ -9,7 +9,7 @@ import { AnunciosList, AnuncioForm } from '@/components/Anuncios'
 
 export default function Anuncios() {
 
-  const {loading} = useAuth()
+  const {user, loading} = useAuth()
 
   const [reload, setReload] = useState(false)
 
@@ -22,15 +22,17 @@ export default function Anuncios() {
   const [anuncios, setAnuncios] = useState(null)
   
   useEffect(() => {
+    if (user && user.residencial_id) {
     (async () => {
       try {
-        const res = await axios.get('/api/anuncios/anuncios')
+        const res = await axios.get(`/api/anuncios/anuncios?residencial_id=${user.residencial_id}`)
         setAnuncios(res.data)
       } catch (error) {
-        console.error(error)
+          console.error(error)
       }
     })()
-  }, [reload])
+  }
+  }, [reload, user])
 
   const [toastSuccessAnuncio, setToastSuccessAnuncio] = useState(false)
   const [toastSuccessAnuncioMod, setToastSuccessAnuncioMod] = useState(false)

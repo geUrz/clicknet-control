@@ -21,15 +21,17 @@ export default function Visitatecnica() {
   const [visitatecnicas, setVisitatecnica] = useState(null)
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get('/api/visitatecnica/visitatecnica')
-        setVisitatecnica(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [reload])
+    if (user && user.residencial_id) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/visitatecnica/visitatecnica?residencial_id=${user.residencial_id}`);
+          setVisitatecnica(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [reload, user])
 
   const [toastSuccessVisitatecnica, setToastSuccessVisitatecnica] = useState(false)
   const [toastSuccessVisitatecnicaMod, setToastSuccessVisitatecnicaMod] = useState(false)
