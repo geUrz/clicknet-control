@@ -1,4 +1,9 @@
-export const initializeOneSignal = () => {
+export const initializeOneSignal = (userId, userName, userUsername) => {
+  if (!userId) {
+    console.error('User ID no disponible, no se puede inicializar OneSignal.');
+    return;
+  }
+
   window.OneSignal = window.OneSignal || [];
 
   OneSignal.push(function() {
@@ -11,14 +16,6 @@ export const initializeOneSignal = () => {
       OneSignal.registerForPushNotifications().then(() => {
         getPlayerIdWithRetry().then((playerId) => {
           console.log('Player ID:', playerId);
-          const userId = getCookie('userId');
-          console.log('User ID:', userId);
-
-          // Obtén el nombre y el usuario del contexto o de las cookies
-          const userName = getCookie('userName');
-          console.log('UserName:', userName);
-          const userUsername = getCookie('userUsername');
-          console.log('Usuario:', userUsername);
 
           if (userId) {
             // Enviar Player ID al backend para agregarlo al usuario
@@ -51,10 +48,6 @@ export const initializeOneSignal = () => {
     OneSignal.on('subscriptionChange', function(isSubscribed) {
       if (isSubscribed) {
         getPlayerIdWithRetry().then((playerId) => {
-          const userId = getCookie('userId');
-          const userName = getCookie('userName');
-          const userUsername = getCookie('userUsername');
-
           if (userId) {
             // Enviar Player ID al backend si cambia la suscripción
             fetch('/api/notificaciones/sendSubscriptionEmail', {

@@ -1,38 +1,45 @@
-import connection from '@/libs/db'
+import axios from 'axios';
+import connection from '@/libs/db';
 
-export default async function savePlayerId(req, res) {
-  const { playerId, userId } = req.body;
+export default async function sendNotification(req, res) {
+  const { userId, title, message } = req.body;
 
-  if (!playerId || !userId) {
-    return res.status(400).json({ error: 'Player ID y User ID son requeridos' });
+  if (!userId || !title || !message) {
+    return res.status(400).json({ error: 'User ID, title y message son requeridos' });
   }
 
   try {
-    // Verificar si el Player ID ya está registrado para este usuario en la tabla `player_ids`
-    const [existingPlayer] = await connection.query(
-      'SELECT * FROM player_ids WHERE user_id = ? AND player_id = ?',
-      [userId, playerId]
+    // Obtener todos los Player IDs asociados al usuario desde la tabla player_ids
+    const [playerIds] = await connection.query(
+      'SELECT player_id FROM player_ids WHERE user_id = ?',
+      [userId]
     );
 
-    if (existingPlayer.length > 0) {
-      return res.status(200).json({ message: 'El Player ID ya está registrado' });
+    if (playerIds.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron Player IDs para este usuario' });
     }
 
-    // Si el Player ID no existe, agregarlo a la tabla `player_ids`
-    await connection.query(
-      'INSERT INTO player_ids (user_id, player_id) VALUES (?, ?)',
-      [userId, playerId]
-    );
+    // Extraer los Player IDs
+    const playerIdArray = playerIds.map(player => player.player_id);
 
-    // Actualizar el campo `onesignal_player_id` en la tabla `usuarios` con el último Player ID
-    await connection.query(
-      'UPDATE usuarios SET onesignal_player_id = ? WHERE id = ?',
-      [playerId, userId]
-    );
+    // Enviar notificación a OneSignal con todos los Player IDs
+    const notificationPayload = {
+      app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+      include_player_ids: playerIdArray, // Enviar a todos los Player IDs del usuario
+      headings: { en: title },
+      contents: { en: message },
+    };
 
-    return res.status(200).json({ message: 'Player ID registrado y usuario actualizado correctamente' });
+    await axios.post('https://onesignal.com/api/v1/notifications', notificationPayload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${process.env.NEXT_PUBLIC_ONESIGNAL_REST_API_KEY}`,
+      }
+    });
+
+    return res.status(200).json({ message: 'Notificación enviada correctamente a todos los dispositivos.' });
   } catch (error) {
-    console.error('Error al guardar Player ID:', error.message);
-    return res.status(500).json({ error: 'Error al guardar Player ID' });
+    console.error('Error al enviar notificación:', error.message);
+    return res.status(500).json({ error: 'Error al enviar notificación' });
   }
 }
