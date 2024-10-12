@@ -1,19 +1,7 @@
 export const initializeOneSignal = () => {
-  // Obtener los valores desde las cookies
-  const userId = getCookie('userId');
-  const userName = getCookie('userName');
-  const userUsername = getCookie('userUsername');
-
-  if (!userId) {
-    console.error('User ID no disponible en las cookies, no se puede inicializar OneSignal.');
-    return;
-  }
-
   window.OneSignal = window.OneSignal || [];
 
   OneSignal.push(function() {
-    console.log('Inicializando OneSignal...');
-
     OneSignal.init({
       appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
     });
@@ -22,7 +10,15 @@ export const initializeOneSignal = () => {
     OneSignal.push(() => {
       OneSignal.registerForPushNotifications().then(() => {
         getPlayerIdWithRetry().then((playerId) => {
-          console.log('Player ID obtenido:', playerId);
+          console.log('Player ID:', playerId);
+          const userId = getCookie('userId');
+          console.log('User ID:', userId);
+
+          // Obtén el nombre y el usuario del contexto o de las cookies
+          const userName = getCookie('userName');
+          console.log('UserName:', userName);
+          const userUsername = getCookie('userUsername');
+          console.log('Usuario:', userUsername);
 
           if (userId) {
             // Enviar Player ID al backend para agregarlo al usuario
@@ -35,16 +31,16 @@ export const initializeOneSignal = () => {
             })
             .then(response => response.json())
             .then(data => {
-              console.log('Player ID guardado en el backend:', data.message);
+              console.log(data.message);
             })
             .catch(error => {
-              console.error('Error al enviar Player ID al backend:', error);
+              console.error('Error al enviar Player ID:', error);
             });
           } else {
-            console.error('User ID no disponible en las cookies.');
+            console.error('User ID no disponible en las cookies');
           }
         }).catch((error) => {
-          console.error('Error al obtener Player ID:', error);
+          console.error(error);
         });
       }).catch(error => {
         console.error('Error al registrar para notificaciones:', error);
@@ -55,6 +51,10 @@ export const initializeOneSignal = () => {
     OneSignal.on('subscriptionChange', function(isSubscribed) {
       if (isSubscribed) {
         getPlayerIdWithRetry().then((playerId) => {
+          const userId = getCookie('userId');
+          const userName = getCookie('userName');
+          const userUsername = getCookie('userUsername');
+
           if (userId) {
             // Enviar Player ID al backend si cambia la suscripción
             fetch('/api/notificaciones/sendSubscriptionEmail', {
@@ -72,18 +72,18 @@ export const initializeOneSignal = () => {
               console.error('Error al enviar correo de suscripción:', error);
             });
           } else {
-            console.error('User ID no disponible en las cookies.');
+            console.error('User ID no disponible en las cookies');
           }
         }).catch((error) => {
-          console.error('Error al obtener Player ID en subscriptionChange:', error);
+          console.error(error);
         });
       }
     });
   });
 };
 
-// Función para obtener el Player ID con más reintentos y mayor tiempo de espera
-const getPlayerIdWithRetry = async (retries = 10, delay = 2000) => {
+// Función para obtener el Player ID con reintentos
+const getPlayerIdWithRetry = async (retries = 10, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
     const playerId = await window.OneSignal.getUserId();
     if (playerId) {
@@ -98,9 +98,5 @@ const getPlayerIdWithRetry = async (retries = 10, delay = 2000) => {
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {
-    console.log(`Cookie obtenida: ${name} = ${parts.pop().split(';').shift()}`);
-    return parts.pop().split(';').shift();
-  }
-  console.log(`Cookie ${name} no encontrada`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
 };
