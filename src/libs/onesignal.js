@@ -1,12 +1,19 @@
-export const initializeOneSignal = (userId, userName, userUsername) => {
+export const initializeOneSignal = () => {
+  // Obtener los valores desde las cookies
+  const userId = getCookie('userId');
+  const userName = getCookie('userName');
+  const userUsername = getCookie('userUsername');
+
   if (!userId) {
-    console.error('User ID no disponible, no se puede inicializar OneSignal.');
+    console.error('User ID no disponible en las cookies, no se puede inicializar OneSignal.');
     return;
   }
 
   window.OneSignal = window.OneSignal || [];
 
   OneSignal.push(function() {
+    console.log('Inicializando OneSignal...');
+
     OneSignal.init({
       appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
     });
@@ -15,7 +22,7 @@ export const initializeOneSignal = (userId, userName, userUsername) => {
     OneSignal.push(() => {
       OneSignal.registerForPushNotifications().then(() => {
         getPlayerIdWithRetry().then((playerId) => {
-          console.log('Player ID:', playerId);
+          console.log('Player ID obtenido:', playerId);
 
           if (userId) {
             // Enviar Player ID al backend para agregarlo al usuario
@@ -28,16 +35,16 @@ export const initializeOneSignal = (userId, userName, userUsername) => {
             })
             .then(response => response.json())
             .then(data => {
-              console.log(data.message);
+              console.log('Player ID guardado en el backend:', data.message);
             })
             .catch(error => {
-              console.error('Error al enviar Player ID:', error);
+              console.error('Error al enviar Player ID al backend:', error);
             });
           } else {
-            console.error('User ID no disponible en las cookies');
+            console.error('User ID no disponible en las cookies.');
           }
         }).catch((error) => {
-          console.error(error);
+          console.error('Error al obtener Player ID:', error);
         });
       }).catch(error => {
         console.error('Error al registrar para notificaciones:', error);
@@ -65,18 +72,18 @@ export const initializeOneSignal = (userId, userName, userUsername) => {
               console.error('Error al enviar correo de suscripción:', error);
             });
           } else {
-            console.error('User ID no disponible en las cookies');
+            console.error('User ID no disponible en las cookies.');
           }
         }).catch((error) => {
-          console.error(error);
+          console.error('Error al obtener Player ID en subscriptionChange:', error);
         });
       }
     });
   });
 };
 
-// Función para obtener el Player ID con reintentos
-const getPlayerIdWithRetry = async (retries = 3, delay = 1000) => {
+// Función para obtener el Player ID con más reintentos y mayor tiempo de espera
+const getPlayerIdWithRetry = async (retries = 10, delay = 2000) => {
   for (let i = 0; i < retries; i++) {
     const playerId = await window.OneSignal.getUserId();
     if (playerId) {
@@ -91,5 +98,9 @@ const getPlayerIdWithRetry = async (retries = 3, delay = 1000) => {
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) {
+    console.log(`Cookie obtenida: ${name} = ${parts.pop().split(';').shift()}`);
+    return parts.pop().split(';').shift();
+  }
+  console.log(`Cookie ${name} no encontrada`);
 };
