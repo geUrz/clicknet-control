@@ -74,7 +74,7 @@ export default async function handler(req, res) {
         // Caso para obtener incidencia por usuario_id
         if (residencial_id) {
             try {
-                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id createdAt FROM incidencias WHERE residencial_id = ?', [residencial_id])
+                const [rows] = await connection.query('SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id createdAt FROM incidencias WHERE residencial_id = ? ORDER BY updatedAt DESC', [residencial_id])
                 if (rows.length === 0) {
                     return res.status(404).json({ error: 'Incidencia no encontrada' })
                 }
@@ -153,11 +153,6 @@ export default async function handler(req, res) {
                     'UPDATE incidencias SET incidencia = ?, descripcion = ?, zona = ?, estado = ? WHERE id = ?',
                     [incidencia, descripcion, zona, estado, id]
                 )
-
-                const header = 'Incidencia modificada'
-                const message = `${incidencia}`
-                const url = '/incidencias'
-                await sendNotification(usuario_id, header, message, url)
 
                 if (result.affectedRows === 0) {
                     return res.status(404).json({ error: 'Incidencia no encontrada' })

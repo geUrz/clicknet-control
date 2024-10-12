@@ -50,6 +50,10 @@ export default function Cuenta() {
                     <h2>{user.email}</h2>
                   </div>
                   <div>
+                    <h1>Residencial:</h1>
+                    <h2>{user.nombre_residencial}</h2>
+                  </div>
+                  <div>
                     <h1>Nivel:</h1>
                     <h2>{user.isadmin}</h2>
                   </div>

@@ -5,30 +5,40 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(usuario_id, header, message, url) {
+async function sendNotificationToResidentialUsers(residencial_id, header, message, url) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-    }
-
-    const data = {
-        app_id: ONE_SIGNAL_APP_ID,
-        included_segments: ['All'],
-        headings: { en: header },
-        contents: { en: message },
-        url: url
-    }
+    };
 
     try {
-        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
+        // Obtener todos los usuarios logueados con el mismo residencial_id
+        const [users] = await connection.query(
+            'SELECT onesignal_player_id FROM usuarios WHERE residencial_id = ? AND onesignal_player_id IS NOT NULL',
+            [residencial_id]
+        );
 
-        await connection.query(
-            'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
-            [usuario_id, header, message, url]
-        )
+        if (users.length === 0) {
+            console.log('No se encontraron usuarios para enviar notificaciones.');
+            return;
+        }
+
+        // Extraer los player_ids de los usuarios
+        const playerIds = users.map(user => user.onesignal_player_id);
+
+        const data = {
+            app_id: ONE_SIGNAL_APP_ID,
+            include_player_ids: playerIds,  // Enviar notificación solo a estos usuarios
+            headings: { en: header },
+            contents: { en: message },
+            url: url,
+        };
+
+        // Enviar la notificación a OneSignal
+        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
 
     } catch (error) {
-        console.error('Error sending notification:', error.message)
+        console.error('Error sending notification:', error.message);
     }
 }
 
@@ -109,8 +119,7 @@ export default async function handler(req, res) {
             const header = 'Visita proveedor'
             const message = `${visitaprovedor}`
             const url = '/visitaprovedores'
-            await sendNotification(usuario_id, header, message, url)
-
+            await sendNotificationToResidentialUsers(residencial_id, header, message, url)
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)
         } catch (error) {
@@ -128,8 +137,8 @@ export default async function handler(req, res) {
             try {
 
                 const [result] = await connection.query(
-                    'UPDATE visitaprovedores SET visitaprovedor = ?, descripcion = ?, estado = ?',
-                    [visitaprovedor, descripcion, estado]
+                    'UPDATE visitaprovedores SET visitaprovedor = ?, descripcion = ?, estado = ? WHERE id = ?',
+                    [visitaprovedor, descripcion, estado, id]
                 )
 
                 if (result.affectedRows === 0) {

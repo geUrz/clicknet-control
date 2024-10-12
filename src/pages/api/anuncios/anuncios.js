@@ -5,30 +5,40 @@ const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
 
 // Función para enviar notificación
-async function sendNotification(usuario_id, header, message, url) {
+async function sendNotificationToResidentialUsers(residencial_id, header, message, url) {
   const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
-  };
-
-  const data = {
-    app_id: ONE_SIGNAL_APP_ID,
-    included_segments: ['All'],
-    headings: { en: header }, 
-    contents: { en: message },
-    url: url
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
   };
 
   try {
-    await axios.post('https://onesignal.com/api/v1/notifications', data, { headers })
+      // Obtener todos los usuarios logueados con el mismo residencial_id
+      const [users] = await connection.query(
+          'SELECT onesignal_player_id FROM usuarios WHERE residencial_id = ? AND onesignal_player_id IS NOT NULL',
+          [residencial_id]
+      );
 
-    await connection.query(
-      'INSERT INTO notificaciones (usuario_id, header, message, url) VALUES (?, ?, ?, ?)',
-      [usuario_id, header, message, url]
-  )
+      if (users.length === 0) {
+          console.log('No se encontraron usuarios para enviar notificaciones.');
+          return;
+      }
+
+      // Extraer los player_ids de los usuarios
+      const playerIds = users.map(user => user.onesignal_player_id);
+
+      const data = {
+          app_id: ONE_SIGNAL_APP_ID,
+          include_player_ids: playerIds,  // Enviar notificación solo a estos usuarios
+          headings: { en: header },
+          contents: { en: message },
+          url: url,
+      };
+
+      // Enviar la notificación a OneSignal
+      await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
 
   } catch (error) {
-    console.error('Error sending notification:', error.message);
+      console.error('Error sending notification:', error.message);
   }
 }
 
@@ -64,7 +74,7 @@ export default async function handler(req, res) {
     // Caso para obtener anuncio por usuario_id
     if (residencial_id) {
       try {
-        const [rows] = await connection.query('SELECT id, usuario_id, folio, anuncio, descripcion, date, hora, residencial_id FROM anuncios WHERE residencial_id = ?', [residencial_id]);
+        const [rows] = await connection.query('SELECT id, usuario_id, folio, anuncio, descripcion, date, hora, residencial_id FROM anuncios WHERE residencial_id = ? ORDER BY updatedAt DESC', [residencial_id]);
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Anuncio no encontrado' })
         }
@@ -114,7 +124,7 @@ export default async function handler(req, res) {
       const header = 'Anuncio'
       const message = `${anuncio}`
       const url = '/anuncios'
-      await sendNotification(usuario_id, header, message, url)
+      await sendNotificationToResidentialUsers(residencial_id, header, message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)
@@ -123,16 +133,16 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'PUT') {
     // Actualización del anuncio
-    const { anuncio, descripcion, date, hora, residencial_id } = req.body;
+    const { anuncio, descripcion, date, hora } = req.body;
 
-    if (!anuncio || !descripcion || !date || !hora || !residencial_id || !id) {
+    if (!anuncio || !descripcion || !date || !hora || !id) {
       return res.status(400).json({ error: 'ID, anuncio y descripción son obligatorios' });
     }
 
     try {
       const [result] = await connection.query(
-        'UPDATE anuncios SET anuncio = ?, descripcion = ?, date = ?, hora = ?, residencial_id = ? WHERE id = ?',
-        [anuncio, descripcion, date, hora, residencial_id, id]
+        'UPDATE anuncios SET anuncio = ?, descripcion = ?, date = ?, hora = ? WHERE id = ?',
+        [anuncio, descripcion, date, hora, id]
       );
 
       if (result.affectedRows === 0) {

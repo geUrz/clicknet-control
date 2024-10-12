@@ -13,6 +13,7 @@ export default async function meHandler(req, res) {
 
     const decoded = jwt.verify(token, 'secret')
 
+    // Cambiar de JOIN a LEFT JOIN para permitir usuarios sin residencial_id
     const [rows] = await connection.query(`
       SELECT 
         usuarios.id, 
@@ -27,7 +28,7 @@ export default async function meHandler(req, res) {
         residenciales.nombre AS nombre_residencial
       FROM 
         usuarios
-      JOIN 
+      LEFT JOIN 
         residenciales ON usuarios.residencial_id = residenciales.id 
       WHERE 
         usuarios.id = ?
@@ -39,18 +40,19 @@ export default async function meHandler(req, res) {
 
     const user = rows[0];
 
+    // Si el usuario no tiene residencial_id, devolver null para los campos relacionados con residenciales
     return res.json({ 
       user: { 
         id: user.id, 
         nombre: user.nombre, 
         usuario: user.usuario, 
-        privada: user.privada, 
-        calle: user.calle, 
-        casa: user.casa, 
+        privada: user.privada || null, 
+        calle: user.calle || null, 
+        casa: user.casa || null, 
         email: user.email, 
         isadmin: user.isadmin, 
-        residencial_id: user.residencial_id,
-        nombre_residencial: user.nombre_residencial 
+        residencial_id: user.residencial_id || null,
+        nombre_residencial: user.nombre_residencial || null 
       } 
     })
   } catch (error) {

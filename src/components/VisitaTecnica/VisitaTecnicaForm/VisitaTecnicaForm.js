@@ -71,7 +71,8 @@ export function VisitaTecnicaForm(props) {
         descripcion,
         date: formattedDate,
         hora,
-        estado
+        estado,
+        residencial_id: user.residencial_id
       })
 
       setVisitatecnica('')

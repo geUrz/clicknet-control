@@ -1,5 +1,5 @@
-import { Button, Form, FormField, FormGroup, Input, Label, Message } from 'semantic-ui-react'
-import { useState } from 'react'
+import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message } from 'semantic-ui-react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { FaUserPlus } from 'react-icons/fa'
@@ -9,7 +9,6 @@ import { BasicJoin } from '@/layouts'
 import styles from './signup.module.css'
 
 export default function Signup() {
-
   const router = useRouter()
 
   const [errors, setErrors] = useState({})
@@ -21,19 +20,39 @@ export default function Signup() {
     calle: '',
     casa: '',
     email: '',
-    isadmin: '',
+    isadmin: '',  // Campo de nivel (Admin, Comité, etc.)
+    residencial_id: '',  // Nuevo campo para el residencial seleccionado
     password: '',
     confirmarPassword: ''
   })
 
-  useRedirectIfAuthenticated()
-
+  const [residenciales, setResidenciales] = useState([]) // Estado para almacenar los residenciales
   const [error, setError] = useState(null)
 
-  const handleChange = (e) => {
+  useRedirectIfAuthenticated()
+
+  // Función para obtener los residenciales
+  useEffect(() => {
+    const fetchResidenciales = async () => {
+      try {
+        const response = await axios.get('/api/residenciales/residenciales')
+        const opcionesResidenciales = response.data.map(res => ({
+          key: res.id,
+          text: res.nombre,
+          value: res.id
+        }))
+        setResidenciales(opcionesResidenciales)
+      } catch (error) {
+        console.error('Error al cargar residenciales:', error)
+      }
+    }
+    fetchResidenciales()
+  }, [])
+
+  const handleChange = (e, { name, value }) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value
+      [name]: value
     })
   }
 
@@ -49,11 +68,26 @@ export default function Signup() {
     }
 
     if (!credentials.email) {
-      newErrors.email = 'El campo es requerido'
+      newErrors.email = 'El campo es requerido' // Validación de email
     }
 
     if (!credentials.isadmin) {
-      newErrors.isadmin = 'El campo es requerido'
+      newErrors.isadmin = 'El campo es requerido' // Validación de nivel
+    }
+
+    // Validación del residencial para todos los niveles
+    if (!credentials.residencial_id) {
+      newErrors.residencial = 'El campo es requerido' // Validación del residencial
+    }
+
+    // Validaciones de privada, calle y casa solo si el nivel es Residente
+    if (credentials.isadmin === 'Residente') {
+      if (!credentials.calle) {
+        newErrors.calle = 'El campo es requerido';
+      }
+      if (!credentials.casa) {
+        newErrors.casa = 'El campo es requerido';
+      }
     }
 
     if (!credentials.password) {
@@ -95,6 +129,7 @@ export default function Signup() {
         casa: '',
         email: '',
         isadmin: '',
+        residencial_id: '', // Limpiar el campo residencial
         password: '',
         confirmarPassword: ''
       })
@@ -114,13 +149,9 @@ export default function Signup() {
   };
 
   return (
-
     <BasicJoin relative>
-
       <div className={styles.main}>
-
         <div className={styles.boxForm}>
-
           <div className={styles.user}>
             <div>
               <FaUserPlus />
@@ -150,37 +181,7 @@ export default function Signup() {
                 />
                 {errors.usuario && <Message negative>{errors.usuario}</Message>}
               </FormField>
-              <FormField>
-                <Label>
-                  Privada
-                </Label>
-                <Input
-                  name='privada'
-                  type="text"
-                  value={credentials.privada}
-                  onChange={handleChange}
-                />
-              </FormField>
-              <FormField>
-                <Label>
-                  Calle
-                </Label>
-                <Input
-                  name='calle'
-                  type="text"
-                  value={credentials.calle}
-                  onChange={handleChange}
-                />
-              </FormField>
-              <FormField>
-                <Label>Casa</Label>
-                <Input
-                  name='casa'
-                  type='number'
-                  value={credentials.casa}
-                  onChange={handleChange}
-                />
-              </FormField>
+              {/* Campo de correo */}
               <FormField error={!!errors.email}>
                 <Label>Correo</Label>
                 <Input
@@ -191,26 +192,77 @@ export default function Signup() {
                 />
                 {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
+              {/* Campo Nivel con Dropdown */}
               <FormField error={!!errors.isadmin}>
-                <Label>
-                  Nivel
-                </Label>
-                <FormField
+                <Label>Nivel</Label>
+                <Dropdown
+                  placeholder='Selecciona nivel'
+                  fluid
+                  selection
+                  options={[
+                    { key: 'Admin', text: 'Admin', value: 'Admin' },
+                    { key: 'Comité', text: 'Comité', value: 'Comité' },
+                    { key: 'Residente', text: 'Residente', value: 'Residente' },
+                    { key: 'Caseta', text: 'Caseta', value: 'Caseta' },
+                    { key: 'Técnico', text: 'Técnico', value: 'Técnico' },
+                  ]}
                   name='isadmin'
-                  type="text"
-                  control='select'
                   value={credentials.isadmin}
                   onChange={handleChange}
-                >
-                  <option value=''></option>
-                  <option value='Admin'>Admin</option>
-                  <option value='Comité'>Comité</option>
-                  <option value='Residente'>Residente</option>
-                  <option value='Caseta'>Caseta</option>
-                  <option value='Técnico'>Técnico</option>
-                </FormField>
+                />
                 {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
               </FormField>
+              
+              {/* Mostrar campos de privada, calle, casa solo si el nivel es Residente */}
+              {credentials.isadmin === 'Residente' && (
+                <>
+                  <FormField>
+                    <Label>Privada</Label>
+                    <Input
+                      name='privada'
+                      type="text"
+                      value={credentials.privada}
+                      onChange={handleChange}
+                    />
+                  </FormField>
+                  <FormField error={!!errors.calle}>
+                    <Label>Calle</Label>
+                    <Input
+                      name='calle'
+                      type="text"
+                      value={credentials.calle}
+                      onChange={handleChange}
+                    />
+                    {errors.calle && <Message negative>{errors.calle}</Message>}
+                  </FormField>
+                  <FormField error={!!errors.casa}>
+                    <Label>Casa</Label>
+                    <Input
+                      name='casa'
+                      type='number'
+                      value={credentials.casa}
+                      onChange={handleChange}
+                    />
+                    {errors.casa && <Message negative>{errors.casa}</Message>}
+                  </FormField>
+                </>
+              )}
+
+              {/* Campo para seleccionar el residencial */}
+              <FormField error={!!errors.residencial_id}>
+                <Label>Residencial</Label>
+                <Dropdown
+                  placeholder='Selecciona residencial'
+                  fluid
+                  selection
+                  options={residenciales}
+                  name='residencial_id'
+                  value={credentials.residencial_id}
+                  onChange={handleChange}
+                />
+                {errors.residencial_id && <Message negative>{errors.residencial_id}</Message>}
+              </FormField>
+
               <FormField error={!!errors.password}>
                 <Label>Contraseña</Label>
                 <Input
@@ -243,12 +295,8 @@ export default function Signup() {
               Iniciar sesión
             </Link>
           </div>
-
         </div>
-
       </div>
-
     </BasicJoin>
-
   )
 }

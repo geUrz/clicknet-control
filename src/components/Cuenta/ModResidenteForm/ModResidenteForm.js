@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
-import { Form, Button, Input, Label, FormGroup, FormField, Dropdown, Message } from 'semantic-ui-react'
+import { Form, Button, Input, Label, FormGroup, FormField, Message } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './ModResidenteForm.module.css'
 
@@ -18,11 +18,9 @@ export function ModResidenteForm(props) {
     newEmail: user.email || '',
     newIsAdmin: user.isadmin || '',
     newPassword: '',
-    confirmPassword: '',
-    newResidencial: '' // Nuevo estado para el residencial
+    confirmPassword: ''
   });
 
-  const [residenciales, setResidenciales] = useState([]) // Estado para residenciales
   const [error, setError] = useState(null)
   const [errors, setErrors] = useState({})
 
@@ -30,7 +28,10 @@ export function ModResidenteForm(props) {
     const newErrors = {}
     if (!formData.newNombre) newErrors.newNombre = 'El campo es requerido'
     if (!formData.newUsuario) newErrors.newUsuario = 'El campo es requerido'
-    if (!formData.newResidencial) newErrors.newResidencial = 'El campo es requerido' // Validación para residencial
+    if (!formData.newCalle) newErrors.newCalle = 'El campo es requerido'
+    if (!formData.newCasa) newErrors.newCasa = 'El campo es requerido'
+    if (!formData.newEmail) newErrors.newEmail = 'El campo es requerido'
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -66,7 +67,6 @@ export function ModResidenteForm(props) {
         newCasa: formData.newCasa,
         newEmail: formData.newEmail,
         newIsAdmin: formData.newIsAdmin,
-        newResidencial: formData.newResidencial, // Enviar el residencial
         newPassword: formData.newPassword,
       })
 
@@ -81,24 +81,6 @@ export function ModResidenteForm(props) {
       }
     }
   }
-
-  useEffect(() => {
-    const fetchResidenciales = async () => {
-      try {
-        const response = await axios.get('/api/residenciales/residenciales')
-        const opcionesResidenciales = response.data.map(res => ({
-          key: res.id,
-          text: res.nombre,
-          value: res.id
-        }))
-        setResidenciales(opcionesResidenciales)
-      } catch (error) {
-        console.error('Error al cargar residenciales:', error)
-      }
-    }
-
-    fetchResidenciales()
-  }, []) 
 
   return (
     <>
@@ -126,7 +108,7 @@ export function ModResidenteForm(props) {
             />
             {errors.newUsuario && <span className={styles.error}>{errors.newUsuario}</span>}
           </FormField>
-          <FormField error={!!errors.newPrivada}>
+          <FormField>
             <Label>Nueva privada</Label>
             <Input
               name='newPrivada'
@@ -134,7 +116,6 @@ export function ModResidenteForm(props) {
               value={formData.newPrivada}
               onChange={handleChange}
             />
-            {errors.newPrivada && <span className={styles.error}>{errors.newPrivada}</span>}
           </FormField>
           <FormField error={!!errors.newCalle}>
             <Label>Nueva calle</Label>
@@ -165,18 +146,6 @@ export function ModResidenteForm(props) {
               onChange={handleChange}
             />
             {errors.newEmail && <span className={styles.error}>{errors.newEmail}</span>}
-          </FormField>
-          <FormField error={!!errors.newResidencial}>
-            <Label>Nuevo residencial</Label>
-            <Dropdown
-              placeholder='Selecciona residencial'
-              fluid
-              selection
-              options={residenciales}
-              value={formData.newResidencial}
-              onChange={(e, { value }) => setFormData({ ...formData, newResidencial: value })}
-            />
-            {errors.newResidencial && <Message negative>{errors.newResidencial}</Message>}
           </FormField>
           <FormField>
             <Label>Nueva contraseña</Label>

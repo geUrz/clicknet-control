@@ -6,9 +6,7 @@ import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './ModUsuarioForm.module.css'
 
 export function ModUsuarioForm(props) {
-
   const { onOpenClose } = props
-
   const { user, logout } = useAuth()
 
   const [formData, setFormData] = useState({
@@ -17,9 +15,11 @@ export function ModUsuarioForm(props) {
     newEmail: user.email || '',
     newIsAdmin: user.isadmin || '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    newResidencial: user.residencial_id || '' // Nuevo estado para el residencial, preasignado
   });
 
+  const [residenciales, setResidenciales] = useState([]); // Estado para residenciales
   const [error, setError] = useState(null)
   const [errors, setErrors] = useState({})
 
@@ -38,8 +38,12 @@ export function ModUsuarioForm(props) {
       newErrors.newIsAdmin = 'El campo es requerido';
     }
 
-    setErrors(newErrors);
+    // Validación para el residencial solo si el nivel no es Admin (opcional)
+    if (!formData.newResidencial) {
+      newErrors.newResidencial = 'El campo es requerido'; // Validación para residencial
+    }
 
+    setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
 
@@ -71,6 +75,7 @@ export function ModUsuarioForm(props) {
         newUsuario: formData.newUsuario,
         newEmail: formData.newEmail,
         newIsAdmin: formData.newIsAdmin,
+        newResidencial: formData.newResidencial, // Enviar el residencial
         newPassword: formData.newPassword,
       })
 
@@ -85,6 +90,25 @@ export function ModUsuarioForm(props) {
       }
     }
   }
+
+  // Cargar los residenciales al montar el componente
+  useEffect(() => {
+    const fetchResidenciales = async () => {
+      try {
+        const response = await axios.get('/api/residenciales/residenciales')
+        const opcionesResidenciales = response.data.map(res => ({
+          key: res.id,
+          text: res.nombre,
+          value: res.id
+        }))
+        setResidenciales(opcionesResidenciales)
+      } catch (error) {
+        console.error('Error al cargar residenciales:', error)
+      }
+    }
+
+    fetchResidenciales()
+  }, [])
 
   const opcionesNivel = [
     { key: 1, text: 'Admin', value: 'Admin' },
@@ -125,9 +149,7 @@ export function ModUsuarioForm(props) {
 
   return (
     <>
-
       <IconClose onOpenClose={onOpenClose} />
-
       <Form onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <FormGroup widths='equal'>
           <FormField error={!!errors.newNombre}>
@@ -150,7 +172,7 @@ export function ModUsuarioForm(props) {
             />
             {errors.newUsuario && <Message negative>{errors.newUsuario}</Message>}
           </FormField>
-          <FormField>
+          <FormField error={!!errors.newEmail}>
             <Label>Nuevo correo</Label>
             <Input
               name='newEmail'
@@ -158,13 +180,12 @@ export function ModUsuarioForm(props) {
               value={formData.newEmail}
               onChange={handleChange}
             />
+            {errors.newEmail && <Message negative>{errors.newEmail}</Message>}
           </FormField>
 
           {activate ? (
             <FormField error={!!errors.newIsAdmin}>
-              <Label>
-                Nivel
-              </Label>
+              <Label>Nivel</Label>
               <Dropdown
                 placeholder='Selecciona una opción'
                 fluid
@@ -176,6 +197,21 @@ export function ModUsuarioForm(props) {
               {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
             </FormField>
           ) : ''}
+
+          {/* Campo para seleccionar el residencial */}
+          <FormField error={!!errors.newResidencial}>
+            <Label>Residencial</Label>
+            <Dropdown
+              placeholder='Selecciona residencial'
+              fluid
+              selection
+              options={residenciales}
+              name='newResidencial'
+              value={formData.newResidencial}
+              onChange={(e, { value }) => setFormData({ ...formData, newResidencial: value })}
+            />
+            {errors.newResidencial && <Message negative>{errors.newResidencial}</Message>}
+          </FormField>
 
           <FormField>
             <Label>Nueva contraseña</Label>
@@ -199,8 +235,6 @@ export function ModUsuarioForm(props) {
         {error && <p className={styles.error}>{error}</p>}
         <Button primary onClick={handleSubmit}>Guardar</Button>
       </Form>
-
     </>
-
   )
 }

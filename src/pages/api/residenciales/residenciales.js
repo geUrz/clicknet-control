@@ -1,4 +1,53 @@
 import connection from "@/libs/db"
+import axios from "axios";
+
+const ONE_SIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
+const ONE_SIGNAL_API_KEY = process.env.NEXT_PUBLIC_ONESIGNAL_API_KEY;
+
+// Función para enviar notificación solo a los admins
+async function sendNotificationToAdmins(header, message, url) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`,
+    };
+
+    try {
+        // Obtener los usuarios que son admin (isadmin = 'Admin') y tienen un onesignal_player_id no nulo
+        const [users] = await connection.query(
+            `SELECT onesignal_player_id 
+            FROM usuarios 
+            WHERE isadmin = 'Admin' 
+            AND onesignal_player_id IS NOT NULL`
+        );
+
+        if (users.length === 0) {
+            console.log('No se encontraron admins para enviar notificaciones.');
+            return;
+        }
+
+        // Extraer los player_ids de los admins
+        const playerIds = users.map(user => user.onesignal_player_id);
+
+        if (playerIds.length === 0) {
+            console.log('No se encontraron player IDs válidos.');
+            return;
+        }
+
+        const data = {
+            app_id: ONE_SIGNAL_APP_ID,
+            include_player_ids: playerIds,  // Enviar notificación solo a estos usuarios
+            headings: { en: header },
+            contents: { en: message },
+            url: url,
+        };
+
+        // Enviar la notificación a OneSignal
+        await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+
+    } catch (error) {
+        console.error('Error sending notification:', error.message);
+    }
+}
 
 export default async function handler(req, res) {
   const { id } = req.query; // Agregamos 'search' al destructuring
@@ -36,6 +85,12 @@ export default async function handler(req, res) {
         'INSERT INTO residenciales (usuario_id, folio, nombre, direccion) VALUES (?, ?, ?, ?)',
         [usuario_id, folio, nombre, direccion]
       )
+
+      const header = 'Residencial';
+      const message = `${nombre}`;
+      const url = '/residenciales';
+
+      await sendNotificationToAdmins(header, message, url)
 
       const newClient = { id: result.insertId }
       res.status(201).json(newClient)
