@@ -8,7 +8,7 @@ export default async function savePlayerId(req, res) {
   }
 
   try {
-    // Verificar si el Player ID ya está registrado para este usuario
+    // Verificar si el Player ID ya está registrado para este usuario en la tabla `player_ids`
     const [existingPlayer] = await connection.query(
       'SELECT * FROM player_ids WHERE user_id = ? AND player_id = ?',
       [userId, playerId]
@@ -18,15 +18,21 @@ export default async function savePlayerId(req, res) {
       return res.status(200).json({ message: 'El Player ID ya está registrado' });
     }
 
-    // Si el Player ID no existe, agregarlo
+    // Si el Player ID no existe, agregarlo a la tabla `player_ids`
     await connection.query(
       'INSERT INTO player_ids (user_id, player_id) VALUES (?, ?)',
       [userId, playerId]
     );
 
-    return res.status(200).json({ message: 'Player ID registrado correctamente' });
+    // Actualizar el campo `onesignal_player_id` en la tabla `usuarios` con el último Player ID
+    await connection.query(
+      'UPDATE usuarios SET onesignal_player_id = ? WHERE id = ?',
+      [playerId, userId]
+    );
+
+    return res.status(200).json({ message: 'Player ID registrado y usuario actualizado correctamente' });
   } catch (error) {
-    console.error('Error al guardar Player ID:', error);
+    console.error('Error al guardar Player ID:', error.message);
     return res.status(500).json({ error: 'Error al guardar Player ID' });
   }
 }
