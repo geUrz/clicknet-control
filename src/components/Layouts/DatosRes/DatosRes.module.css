@@ -48,6 +48,10 @@
   text-align: left;
 }
 
+.box1_1 div:nth-child(1) h2{
+  text-transform: capitalize;
+}
+
 .box1_2{
   width: 50%;
   display: flex;

@@ -1,7 +1,7 @@
 import { BasicLayout } from '@/layouts'
 import { useCallback, useEffect, useState } from 'react'
 import { Card } from '@/components/Home'
-import { FaBuilding, FaBullhorn, FaCarCrash, FaClipboard, FaUserCheck, FaUserCog, FaUserMd } from 'react-icons/fa'
+import { FaBuilding, FaBullhorn, FaCarCrash, FaClipboard, FaUserCheck, FaUserCog, FaUserMd, FaUsers } from 'react-icons/fa'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import axios from 'axios'
 import { size } from 'lodash'
@@ -24,6 +24,7 @@ export default function Home() {
     reportes: null,
     visitaprovedores: null,
     residenciales: null,
+    usuarios: null
   });
 
   const fetchData = useCallback(async (endpoint, key) => {
@@ -45,7 +46,8 @@ export default function Home() {
       fetchData(`/api/visitatecnica/visitatecnica?residencial_id=${user.residencial_id}`, 'visitatecnica')
       fetchData(`/api/reportes/reportes?residencial_id=${user.residencial_id}`, 'reportes')
       fetchData(`/api/visitaprovedores/visitaprovedores?residencial_id=${user.residencial_id}`, 'visitaprovedores')
-      fetchData('/api/residenciales/residenciales', 'residenciales')
+      fetchData('/api/residenciales/residenciales', 'residenciales'),
+      fetchData('/api/usuarios/usuarios', 'usuarios')
     }
   }, [reload, user, fetchData])
 
@@ -55,13 +57,14 @@ export default function Home() {
     visitatecnica: size(data.visitatecnica),
     reportes: size(data.reportes),
     visitaprovedores: size(data.visitaprovedores),
-    residenciales: size(data.residenciales)
-    
+    residenciales: size(data.residenciales),
+    usuarios: size(data.usuarios)
+
   }
 
   if (loading) {
     return <Loading size={45} loading={0} />
-    
+
   }
 
   return (
@@ -90,19 +93,28 @@ export default function Home() {
               <FaUserMd />
             </Card>
 
-            {user && (user.isadmin === 'Admin') ? 
-              <Card link='/residenciales' title='Residenciales'
-              countResidenciales={countData.residenciales}>
-                <FaBuilding />
-              </Card>
-             : null
+            {user && (user.isadmin === 'Admin') ?
+              <>
+
+                <Card link='/usuarios' title='Usuarios'
+                  countResidenciales={countData.usuarios}>
+                  <FaUsers />
+                </Card>
+
+                <Card link='/residenciales' title='Residenciales'
+                  countResidenciales={countData.residenciales}>
+                  <FaBuilding />
+                </Card>
+
+              </>
+              : null
             }
 
-            {user && (user.isadmin === 'Admin' || user.isadmin === 'Caseta' || user.isadmin === 'Comité') ? 
+            {user && (user.isadmin === 'Admin' || user.isadmin === 'Caseta' || user.isadmin === 'Comité') ?
               <Card link='/validarvisitas' title='Validar Visitas' count={false}>
                 <FaUserCheck />
               </Card>
-             : null
+              : null
             }
 
           </div>

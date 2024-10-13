@@ -84,8 +84,10 @@ export function DatosCodigo(props) {
                 <h3>{visita.usuario_privada}</h3>
                 <h2>Casa</h2>
                 <h3>#{visita.usuario_casa}</h3>
-                <h2>Tipo de acceso</h2>
-                <h3>{visita.tipoacceso}</h3>
+                <div className={styles.tipoAcc}>
+                  <h2>Tipo de acceso</h2>
+                  <h3>{visita.tipoacceso}</h3>
+                </div>
               </div>
             </div>
 

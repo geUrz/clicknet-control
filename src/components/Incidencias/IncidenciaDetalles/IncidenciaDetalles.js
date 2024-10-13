@@ -15,7 +15,7 @@ export function IncidenciaDetalles(props) {
 
   const { user } = useAuth()
 
-  const [incidencia, setIncidencia] = useState(initialIncidencia)
+  const [incidencia, setIncidencia] = useState(initialIncidencia || {})
   const [showEditIncidencia, setShowEditIncidencia] = useState(false)
   const [showSubirImg, setShowSubirImg] = useState(false)
   const [selectedImageKey, setSelectedImageKey] = useState(null)
@@ -43,6 +43,7 @@ export function IncidenciaDetalles(props) {
     if (incidencia?.id) {
       try {
         await axios.delete(`/api/incidencias/incidencias?id=${incidencia.id}`)
+        setIncidencia(null)
         onReload()
         onToastSuccessIncidenciaDel()
         onOpenCloseDetalles()

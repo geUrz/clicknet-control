@@ -250,13 +250,17 @@
   cursor: pointer;
 }
 
+.tipoAcc h2{
+  text-transform: capitalize;
+}
+
 .reporta div, .tipoAcc div{
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
-.tipoAcc h2{
+.reporta h2{
   text-transform: capitalize;
 }
 

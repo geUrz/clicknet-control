@@ -1,18 +1,18 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
-import { formatDate } from '@/helpers';
+import { formatDate, formatDateInc, formatDateIncDet } from '@/helpers';
 import { BasicModal } from '@/layouts';
 import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
-import { Image, Image as SemanticImage } from 'semantic-ui-react';
+import { Image as SemanticImage } from 'semantic-ui-react';
 import styles from './VisitaDetalles.module.css';
 
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-  
+
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)
@@ -38,7 +38,7 @@ export function VisitaDetalles(props) {
     } else {
       console.error('Visita o ID no disponible')
     }
-  }
+  };
 
   const handleDownloadQRCode = async () => {
     if (!visita || !visita.qrCode) {
@@ -185,26 +185,6 @@ export function VisitaDetalles(props) {
             <SemanticImage src={visita.qrCode} />
           )}
         </div>
-
-        {visita.img1 || visita.img2 ? 
-          <div className={styles.mainImg}>
-            <div className={styles.sectionImg}>
-              {visita.img1 ?
-                <div>
-                  <Image src={visita.img1} />
-                </div>
-                : ''
-              }
-              {visita.img2 ?
-                <div>
-                  <Image src={visita.img2} />
-                </div>
-                : ''
-              }
-            </div>
-          </div>
-          : ''
-        }
 
         {user.isadmin === 'Admin' || visita.usuario_id === user.id ? (
           <>

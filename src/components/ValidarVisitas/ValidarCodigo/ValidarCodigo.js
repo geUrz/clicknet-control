@@ -1,9 +1,9 @@
 import { Button, Input } from 'semantic-ui-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import QrScanner from 'react-qr-scanner';
 import { BasicModal } from '@/layouts';
-import { IconClose, Loading, ToastWarningPage } from '@/components/Layouts';
+import { IconClose, Loading } from '@/components/Layouts';
 import { FaEraser, FaQrcode } from 'react-icons/fa';
 import { IoIosReverseCamera } from 'react-icons/io';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,7 +11,7 @@ import styles from './ValidarCodigo.module.css';
 import { useRouter } from 'next/router';
 
 export function ValidarCodigo(props) {
-  const { reload, onReload, setVisita, onToastSuccessQRValido, onToastSuccessPagina } = props;
+  const { reload, onReload, setVisita, onToastSuccessQRValido } = props;
 
   const { user } = useAuth()
 

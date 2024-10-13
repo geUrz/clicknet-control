@@ -36,7 +36,7 @@ export function AnuncioDetalles(props) {
         console.error('Error al eliminar el anuncio:', error)
       }
     } else {
-      console.error('Incidencia o ID no disponible')
+      console.error('Anuncio o ID no disponible')
     }
   }
 

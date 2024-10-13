@@ -1,93 +1,77 @@
-import { Button, Checkbox, Dropdown, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react'
-import { useState } from 'react'
-import axios from 'axios'
-import { useAuth } from '@/contexts/AuthContext'
-import { IconClose } from '@/components/Layouts/IconClose/IconClose'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import styles from './VisitaForm.module.css'
+import { Button, Checkbox, Dropdown, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react';
+import { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '@/contexts/AuthContext';
+import { IconClose } from '@/components/Layouts/IconClose/IconClose';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import styles from './VisitaForm.module.css';
 
 export function VisitaForm(props) {
-
-  const { user } = useAuth()
-
-  const [visita, setVisita] = useState('')
-  const [tipovisita, setTipovisita] = useState('')
-  const [tipoacceso, setTipoacceso] = useState('')
-  const [date, setDate] = useState(null)
-  const [fromDate, setFromDate] = useState(null)
-  const [toDate, setToDate] = useState(null)
-  const [hora, setHora] = useState('')
-  const [diasSeleccionados, setDiasSeleccionados] = useState([])
-
-  const { reload, onReload, onOpenCloseForm, onToastSuccessVisita } = props
-
-  const [errors, setErrors] = useState({})
-
-  const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+  const { user } = useAuth();
+  
+  const [visita, setVisita] = useState('');
+  const [tipovisita, setTipovisita] = useState('');
+  const [tipoacceso, setTipoacceso] = useState('');
+  const [date, setDate] = useState(null);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+  const [hora, setHora] = useState('');
+  const [diasSeleccionados, setDiasSeleccionados] = useState([]);
+  
+  const { onReload, onOpenCloseForm, onToastSuccessVisita } = props;
+  const [errors, setErrors] = useState({});
+  
+  const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   const validarForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
-    if (!visita) {
-      newErrors.visita = 'El campo es requerido'
-    }
+    if (!visita) newErrors.visita = 'El campo es requerido';
+    if (!tipovisita) newErrors.tipovisita = 'El campo es requerido';
 
     if (tipoacceso === 'frecuente' && diasSeleccionados.length === 0) {
-      newErrors.dias = 'Debe seleccionar al menos un día'
+      newErrors.dias = 'Debe seleccionar al menos un día';
     }
 
-    if (!tipoacceso) {
-      newErrors.tipoacceso = 'El campo es requerido'
-    }
+    if (!tipoacceso) newErrors.tipoacceso = 'El campo es requerido';
 
     if (tipoacceso === 'frecuente') {
-      if (!fromDate) {
-        newErrors.fromDate = 'El campo es requerido'
-      }
-
-      if (!toDate) {
-        newErrors.toDate = 'El campo es requerido'
+      if (!fromDate) newErrors.fromDate = 'El campo es requerido';
+      if (!toDate) newErrors.toDate = 'El campo es requerido';
+      if (fromDate && toDate && fromDate > toDate) {
+        newErrors.dateRange = 'La fecha de "Desde" debe ser anterior a "Hasta"';
       }
     } else if (tipoacceso === 'eventual') {
-      if (!date) {
-        newErrors.date = 'El campo es requerido'
-      }
+      if (!date) newErrors.date = 'El campo es requerido';
     }
 
-    setErrors(newErrors)
-
-    return Object.keys(newErrors).length === 0
-
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleVisitaChange = (e) => {
-    const value = e.target.value
-    setVisita(value)
-  }
+    setVisita(e.target.value);
+  };
 
   const handleDiaChange = (dia) => {
-    setDiasSeleccionados((prev) =>
+    setDiasSeleccionados((prev) => 
       prev.includes(dia) ? prev.filter((d) => d !== dia) : [...prev, dia]
-    )
-  }
+    );
+  };
 
   const crearVisita = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    if (!validarForm()) return;
 
-    if (!validarForm()) {
-      return
-    }
+    const estado = 'Sin ingresar';
+    const formattedDate = date ? date.toISOString().split('T')[0] : null;
+    const formattedFromDate = fromDate ? fromDate.toISOString().split('T')[0] : null;
+    const formattedToDate = toDate ? toDate.toISOString().split('T')[0] : null;
 
-    const estado = 'Sin ingresar'
-
-    const formattedDate = date ? date.toISOString().split('T')[0] : null
-    const formattedFromDate = fromDate ? fromDate.toISOString().split('T')[0] : null
-    const formattedToDate = toDate ? toDate.toISOString().split('T')[0] : null
-
-    const diasOrdenadosSeleccionados = diasSeleccionados.sort((a, b) =>
+    const diasOrdenadosSeleccionados = diasSeleccionados.sort((a, b) => 
       diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b)
-    )
+    );
 
     try {
       await axios.post('/api/visitas/visitas', {
@@ -101,53 +85,47 @@ export function VisitaForm(props) {
         hora,
         estado,
         dias: tipoacceso === 'frecuente' ? diasOrdenadosSeleccionados.join(', ') : null,
-      })
+      });
 
-      setVisita('')
-      setTipovisita('')
-      setTipoacceso('')
-      setDate(null)
-      setFromDate(null)
-      setToDate(null)
-      setHora('')
-      setDiasSeleccionados([])
+      // Reiniciar estado del formulario
+      setVisita('');
+      setTipovisita('');
+      setTipoacceso('');
+      setDate(null);
+      setFromDate(null);
+      setToDate(null);
+      setHora('');
+      setDiasSeleccionados([]);
 
-      onReload()
-      onOpenCloseForm()
-      onToastSuccessVisita()
+      onReload();
+      onOpenCloseForm();
+      onToastSuccessVisita();
     } catch (error) {
-      console.error('Error al crear el visita:', error)
+      console.error('Error al crear la visita:', error);
     }
-  }
+  };
 
   const opcionesTipovisita = [
     { key: 1, text: 'Familia', value: 'Familia' },
     { key: 2, text: 'Amigo', value: 'Amigo' },
     { key: 3, text: 'Proveedor', value: 'Proveedor' },
     { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
-  ]
+  ];
 
   const opcionesTipoacceso = [
     { key: 1, text: 'Eventual', value: 'eventual' },
     { key: 2, text: 'Frecuente', value: 'frecuente' }
-  ]
+  ];
 
   return (
-
     <>
-
       <IconClose onOpenClose={onOpenCloseForm} />
-
       <div className={styles.main}>
-
         <div className={styles.container}>
-
           <Form>
             <FormGroup widths='equal'>
               <FormField error={!!errors.visita}>
-                <Label>
-                  Visita
-                </Label>
+                <Label>Visita</Label>
                 <Input
                   name='visita'
                   type="text"
@@ -157,16 +135,14 @@ export function VisitaForm(props) {
                 {errors.visita && <span className={styles.error}>{errors.visita}</span>}
               </FormField>
               <FormField error={!!errors.tipovisita}>
-                <Label>
-                  Tipo de visita
-                </Label>
+                <Label>Tipo de visita</Label>
                 <Dropdown
                   placeholder='Seleccionar una opción'
                   fluid
                   selection
                   options={opcionesTipovisita}
                   value={tipovisita}
-                  onChange={(e) => setTipovisita(e.target.value)}
+                  onChange={(e, { value }) => setTipovisita(value)}
                 />
                 {errors.tipovisita && <span className={styles.error}>{errors.tipovisita}</span>}
               </FormField>
@@ -178,7 +154,7 @@ export function VisitaForm(props) {
                   selection
                   options={opcionesTipoacceso}
                   value={tipoacceso}
-                  onChange={(e) => setTipoacceso(e.target.value)}
+                  onChange={(e, { value }) => setTipoacceso(value)}
                 />
                 {errors.tipoacceso && <span className={styles.error}>{errors.tipoacceso}</span>}
               </FormField>
@@ -205,9 +181,7 @@ export function VisitaForm(props) {
               <>
                 <FormField error={!!errors.fromDate}>
                   <Label>Fecha de acceso</Label>
-                  <Label>
-                    Desde
-                  </Label>
+                  <Label>Desde</Label>
                   <DatePicker
                     selected={fromDate}
                     onChange={(date) => setFromDate(date)}
@@ -221,9 +195,7 @@ export function VisitaForm(props) {
                   {errors.fromDate && <span className={styles.error}>{errors.fromDate}</span>}
                 </FormField>
                 <FormField error={!!errors.toDate}>
-                  <Label>
-                    Hasta
-                  </Label>
+                  <Label>Hasta</Label>
                   <DatePicker
                     selected={toDate}
                     onChange={(date) => setToDate(date)}
@@ -235,13 +207,12 @@ export function VisitaForm(props) {
                     popperPlacement="top"
                   />
                   {errors.toDate && <span className={styles.error}>{errors.toDate}</span>}
+                  {errors.dateRange && <span className={styles.error}>{errors.dateRange}</span>}
                 </FormField>
               </>
             ) : (
               <FormField error={!!errors.date}>
-                <Label>
-                  Fecha
-                </Label>
+                <Label>Fecha</Label>
                 <DatePicker
                   selected={date}
                   onChange={(date) => setDate(date)}
@@ -256,20 +227,12 @@ export function VisitaForm(props) {
               </FormField>
             )}
 
-            <Button
-              primary
-              onClick={crearVisita}
-            >
+            <Button primary onClick={crearVisita}>
               Crear
             </Button>
-
           </Form>
-
         </div>
-
       </div>
-
     </>
-
-  )
+  );
 }
