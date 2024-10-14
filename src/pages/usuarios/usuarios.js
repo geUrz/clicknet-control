@@ -4,10 +4,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { BasicLayout, BasicModal } from '@/layouts'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { UsuarioForm, UsuarioList } from '@/components/usuarios'
-import styles from './usuarios.module.css'
 import { FaSearch } from 'react-icons/fa'
-import { SearchUsuarios, UsuariosListSearch } from '@/components/Usuarios'
+import { UsuarioForm, UsuarioList, SearchUsuarios, UsuariosListSearch } from '@/components/Usuarios'
+import styles from './usuarios.module.css'
 
 export default function Usuarios() {
 
