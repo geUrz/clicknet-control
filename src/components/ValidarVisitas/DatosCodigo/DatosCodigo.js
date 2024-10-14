@@ -78,7 +78,7 @@ export function DatosCodigo(props) {
                 <h3>{visita.tipovisita}</h3>
               </div>
               <div>
-                <h2>Código acceso</h2>
+                <h2>Código</h2>
                 <h3>{visita.codigo}</h3>
                 <h2>Privada</h2>
                 <h3>{visita.usuario_privada}</h3>

@@ -8,11 +8,14 @@ import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
 import { Image as SemanticImage } from 'semantic-ui-react';
 import styles from './VisitaDetalles.module.css';
+import { format } from 'date-fns';
 
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-
+  const today = format(new Date(), 'yyyy-MM-dd')
+  console.log(today);
+  
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)
