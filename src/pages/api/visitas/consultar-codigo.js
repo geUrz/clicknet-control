@@ -1,5 +1,5 @@
 import connection from "@/libs/db"; // Tu conexión a la base de datos
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -28,7 +28,8 @@ export default async function handler(req, res) {
 
       // Verificar el estado de la visita
       const visita = rows[0]
-      const today = format(new Date(), 'yyyy-MM-dd')
+      const tod = parseISO(visita.date)
+      const today = format(tod, 'yyyy-MM-dd')
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
