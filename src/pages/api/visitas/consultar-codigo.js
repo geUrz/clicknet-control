@@ -1,4 +1,5 @@
 import connection from "@/libs/db"; // Tu conexión a la base de datos
+import { format } from "date-fns";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -27,11 +28,10 @@ export default async function handler(req, res) {
 
       // Verificar el estado de la visita
       const visita = rows[0]
-      const today = new Date().toISOString().split('T')[0]
+      const today = format(new Date(), 'yyyy-MM-dd')
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
-      console.log(today, fromDate, toDate);
       
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
       const diasDeLaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
