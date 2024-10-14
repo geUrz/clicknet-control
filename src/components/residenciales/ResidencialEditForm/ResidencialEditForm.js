@@ -8,11 +8,11 @@ import styles from './ResidencialEditForm.module.css'
 
 export function ResidencialEditForm(props) {
 
-  const { reload, onReload, residencial, onOpenEditResidencial, onToastSuccessResidencialMod } = props
+  const { reload, onReload, usuario, onOpenEditUsuario, onToastSuccessUsuarioMod } = props
 
   const [formData, setFormData] = useState({
-    nombre: residencial.nombre,
-    direccion: residencial.direccion,
+    nombre: usuario.nombre,
+    direccion: usuario.direccion,
   })
 
   const [errors, setErrors] = useState({})
@@ -49,15 +49,15 @@ export function ResidencialEditForm(props) {
     }
 
     try {
-      await axios.put(`/api/residenciales/residenciales?id=${residencial.id}`, {
+      await axios.put(`/api/residenciales/residenciales?id=${usuario.id}`, {
         ...formData,
         date: formData.date ? formData.date.toISOString().split('T')[0] : null
       })
       onReload()
-      onOpenEditResidencial()
-      onToastSuccessResidencialMod()
+      onOpenEditUsuario()
+      onToastSuccessUsuarioMod()
     } catch (error) {
-      console.error('Error actualizando el residencial:', error)
+      console.error('Error actualizando el usuario:', error)
     }
   }
 
@@ -72,7 +72,7 @@ export function ResidencialEditForm(props) {
 
     <>
 
-      <IconClose onOpenClose={onOpenEditResidencial} />
+      <IconClose onOpenClose={onOpenEditUsuario} />
 
       <Form>
         <FormGroup widths='equal'>

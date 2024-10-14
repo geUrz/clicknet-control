@@ -67,3 +67,12 @@ export function formatClientId(id) {
   }
   return id.toString().padStart(3, '0')
 }
+
+export function genUserId(length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = 'US-0'; // Prefijo para el folio
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}

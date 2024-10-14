@@ -97,7 +97,7 @@ export default function Home() {
               <>
 
                 <Card link='/usuarios' title='Usuarios'
-                  countResidenciales={countData.usuarios}>
+                  countUsuarios={countData.usuarios}>
                   <FaUsers />
                 </Card>
 

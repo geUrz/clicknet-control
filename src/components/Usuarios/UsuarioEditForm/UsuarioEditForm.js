@@ -3,23 +3,25 @@ import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
 import { Form, Button, Input, Label, FormGroup, FormField, Message, Dropdown } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
-import styles from './ModUsuarioForm.module.css'
+import styles from './UsuarioEditForm.module.css'
 
-export function ModUsuarioForm(props) {
-  const { onOpenClose } = props
-  const { user, logout } = useAuth()
+export function UsuarioEditForm(props) {
+  const { reload, onReload, usuario, onOpenClose, onToastSuccessUsuarioMod } = props
 
   const [formData, setFormData] = useState({
-    newNombre: user.nombre || '',
-    newUsuario: user.usuario || '',
-    newEmail: user.email || '',
-    newIsAdmin: user.isadmin || '',
+    newNombre: usuario.nombre || '',
+    newUsuario: usuario.usuario || '',
+    newResidencial: usuario.residencial_id || '',
+    newIsAdmin: usuario.isadmin || '',
+    newPrivada: usuario.privada || '',
+    newCalle: usuario.calle || '',
+    newCasa: usuario.casa || '',
+    newEmail: usuario.email || '',
     newPassword: '',
-    confirmPassword: '',
-    newResidencial: user.residencial_id || '' // Nuevo estado para el residencial, preasignado
+    confirmPassword: ''
   });
 
-  const [residenciales, setResidenciales] = useState([]); // Estado para residenciales
+  const [residenciales, setResidenciales] = useState([])
   const [error, setError] = useState(null)
   const [errors, setErrors] = useState({})
 
@@ -27,20 +29,32 @@ export function ModUsuarioForm(props) {
     const newErrors = {};
 
     if (!formData.newNombre) {
-      newErrors.newNombre = 'El campo es requerido';
+      newErrors.newNombre = 'El campo es requerido'
     }
 
     if (!formData.newUsuario) {
-      newErrors.newUsuario = 'El campo es requerido';
+      newErrors.newUsuario = 'El campo es requerido'
+    }
+
+    if (!formData.newResidencial) {
+      newErrors.newResidencial = 'El campo es requerido'
     }
 
     if (!formData.newIsAdmin) {
-      newErrors.newIsAdmin = 'El campo es requerido';
+      newErrors.newIsAdmin = 'El campo es requerido'
     }
 
-    // Validación para el residencial solo si el nivel no es Admin (opcional)
-    if (!formData.newResidencial) {
-      newErrors.newResidencial = 'El campo es requerido'; // Validación para residencial
+    if (formData.isadmin === 'Residente') {
+      if (!formData.newCalle) {
+        newErrors.newCalle = 'El campo es requerido'
+      }
+      if (!formData.newCasa) {
+        newErrors.newCasa = 'El campo es requerido'
+      }
+    }
+
+    if (!formData.newEmail) {
+      newErrors.newEmail = 'El campo es requerido'
     }
 
     setErrors(newErrors);
@@ -69,17 +83,21 @@ export function ModUsuarioForm(props) {
     }
 
     try {
-      await axios.put('/api/auth/updateUser', {
-        userId: user.id,
-        newNombre: formData.newNombre,
-        newUsuario: formData.newUsuario,
-        newEmail: formData.newEmail,
-        newIsAdmin: formData.newIsAdmin,
-        newResidencial: formData.newResidencial, // Enviar el residencial
-        newPassword: formData.newPassword,
+      await axios.put(`/api/usuarios/usuarios?id=${usuario.id}`, {
+        nombre: formData.newNombre,
+        usuario: formData.newUsuario,
+        privada: formData.newPrivada,
+        calle: formData.newCalle,
+        casa: formData.newCasa,
+        email: formData.newEmail,
+        isadmin: formData.newIsAdmin,
+        residencial_id: formData.newResidencial, 
+        password: formData.newPassword,
       })
 
-      logout()
+      onReload()
+      onOpenClose()
+      onToastSuccessUsuarioMod()
 
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
@@ -118,39 +136,10 @@ export function ModUsuarioForm(props) {
     { key: 5, text: 'Técnico', value: 'Técnico' }
   ]
 
-  const [activate, setActivate] = useState(false)
-
-  const timer = useRef(null)
-
-  const handleTouchStart = () => {
-    timer.current = setTimeout(() => {
-      setActivate(prev => !prev)
-    }, 3000)
-  }
-
-  const handleTouchEnd = () => {
-    clearTimeout(timer.current)
-  }
-
-  const handleKeyDown = (e) => {
-    if (e.ctrlKey && e.key === '0') {
-      e.preventDefault()
-      setActivate((prevState) => !prevState)
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
-
   return (
     <>
       <IconClose onOpenClose={onOpenClose} />
-      <Form onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <Form>
         <FormGroup widths='equal'>
           <FormField error={!!errors.newNombre}>
             <Label>Nuevo nombre</Label>
@@ -172,32 +161,6 @@ export function ModUsuarioForm(props) {
             />
             {errors.newUsuario && <Message negative>{errors.newUsuario}</Message>}
           </FormField>
-          <FormField error={!!errors.newEmail}>
-            <Label>Nuevo correo</Label>
-            <Input
-              name='newEmail'
-              type='email'
-              value={formData.newEmail}
-              onChange={handleChange}
-            />
-            {errors.newEmail && <Message negative>{errors.newEmail}</Message>}
-          </FormField>
-
-          {activate ? (
-            <FormField error={!!errors.newIsAdmin}>
-              <Label>Nivel</Label>
-              <Dropdown
-                placeholder='Selecciona una opción'
-                fluid
-                selection
-                options={opcionesNivel}
-                value={formData.newIsAdmin}
-                onChange={(e, { value }) => setFormData({ ...formData, newIsAdmin: value })}
-              />
-              {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
-            </FormField>
-          ) : ''}
-
           <FormField error={!!errors.newResidencial}>
             <Label>Residencial</Label>
             <Dropdown
@@ -211,7 +174,63 @@ export function ModUsuarioForm(props) {
             />
             {errors.newResidencial && <Message negative>{errors.newResidencial}</Message>}
           </FormField>
+          <FormField error={!!errors.newIsAdmin}>
+            <Label>Nuevo nivel</Label>
+            <Dropdown
+              placeholder='Selecciona una opción'
+              fluid
+              selection
+              options={opcionesNivel}
+              value={formData.newIsAdmin}
+              onChange={(e, { value }) => setFormData({ ...formData, newIsAdmin: value })}
+            />
+            {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
+          </FormField>
 
+          {formData.newIsAdmin === 'Residente' && (
+            <>
+              <FormField>
+                <Label>Privada</Label>
+                <Input
+                  name='privada'
+                  type="text"
+                  value={formData.newPrivada}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField error={!!errors.newCalle}>
+                <Label>Calle</Label>
+                <Input
+                  name='newCalle'
+                  type="text"
+                  value={formData.newCalle}
+                  onChange={handleChange}
+                />
+                {errors.newCalle && <Message negative>{errors.newCalle}</Message>}
+              </FormField>
+              <FormField error={!!errors.newCasa}>
+                <Label>Casa</Label>
+                <Input
+                  name='newCasa'
+                  type='number'
+                  value={formData.newCasa}
+                  onChange={handleChange}
+                />
+                {errors.newCasa && <Message negative>{errors.newCasa}</Message>}
+              </FormField>
+            </>
+          )}
+
+          <FormField error={!!errors.newEmail}>
+            <Label>Nuevo correo</Label>
+            <Input
+              name='newEmail'
+              type='email'
+              value={formData.newEmail}
+              onChange={handleChange}
+            />
+            {errors.newEmail && <Message negative>{errors.newEmail}</Message>}
+          </FormField>
           <FormField>
             <Label>Nueva contraseña</Label>
             <Input
