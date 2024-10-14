@@ -5,7 +5,7 @@ import { BasicLayout, BasicModal } from '@/layouts'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { UsuarioForm, UsuarioList } from '@/components/usuarios'
-import styles from './Usuarios.module.css'
+import styles from './usuarios.module.css'
 import { FaSearch } from 'react-icons/fa'
 import { SearchUsuarios, UsuariosListSearch } from '@/components/Usuarios'
 
