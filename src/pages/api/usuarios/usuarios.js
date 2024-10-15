@@ -1,4 +1,5 @@
-import connection from "@/libs/db";
+import connection from "@/libs/db"
+import bcrypt from "bcrypt"
 
 export default async function handler(req, res) {
     const { id, search } = req.query;
@@ -91,13 +92,20 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         // Crear un nuevo usuario
-        const { folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id } = req.body;
+        const { folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id, password } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ error: 'Se requiere una contraseña' });
+        }
 
         try {
+            // Encriptar la contraseña
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const [result] = await connection.query(
-                `INSERT INTO usuarios (folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id]
+                `INSERT INTO usuarios (folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id, password)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id, hashedPassword]
             );
 
             res.status(201).json({ id: result.insertId, folio, nombre, usuario, privada, calle, casa, email, isadmin, residencial_id });

@@ -176,7 +176,7 @@ export function ResidenteEditForm(props) {
                   <FormField>
                     <Label>Privada</Label>
                     <Input
-                      name='privada'
+                      name='newPrivada'
                       type="text"
                       value={formData.newPrivada}
                       onChange={handleChange}
