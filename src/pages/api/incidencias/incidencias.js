@@ -75,9 +75,9 @@ export default async function handler(req, res) {
                     'SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id, createdAt FROM incidencias WHERE residencial_id = ? ORDER BY updatedAt DESC',
                     [residencial_id]
                 )
-                if (rows.length === 0) {
+                /* if (rows.length === 0) {
                     return res.status(404).json({ error: 'Incidencia no encontrada' });
-                }
+                } */
                 res.status(200).json(rows);
             } catch (error) {
                 res.status(500).json({ error: error.message });

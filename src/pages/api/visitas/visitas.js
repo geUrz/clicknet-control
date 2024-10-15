@@ -100,9 +100,9 @@ export default async function handler(req, res) {
                     ORDER BY visitas.updatedAt DESC`, [usuario_id]
                 )
 
-                if (rows.length === 0) {
+                /* if (rows.length === 0) {
                     return res.status(404).json({ error: 'No se encontraron visitas para el usuario' })
-                }
+                } */
 
                 const visitas = await Promise.all(rows.map(async (visita) => {
                     const qrCode = await QRCode.toDataURL(visita.codigo)  // Genera el QR

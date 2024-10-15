@@ -55,9 +55,9 @@ export default async function handler(req, res) {
                     [id]
                 );
 
-                if (rows.length === 0) {
+                /* if (rows.length === 0) {
                     return res.status(404).json({ error: 'Usuario no encontrado' });
-                }
+                } */
 
                 res.status(200).json(rows[0]);
             } catch (error) {

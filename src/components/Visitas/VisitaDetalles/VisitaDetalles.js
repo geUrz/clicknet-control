@@ -1,5 +1,5 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
-import { formatDate, formatDateInc, formatDateIncDet } from '@/helpers';
+import { formatDate } from '@/helpers';
 import { BasicModal } from '@/layouts';
 import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
@@ -8,7 +8,6 @@ import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
 import { Image as SemanticImage } from 'semantic-ui-react';
 import styles from './VisitaDetalles.module.css';
-import { format, parseISO } from 'date-fns';
 
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;

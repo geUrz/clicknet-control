@@ -96,9 +96,9 @@ export default async function handler(req, res) {
     WHERE visitatecnica.residencial_id = ?
     ORDER BY visitatecnica.updatedAt DESC`, 
           [residencial_id])
-        if (rows.length === 0) {
+        /* if (rows.length === 0) {
           return res.status(404).json({ error: 'Visita Tecnica no encontrada' })
-        }
+        } */
         res.status(200).json(rows)
         //res.status(200).json(rows[0])
       } catch (error) {

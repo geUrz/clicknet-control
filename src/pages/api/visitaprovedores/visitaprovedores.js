@@ -69,9 +69,9 @@ export default async function handler(req, res) {
                 WHERE visitaprovedores.residencial_id = ?
                 ORDER BY visitaprovedores.updatedAt DESC`, 
                 [residencial_id])
-                if (rows.length === 0) {
+                /* if (rows.length === 0) {
                     return res.status(404).json({ error: 'Visita provedor no encontrado' })
-                }
+                } */
                 res.status(200).json(rows)
             } catch (error) {
                 res.status(500).json({ error: error.message })

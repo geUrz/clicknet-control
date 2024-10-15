@@ -76,9 +76,9 @@ export default async function handler(req, res) {
     if (residencial_id) {
       try {
         const [rows] = await connection.query('SELECT id, usuario_id, folio, reporte, descripcion, date, estado, img1, img2, img3, img4, img5, img6, residencial_id FROM reportes WHERE residencial_id = ? ORDER BY updatedAt DESC', [residencial_id])
-        if (rows.length === 0) {
+        /* if (rows.length === 0) {
           return res.status(404).json({ error: 'Reporte no encontrado' })
-        }
+        } */
         res.status(200).json(rows)
         //res.status(200).json(rows[0])
       } catch (error) {
