@@ -12,7 +12,7 @@ import styles from './VisitaDetalles.module.css';
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-  
+
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)
@@ -98,9 +98,13 @@ export function VisitaDetalles(props) {
 
         ctx.drawImage(img, 0, qrY, qrCodeSize, qrCodeSize)
 
+        const usuarioPrivada = visita.usuario_privada !== null ? visita.usuario_privada : '';
+        const usuarioCalle = visita.usuario_calle !== null ? visita.usuario_calle : '';
+        const usuarioCasa = visita.usuario_casa !== null && visita.usuario_casa !== 0 ? `#${visita.usuario_casa}` : ''
+
         // Texto que va debajo del código QR
         const additionalText = `${visita.usuario_nombre}\n` +
-          `${visita.usuario_privada} ${visita.usuario_calle} #${visita.usuario_casa}`;
+          `${usuarioPrivada} ${usuarioCalle} ${usuarioCasa}`;
 
         ctx.font = '18px Calibri'; // Tamaño de la fuente para el texto adicional
         const additionalLines = additionalText.split('\n')
@@ -116,7 +120,7 @@ export function VisitaDetalles(props) {
         // Crear enlace para descargar la imagen
         const link = document.createElement('a')
         link.href = canvas.toDataURL('image/png')
-        link.download = `qrCode_${visita.usuario_calle}_#${visita.usuario_casa}`;
+        link.download = `qrCode_${usuarioCalle}_${usuarioCasa}`;
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -147,7 +151,7 @@ export function VisitaDetalles(props) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const qrCodeSize = 300;
-        const textHeight = 60; 
+        const textHeight = 60;
         const additionalTextHeight = 60;
         const width = qrCodeSize;
         const height = qrCodeSize + textHeight + additionalTextHeight;
@@ -179,9 +183,14 @@ export function VisitaDetalles(props) {
         const qrY = 70;
         ctx.drawImage(img, 0, qrY, qrCodeSize, qrCodeSize);
 
-        // Texto adicional debajo del QR
+        const usuarioPrivada = visita.usuario_privada !== null ? visita.usuario_privada : '';
+        const usuarioCalle = visita.usuario_calle !== null ? visita.usuario_calle : '';
+        const usuarioCasa = visita.usuario_casa !== null && visita.usuario_casa !== 0 ? `#${visita.usuario_casa}` : ''
+
+        // Texto que va debajo del código QR
         const additionalText = `${visita.usuario_nombre}\n` +
-          `${visita.usuario_privada} ${visita.usuario_calle} #${visita.usuario_casa}`;
+          `${usuarioPrivada} ${usuarioCalle} ${usuarioCasa}`;
+
         const additionalLines = additionalText.split('\n');
         const additionalLineHeight = 20;
         let additionalTextY = 5 + qrCodeSize + 60;
@@ -193,7 +202,7 @@ export function VisitaDetalles(props) {
 
         // Convertir el canvas en un archivo blob para compartir
         canvas.toBlob(async (blob) => {
-          const file = new File([blob], `qrCode_${visita.usuario_calle}_#${visita.usuario_casa}.png`, { type: 'image/png' });
+          const file = new File([blob], `qrCode_${usuarioCalle}_#${usuarioCasa}.png`, { type: 'image/png' });
 
           if (navigator.share) {
             try {
@@ -301,10 +310,10 @@ export function VisitaDetalles(props) {
 
       <BasicModal
         title={
-          visita.tipoacceso === 'frecuente' 
-            ? 'Días y fecha para accesar' 
-            : visita.tipoacceso === 'eventual' 
-              ? 'Fecha para accesar' 
+          visita.tipoacceso === 'frecuente'
+            ? 'Días y fecha para accesar'
+            : visita.tipoacceso === 'eventual'
+              ? 'Fecha para accesar'
               : ''
         }
         show={showTipoAcc}
