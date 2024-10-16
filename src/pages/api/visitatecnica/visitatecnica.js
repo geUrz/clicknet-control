@@ -24,7 +24,17 @@ async function sendNotificationToResidentialUsers(residencial_id, header, messag
       }
 
       // Extraer los player_ids de los usuarios
-      const playerIds = users.map(user => user.onesignal_player_id);
+      //const playerIds = users.map(user => user.onesignal_player_id);
+
+      let playerIds = [];
+        users.forEach(user => {
+            // Verificar si hay más de un player_id y convertirlo en array
+            if (user.onesignal_player_id.includes(',')) {
+                playerIds = playerIds.concat(user.onesignal_player_id.split(','));
+            } else {
+                playerIds.push(user.onesignal_player_id);
+            }
+        })
 
       const data = {
           app_id: ONE_SIGNAL_APP_ID,

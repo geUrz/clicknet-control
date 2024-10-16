@@ -136,77 +136,6 @@
   border: 4px solid var(--clrGR1);
 }
 
-.iconEdit{
-  margin-top: 30px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.iconEdit svg, .iconEdit path{
-  font-size: 26px;
-  color: var(--clrBL0000);
-  cursor: pointer;
-}
-
-.iconEdit svg:hover, .iconEdit:hover path{
-  color: var(--clrBL0);
-}
-
-.iconEdit svg:active, .iconEdit:active path{
-  color: var(--clrBL1);
-}
-
-.actionsBottom{
-  margin-top: 30px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.iconDown{
-  margin-left: 20px;
-}
-
-.iconDown svg, .iconDown path{
-  margin-right: 20px;
-  font-size: 20px;
-  color: var(--clrGR000);
-  cursor: pointer;
-}
-
-.iconDown svg:hover, .iconDown:hover path{
-  color: var(--clrGR00);
-}
-
-.iconDown svg:active, .iconDown:active path{
-  color: var(--clrGR0);
-}
-
-.iconDel{
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.iconDel svg, .iconDel path{
-  font-size: 20px;
-  color: var(--clrGR000);
-  cursor: pointer;
-}
-
-.iconDel svg:hover, .iconDel:hover path{
-  color: var(--clrGR00);
-}
-
-.iconDel svg:active, .iconDel:active path{
-  color: var(--clrGR0);
-}
-
 .iconClose svg, .iconClose path{
   padding: 8px;
   font-size: 34px;
@@ -276,4 +205,81 @@
 
 .reporta div svg:active, .reporta div:active path, .tipoAcc div svg:active, .tipoAcc div:active path{
   color: var(--clrBL2);
+}
+
+.iconEdit{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconEdit svg, .iconEdit path{
+  font-size: 26px;
+  color: var(--clrBL0000);
+  cursor: pointer;
+}
+
+.iconEdit svg:hover, .iconEdit:hover path{
+  color: var(--clrBL0);
+}
+
+.iconEdit svg:active, .iconEdit:active path{
+  color: var(--clrBL1);
+}
+
+.actionsBottom{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionsBottom div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconDown{
+  margin-left: 20px;
+}
+
+.iconDown svg, .iconDown path, .iconShare svg, .iconShare path{
+  margin-right: 20px;
+  font-size: 20px;
+  color: var(--clrGR000);
+  cursor: pointer;
+}
+
+.iconDown svg:hover, .iconDown:hover path, .iconShare svg:hover, .iconShare:hover path{
+  color: var(--clrGR00);
+}
+
+.iconDown svg:active, .iconDown:active path, .iconShare svg:active, .iconShare:active path{
+  color: var(--clrGR0);
+}
+
+.iconDel{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.iconDel svg, .iconDel path{
+  font-size: 20px;
+  color: var(--clrGR000);
+  cursor: pointer;
+}
+
+.iconDel svg:hover, .iconDel:hover path{
+  color: var(--clrGR00);
+}
+
+.iconDel svg:active, .iconDel:active path{
+  color: var(--clrGR0);
 }

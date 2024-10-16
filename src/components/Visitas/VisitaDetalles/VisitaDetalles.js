@@ -1,7 +1,7 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
 import { formatDate } from '@/helpers';
 import { BasicModal } from '@/layouts';
-import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaShare, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm';
 import axios from 'axios';
@@ -130,7 +130,95 @@ export function VisitaDetalles(props) {
     } catch (error) {
       console.error('Error al descargar la imagen QR Code:', error)
     }
-  };
+  }
+
+  const handleShare = async () => {
+    if (!visita || !visita.qrCode) {
+      console.error('El objeto visita o qrCode no está definido');
+      return;
+    }
+
+    try {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = visita.qrCode;
+
+      img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const qrCodeSize = 300;
+        const textHeight = 60; 
+        const additionalTextHeight = 60;
+        const width = qrCodeSize;
+        const height = qrCodeSize + textHeight + additionalTextHeight;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Fondo blanco
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, width, height);
+
+        // Texto encima del QR
+        const headerText = 'Código de acceso\n' +
+          `${visita.codigo}`;
+        ctx.font = '18px Calibri';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const lines = headerText.split('\n');
+        const lineHeight = 25;
+        let textY = 25;
+
+        lines.forEach((line) => {
+          ctx.fillText(line, width / 2, textY);
+          textY += lineHeight;
+        });
+
+        const qrY = 70;
+        ctx.drawImage(img, 0, qrY, qrCodeSize, qrCodeSize);
+
+        // Texto adicional debajo del QR
+        const additionalText = `${visita.usuario_nombre}\n` +
+          `${visita.usuario_privada} ${visita.usuario_calle} #${visita.usuario_casa}`;
+        const additionalLines = additionalText.split('\n');
+        const additionalLineHeight = 20;
+        let additionalTextY = 5 + qrCodeSize + 60;
+
+        additionalLines.forEach((line) => {
+          ctx.fillText(line, width / 2, additionalTextY);
+          additionalTextY += additionalLineHeight;
+        });
+
+        // Convertir el canvas en un archivo blob para compartir
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], `qrCode_${visita.usuario_calle}_#${visita.usuario_casa}.png`, { type: 'image/png' });
+
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: 'Código QR de acceso',
+                text: `Visita: ${visita.visita}\nCódigo de acceso: ${visita.codigo}`,
+                files: [file], // Compartir el archivo con datos adicionales
+              });
+              console.log('QR compartido exitosamente');
+            } catch (error) {
+              console.error('Error al compartir el QR:', error);
+            }
+          } else {
+            console.error('La API de Web Share no está soportada en este navegador');
+          }
+        });
+      };
+
+      img.onerror = (error) => {
+        console.error('Error al cargar la imagen QR Code para compartir', error);
+      };
+    } catch (error) {
+      console.error('Error al compartir el QR:', error);
+    }
+  }
 
   return (
     <>
@@ -170,10 +258,6 @@ export function VisitaDetalles(props) {
                 <h1>Estatus</h1>
                 <h2>{visita.estado}</h2>
               </div>
-              <div>
-                <h1>Autorizó</h1>
-                <h2>{visita.autorizo_isAdmin}</h2>
-              </div>
             </div>
           </div>
         </div>
@@ -193,8 +277,13 @@ export function VisitaDetalles(props) {
             </div>
 
             <div className={styles.actionsBottom}>
-              <div className={styles.iconDown}>
-                <FaDownload onClick={handleDownloadQRCode} />
+              <div>
+                <div className={styles.iconDown}>
+                  <FaDownload onClick={handleDownloadQRCode} />
+                </div>
+                <div className={styles.iconShare}>
+                  <FaShareAlt onClick={handleShare} />
+                </div>
               </div>
               {user.isadmin === 'Admin' || visita.usuario_id === user.id ? (
                 <div className={styles.iconDel}>

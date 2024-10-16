@@ -147,23 +147,3 @@
   color: var(--clrBL1);
   cursor: pointer;
 }
-
-.reporta div{
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.reporta div svg, .reporta div path{
-  margin-left: 5px;
-  color: var(--clrBL0);
-  cursor: pointer;
-}
-
-.reporta div svg:hover, .reporta div:hover path{
-  color: var(--clrBL1);
-}
-
-.reporta div svg:active, .reporta div:active path{
-  color: var(--clrBL2);
-}

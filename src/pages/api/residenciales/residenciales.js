@@ -26,7 +26,17 @@ async function sendNotificationToAdmins(header, message, url) {
         }
 
         // Extraer los player_ids de los admins
-        const playerIds = users.map(user => user.onesignal_player_id);
+        //const playerIds = users.map(user => user.onesignal_player_id);
+
+        let playerIds = [];
+        users.forEach(user => {
+            // Verificar si hay más de un player_id y convertirlo en array
+            if (user.onesignal_player_id.includes(',')) {
+                playerIds = playerIds.concat(user.onesignal_player_id.split(','));
+            } else {
+                playerIds.push(user.onesignal_player_id);
+            }
+        })
 
         if (playerIds.length === 0) {
             console.log('No se encontraron player IDs válidos.');

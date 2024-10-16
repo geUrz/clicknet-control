@@ -17,10 +17,6 @@ export function AnuncioDetalles(props) {
 
   const onOpenEditAnuncio = () => setShowEditAnuncio((prevState) => !prevState)
 
-  const [showRes, setShowRes] = useState(false)
-
-  const onOpenCloseRes = () => setShowRes((prevState) => !prevState)
-
   const [showConfirmDel, setShowConfirmDel] = useState(false)
 
   const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
@@ -54,13 +50,6 @@ export function AnuncioDetalles(props) {
             <div>
               <h1>Descripción</h1>
               <h2>{anuncio.descripcion}</h2>
-            </div>
-            <div className={styles.anuncia}>
-              <h1>Anuncia</h1>
-              <div onClick={onOpenCloseRes}>
-                <h2>{anuncio.usuario_isadmin}</h2>
-                <FaInfoCircle />
-              </div>
             </div>
           </div>
           <div className={styles.box1_2}>
@@ -102,10 +91,6 @@ export function AnuncioDetalles(props) {
 
       <BasicModal title='Editar anuncio' show={showEditAnuncio} onClose={onOpenEditAnuncio}>
         <AnuncioEditForm reload={reload} onReload={onReload} anuncio={anuncio} onOpenEditAnuncio={onOpenEditAnuncio} onToastSuccessAnuncioMod={onToastSuccessAnuncioMod} />
-      </BasicModal>
-
-      <BasicModal title='datos de residente' show={showRes} onClose={onOpenCloseRes}>
-        <DatosRes anuncio={anuncio} onOpenCloseRes={onOpenCloseRes} />
       </BasicModal>
 
       <Confirm
