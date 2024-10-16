@@ -100,7 +100,7 @@ export function VisitaDetalles(props) {
 
         const usuarioPrivada = visita.usuario_privada !== null ? visita.usuario_privada : '';
         const usuarioCalle = visita.usuario_calle !== null ? visita.usuario_calle : '';
-        const usuarioCasa = visita.usuario_casa !== null && visita.usuario_casa !== 0 ? `#${visita.usuario_casa}` : ''
+        const usuarioCasa = visita.usuario_casa && visita.usuario_casa !== '0' ? `#${visita.usuario_casa}` : ''
 
         // Texto que va debajo del código QR
         const additionalText = `${visita.usuario_nombre}\n` +
@@ -185,7 +185,7 @@ export function VisitaDetalles(props) {
 
         const usuarioPrivada = visita.usuario_privada !== null ? visita.usuario_privada : '';
         const usuarioCalle = visita.usuario_calle !== null ? visita.usuario_calle : '';
-        const usuarioCasa = visita.usuario_casa !== null && visita.usuario_casa !== 0 ? `#${visita.usuario_casa}` : ''
+        const usuarioCasa = visita.usuario_casa && visita.usuario_casa !== '0' ? `#${visita.usuario_casa}` : ''
 
         // Texto que va debajo del código QR
         const additionalText = `${visita.usuario_nombre}\n` +
@@ -202,7 +202,7 @@ export function VisitaDetalles(props) {
 
         // Convertir el canvas en un archivo blob para compartir
         canvas.toBlob(async (blob) => {
-          const file = new File([blob], `qrCode_${usuarioCalle}_#${usuarioCasa}.png`, { type: 'image/png' });
+          const file = new File([blob], `qrCode_${usuarioCalle}_${usuarioCasa}.png`, { type: 'image/png' });
 
           if (navigator.share) {
             try {
