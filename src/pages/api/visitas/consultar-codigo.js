@@ -33,10 +33,10 @@ export default async function handler(req, res) {
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
-      
+
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
       
-      const diasDeLaSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+      const diasDeLaSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
       const diaActual = diasDeLaSemana[(new Date().getDay() + 6) % 7]
       
       const msjTipoAcceso = visita.tipoacceso === 'eventual' || visita.tipoacceso === 'frecuente'
