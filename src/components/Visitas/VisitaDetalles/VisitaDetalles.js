@@ -1,7 +1,7 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
 import { formatDate } from '@/helpers';
 import { BasicModal } from '@/layouts';
-import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaShare, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import styles from './VisitaDetalles.module.css';
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-
+  
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)

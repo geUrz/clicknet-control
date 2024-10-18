@@ -1,5 +1,5 @@
-import connection from "@/libs/db"; // Tu conexión a la base de datos
-import { format, parseISO } from "date-fns";
+import { formatDateInc } from "@/helpers"
+import connection from "@/libs/db"
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -28,27 +28,24 @@ export default async function handler(req, res) {
 
       // Verificar el estado de la visita
       const visita = rows[0]
-      const tod = parseISO(visita.date)
-      const today = format(tod, 'yyyy-MM-dd')
+      const todayFormat = new Date().toLocaleDateString().split('T')[0]
+      const today = formatDateInc(todayFormat)
       const visitaDate = visita.date
       const fromDate = visita.fromDate
       const toDate = visita.toDate
-      
+
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
+      
       const diasDeLaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
       const diaActual = diasDeLaSemana[new Date().getDay()]
-      
-      const isWithinDateRange = (today, fromDate, toDate) => {
-        return today >= fromDate && today <= toDate;
-      }
-      
+
       const msjTipoAcceso = visita.tipoacceso === 'eventual' || visita.tipoacceso === 'frecuente'
         ? `${visita.tipoacceso}`
         : 'Código inválido'
 
         if (visita.estado === 'Sin ingresar') {
           if (visita.tipoacceso === 'frecuente') {
-            if(isWithinDateRange(today, fromDate, toDate)) {
+            if (today >= fromDate && today <= toDate) {
               if (diasSeleccionados.includes(diaActual)) {
                 return res.status(200).json({
                   message: `¡ Código ${msjTipoAcceso} válido !\n El visitante no ha ingresado`,
@@ -69,12 +66,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: `¡ Código ${msjTipoAcceso} no válido !\n La fecha de ingreso no está disponible` });
           }
       } else if (visita.estado === 'Ingresado' && visita.tipoacceso === 'frecuente') {
-        const todayDate = new Date(today);
-        const fromDateObj = new Date(fromDate);
-        const toDateObj = new Date(toDate);
       
         // Verificar si el día actual está en el rango de fechas
-        if (todayDate >= fromDateObj && todayDate <= toDateObj) {
+        if (today >= fromDate && today <= toDate) {
           // Validar si el día actual está en los días seleccionados
           if (diasSeleccionados.includes(diaActual)) {
             return res.status(200).json({

@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       // Obtener la visita asociada al código proporcionado
       const [rows] = await connection.execute(`
         SELECT visitas.id, visitas.usuario_id, visitas.codigo, visitas.visita, visitas.tipovisita, 
-               visitas.tipoacceso, visitas.nota, visitas.date, fromDate, toDate,visitas.hora, visitas.estado, visitas.countAcc,
+               visitas.tipoacceso, visitas.nota, visitas.date, visitas.fromDate, visitas.toDate,visitas.hora, visitas.dias, visitas.estado, visitas.countAcc,
                usuarios.nombre AS usuario_nombre, usuarios.privada AS usuario_privada, usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa,
                usuarios.onesignal_player_id AS player_id
         FROM visitas
