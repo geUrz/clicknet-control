@@ -1,6 +1,6 @@
-import { IconClose, Confirm } from '@/components/Layouts';
+import { IconClose, Confirm, Loading } from '@/components/Layouts';
 import { formatDateIncDet } from '@/helpers';
-import { BasicModal } from '@/layouts';
+import { BasicModal, ModalImg } from '@/layouts';
 import { FaCheck, FaEdit, FaImage, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { IncidenciaEditForm } from '../IncidenciaEditForm/IncidenciaEditForm';
@@ -8,17 +8,22 @@ import axios from 'axios';
 import { UploadImg } from '@/components/Layouts/UploadImg';
 import styles from './IncidenciaDetalles.module.css';
 import { useAuth } from '@/contexts/AuthContext';
-import { Image } from 'semantic-ui-react';
+import { Button, Form, FormField, FormGroup, Image, Input } from 'semantic-ui-react';
 
 export function IncidenciaDetalles(props) {
   const { reload, onReload, incidencia: initialIncidencia, onOpenCloseDetalles, onToastSuccessIncidenciaMod, onToastSuccessIncidenciaDel } = props;
 
   const { user } = useAuth()
-
+  
   const [incidencia, setIncidencia] = useState(initialIncidencia || {})
   const [showEditIncidencia, setShowEditIncidencia] = useState(false)
   const [showSubirImg, setShowSubirImg] = useState(false)
   const [selectedImageKey, setSelectedImageKey] = useState(null)
+  const [showImg, setShowImg] = useState(false)
+  const [selectedImg, setSelectedImg] = useState(null)
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentTitleKey, setCurrentTitleKey] = useState(null);
+  const [showEditTitleModal, setShowEditTitleModal] = useState(false);
 
   const onOpenEditIncidencia = () => setShowEditIncidencia((prevState) => !prevState)
 
@@ -26,15 +31,24 @@ export function IncidenciaDetalles(props) {
 
   const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
 
+  const [imgKeyToDelete, setImgKeyToDelete] = useState(null);
+
+  const openImg = (imgUrl, imgKey) => {
+    setSelectedImg(imgUrl)
+    setImgKeyToDelete(imgKey)
+    setShowImg(true)
+  }
+
   const onShowSubirImg = (imgKey) => {
     setSelectedImageKey(imgKey)
     setShowSubirImg(true)
   }
 
   const onCloseSubirImg = () => {
-    setShowSubirImg(false)
-    setSelectedImageKey(null)
-  }
+    setShowSubirImg(false); // Cierra el modal
+    setSelectedImageKey(null); // Limpia la clave de la imagen seleccionada
+  };
+
 
   const [showConfirmDelImg, setShowConfirmDelImg] = useState(null)
   const [imageToDelete, setImageToDelete] = useState(null)
@@ -55,27 +69,78 @@ export function IncidenciaDetalles(props) {
     }
   }
 
-  const deleteImage = async () => {
+  const handleDeleteImage = async () => {
     try {
-      if (imageToDelete) {
-        await axios.put(`/api/incidencias/updateImage?id=${incidencia.id}`, { [imageToDelete]: null })
-        setIncidencia({ ...incidencia, [imageToDelete]: null })
-        setShowConfirmDelImg(false)
-      }
+      // Realiza la solicitud de eliminación de la imagen en el backend
+      await axios.delete(`/api/incidencias/uploadImage`, {
+        params: {
+          id: incidencia.id,
+          imageKey: imgKeyToDelete,
+        },
+      });
+  
+      // Actualiza el estado de la incidencia después de eliminar la imagen
+      setIncidencia((prevIncidencia) => ({
+        ...prevIncidencia,
+        [imgKeyToDelete]: null, // Se establece la clave de la imagen a null
+      }));
+  
+      onReload(); // Recarga los datos
+      setShowImg(false); // Cierra el modal de imagen
+      setShowConfirmDelImg(false); // Cierra el modal de confirmación
     } catch (error) {
-      console.error('Error al eliminar la imagen:', error)
+      console.error('Error al eliminar la imagen:', error);
     }
   }
+  
 
   const onShowConfirmDelImg = (imgKey) => {
-    setImageToDelete(imgKey) 
-    setShowConfirmDelImg(true) 
+    setImageToDelete(imgKey)
+    setShowConfirmDelImg(true)
   }
 
   const handleImageUploadSuccess = (imageKey, imageUrl) => {
     setIncidencia({ ...incidencia, [imageKey]: imageUrl });
     setShowSubirImg(false);
   }
+
+  const MAX_TITLE_LENGTH = 40
+
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value || ''
+    if (newTitle.length <= MAX_TITLE_LENGTH) {
+      setCurrentTitle(newTitle)
+    }
+  };
+  
+
+  const handleEditTitle = (title, key) => {
+    setCurrentTitle(title);
+    setCurrentTitleKey(key); // Guardamos la clave del título que se está editando
+    setShowEditTitleModal(true);
+  };
+
+  const handleSaveTitle = async () => {
+    try {
+      await axios.put(`/api/incidencias/uploadTitle`, {
+        id: incidencia.id,
+        titleKey: currentTitleKey,
+        titleValue: currentTitle,
+      });
+
+      setIncidencia((prev) => ({
+        ...prev,
+        [currentTitleKey]: currentTitle, // Actualizamos el título en el estado
+      }));
+
+      setShowEditTitleModal(false);
+      onReload();
+    } catch (error) {
+      console.error('Error al guardar el título:', error);
+    }
+  }
+
+  const imageKeys = ['img1', 'img2', 'img3', 'img4']
 
   return (
     <>
@@ -113,46 +178,40 @@ export function IncidenciaDetalles(props) {
           </div>
         </div>
 
-        <div className={styles.img}>
+        <div className={styles.evidencias}>
           <h1>Evidencias</h1>
-          <div>
-            {!incidencia.img1 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img1")}>
-                <div>
-                  <FaImage />
-                </div>
+          <div className={styles.imgContent}>
+            {imageKeys.map(imgKey => (
+              <div key={imgKey}>
+                {incidencia[imgKey] === null ? (
+                  <FaImage onClick={() => onShowSubirImg(imgKey)} />
+                ) : (
+                  <>
+                    <Image src={incidencia[imgKey]} onClick={() => openImg(incidencia[imgKey], imgKey)} />
+                    <h1>{incidencia[`title${imageKeys.indexOf(imgKey) + 1}`] || 'Sin título'}</h1>
+                    <div className={styles.editTitle} onClick={() => handleEditTitle(incidencia[`title${imageKeys.indexOf(imgKey) + 1}`], `title${imageKeys.indexOf(imgKey) + 1}`)}>
+                      <FaEdit />
+                    </div>
+                  </>
+                )}
               </div>
-            ) : (
-              <div className={styles.imgDel}>
-                <Image src={incidencia.img1} alt="Incidencia imagen 1" onClick={() => onShowSubirImg("img1")} />
-                <FaTrash onClick={() => onShowConfirmDelImg("img1")} />
-              </div>
-            )}
-
-            {!incidencia.img2 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img2")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                <Image src={incidencia.img2} alt="Incidencia imagen 2" onClick={() => onShowSubirImg("img2")} />
-                <FaTrash onClick={() => onShowConfirmDelImg("img2")} />
-              </div>
-            )}
+            ))}
           </div>
         </div>
 
         {user.isadmin === 'Admin' || incidencia.usuario_id === user.id ? (
           <>
             <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenEditIncidencia} />
+              <div>
+                <FaEdit onClick={onOpenEditIncidencia} />
+              </div>
             </div>
 
             {user.isadmin === 'Admin' ? (
               <div className={styles.iconDel}>
-                <FaTrash onClick={onOpenCloseConfirmDel} />
+                <div>
+                  <FaTrash onClick={onOpenCloseConfirmDel} />
+                </div>
               </div>
             ) : (
               ''
@@ -179,6 +238,38 @@ export function IncidenciaDetalles(props) {
             onSuccess={handleImageUploadSuccess}
           />
         )}
+      </BasicModal>
+
+      <BasicModal show={showImg} onClose={() => setShowImg(false)}>
+        <ModalImg
+          img={selectedImg}
+          openImg={() => setShowImg(false)}
+          onShowConfirmDelImg={() => onShowConfirmDelImg(imgKeyToDelete)}
+          imgKey={imgKeyToDelete}
+        />
+      </BasicModal>
+
+      <BasicModal title="Título de la imagen" show={showEditTitleModal} onClose={() => setShowEditTitleModal(false)}>
+        <div>
+          <IconClose onOpenClose={() => setShowEditTitleModal(false)} />
+
+          <Form>
+          <FormGroup widths='equal'>
+            <FormField>
+            <Input
+            type="text"
+            value={currentTitle}
+            onChange={handleTitleChange} 
+            placeholder="Título"
+          />
+            </FormField>
+          </FormGroup>
+          <div className={styles.caracteres}>
+          <h2>{(currentTitle || '').length}/{MAX_TITLE_LENGTH}</h2>
+        </div>
+          <Button primary onClick={handleSaveTitle}>Guardar</Button>
+          </Form>
+        </div>
       </BasicModal>
 
       <Confirm
@@ -210,7 +301,7 @@ export function IncidenciaDetalles(props) {
             <FaCheck />
           </div>
         }
-        onConfirm={deleteImage}
+        onConfirm={handleDeleteImage}
         onCancel={() => setShowConfirmDelImg(false)}
         content='¿ Estás seguro de eliminar la imagen ?'
       />

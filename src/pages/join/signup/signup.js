@@ -181,7 +181,6 @@ export default function Signup() {
                 />
                 {errors.usuario && <Message negative>{errors.usuario}</Message>}
               </FormField>
-              {/* Campo de correo */}
               <FormField error={!!errors.email}>
                 <Label>Correo</Label>
                 <Input
@@ -192,7 +191,6 @@ export default function Signup() {
                 />
                 {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
-              {/* Campo Nivel con Dropdown */}
               <FormField error={!!errors.isadmin}>
                 <Label>Nivel</Label>
                 <Dropdown
@@ -213,7 +211,6 @@ export default function Signup() {
                 {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
               </FormField>
               
-              {/* Mostrar campos de privada, calle, casa solo si el nivel es Residente */}
               {credentials.isadmin === 'Residente' && (
                 <>
                   <FormField>
@@ -248,7 +245,6 @@ export default function Signup() {
                 </>
               )}
 
-              {/* Campo para seleccionar el residencial */}
               <FormField error={!!errors.residencial_id}>
                 <Label>Residencial</Label>
                 <Dropdown

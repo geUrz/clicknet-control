@@ -61,14 +61,6 @@
   background-color: rgb(204, 255, 255);
 }
 
-.inProcess{
-  background-color: var(--inProcess) !important;
-}
-
-.realizada{
-  background-color: var(--finish) !important;
-}
-
 .column1{
   width: 10%;
   height: auto;
@@ -95,7 +87,7 @@
 
 .column2 div:nth-child(1){
   padding: 0 10px 0 4px;
-  width: 52%;
+  width: 95%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -105,17 +97,7 @@
 }
 
 .column2 div:nth-child(2){
-  width: 20%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.column2 div:nth-child(3){
-  width: 26%;
+  width: 60%;
   height: auto;
   display: flex;
   flex-direction: column;

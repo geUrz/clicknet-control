@@ -16,7 +16,7 @@ export function ReporteForm(props) {
   const [descripcion, setDescripcion] = useState('')
   const [date, setDate] = useState(null)
 
-  const { reload, onReload, onOpenCloseForm, onToastSuccessReporte } = props
+  const { reload, onReload, onOpenCloseForm, onToastSuccess } = props
 
   const [errors, setErrors] = useState({})
 
@@ -75,7 +75,7 @@ export function ReporteForm(props) {
 
       onReload()
       onOpenCloseForm()
-      onToastSuccessReporte()
+      onToastSuccess()
 
     } catch (error) {
       console.error('Error al crear la reporte:', error)

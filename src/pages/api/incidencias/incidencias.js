@@ -83,7 +83,7 @@ export default async function handler(req, res) {
         if (residencial_id) {
             try {
                 const [rows] = await connection.query(
-                    'SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, img1, img2, residencial_id, createdAt FROM incidencias WHERE residencial_id = ? ORDER BY updatedAt DESC',
+                    'SELECT id, usuario_id, folio, incidencia, descripcion, zona, estado, title1, title2, title3, title4, img1, img2, img3, img4, residencial_id, createdAt FROM incidencias WHERE residencial_id = ? ORDER BY updatedAt DESC',
                     [residencial_id]
                 )
                 /* if (rows.length === 0) {
@@ -103,8 +103,8 @@ export default async function handler(req, res) {
                  usuarios.usuario AS usuario_usuario, usuarios.privada AS usuario_privada,
                  usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa,
                  incidencias.folio, incidencias.incidencia, incidencias.descripcion,
-                 incidencias.zona, incidencias.estado, incidencias.img1,
-                 incidencias.img2, incidencias.residencial_id, incidencias.createdAt
+                 incidencias.zona, incidencias.estado, incidencias.title1, incidencias.title2, incidencias.title3, incidencias.title4, incidencias.img1,
+                 incidencias.img2, incidencias.img3, incidencias.img4, incidencias.residencial_id, incidencias.createdAt
                  FROM incidencias
                  JOIN usuarios ON incidencias.usuario_id = usuarios.id
                  ORDER BY incidencias.updatedAt DESC`
@@ -128,7 +128,7 @@ export default async function handler(req, res) {
             const header = 'Incidencia';
             const message = `${incidencia}`;
             const url = '/incidencias';
-            await sendNotificationToResidentialUsers(residencial_id, header, message, url);
+            await sendNotificationToResidentialUsers(residencial_id, header, message, url)
 
             const newClient = { id: result.insertId };
             res.status(201).json(newClient);

@@ -99,7 +99,7 @@ export function IncidenciasList(props) {
       </div>
 
       {showLoading ? (
-        <Loading size={45} loading={2} />
+        <Loading size={45} loading={1} />
       ) : (
         size(filteredIncidencias) === 0 ? (
           <ListEmpty />

@@ -79,7 +79,7 @@ export function AnunciosList(props) {
       </div>
 
       {showLoading ? (
-        <Loading size={45} loading={2} />
+        <Loading size={45} loading={1} />
       ) : (
         size(filteredanuncios) === 0 ? (
           <ListEmpty />

@@ -66,9 +66,9 @@ export default function Usuarios() {
 
       <BasicLayout title='Usuarios' relative onReload={onReload}>
 
-        {toastSuccessUsuario && <ToastSuccess contain='Usuario creado exitosamente' onClose={() => setToastSuccessUsuario(false)} />}
+        {toastSuccessUsuario && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessUsuario(false)} />}
 
-        {toastSuccessUsuarioMod && <ToastSuccess contain='Usuario modificado exitosamente' onClose={() => setToastSuccessUsuarioMod(false)} />}
+        {toastSuccessUsuarioMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessUsuarioMod(false)} />}
 
         {!search ? (
           ''
@@ -93,7 +93,7 @@ export default function Usuarios() {
         )}
 
         {user.isadmin === 'Admin' ? (
-          <Add titulo='crear usuario' onOpenClose={onOpenCloseForm} />
+          <Add onOpenClose={onOpenCloseForm} />
         ) : (
           ''
         )} 

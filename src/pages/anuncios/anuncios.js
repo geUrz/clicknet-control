@@ -69,15 +69,15 @@ export default function Anuncios() {
 
       <BasicLayout title='anuncios' relative onReload={onReload}>
 
-        {toastSuccessAnuncio && <ToastSuccess contain='Anuncio creado exitosamente' onClose={() => setToastSuccessAnuncio(false)} />}
+        {toastSuccessAnuncio && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessAnuncio(false)} />}
 
-        {toastSuccessAnuncioMod && <ToastSuccess contain='Anuncio modificado exitosamente' onClose={() => setToastSuccessAnuncioMod(false)} />}
+        {toastSuccessAnuncioMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessAnuncioMod(false)} />}
 
-        {toastSuccessAnuncioDel && <ToastDelete contain='Anuncio eliminado exitosamente' onClose={() => setToastSuccessAnuncioDel(false)} />}
+        {toastSuccessAnuncioDel && <ToastDelete contain='Eliminado exitosamente' onClose={() => setToastSuccessAnuncioDel(false)} />}
 
         <AnunciosList reload={reload} onReload={onReload} anuncios={anuncios} onToastSuccessAnuncioMod={onToastSuccessAnuncioMod} onToastSuccessAnuncioDel={onToastSuccessAnuncioDel} />
 
-        <Add titulo='crear anuncio' onOpenClose={onOpenCloseForm} />
+        <Add onOpenClose={onOpenCloseForm} />
 
       </BasicLayout>
 

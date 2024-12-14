@@ -2,14 +2,14 @@ import { size } from 'lodash';
 import styles from './DatosCodigo.module.css';
 import { Image } from 'semantic-ui-react';
 import { FaCheck, FaImage, FaTimes, FaTrash } from 'react-icons/fa';
-import { BasicModal } from '@/layouts';
+import { BasicModal, ModalImg } from '@/layouts';
 import { Confirm, UploadImg } from '@/components/Layouts';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export function DatosCodigo(props) {
   const { visita: initialVisita, reload, onReload } = props
-  
+
   const [visita, setVisita] = useState(initialVisita)
 
   useEffect(() => {
@@ -18,9 +18,19 @@ export function DatosCodigo(props) {
 
   const [showSubirImg, setShowSubirImg] = useState(false)
   const [selectedImageKey, setSelectedImageKey] = useState(null)
+  const [showImg, setShowImg] = useState(false)
+  const [selectedImg, setSelectedImg] = useState(null)
 
   const [showConfirmDelImg, setShowConfirmDelImg] = useState(false)
   const [imageToDelete, setImageToDelete] = useState(null)
+
+  const [imgKeyToDelete, setImgKeyToDelete] = useState(null);
+
+  const openImg = (imgUrl, imgKey) => {
+    setSelectedImg(imgUrl)
+    setImgKeyToDelete(imgKey)
+    setShowImg(true)
+  }
 
   const onShowSubirImg = (imgKey) => {
     setSelectedImageKey(imgKey)
@@ -32,19 +42,29 @@ export function DatosCodigo(props) {
     setSelectedImageKey(null)
   };
 
-  const deleteImage = async () => {
+  const handleDeleteImage = async () => {
     try {
-      if (imageToDelete) {
-        await axios.put(`/api/visitas/updateImage?id=${visita.id}`, { [imageToDelete]: null })
-        
-        // Actualizamos la imagen en el estado local de visita
-        setVisita({ ...visita, [imageToDelete]: null })
-        setShowConfirmDelImg(false)
-      }
+      // Realiza la solicitud de eliminación de la imagen en el backend
+      await axios.delete(`/api/visitas/uploadImage`, {
+        params: {
+          id: visita.id,
+          imageKey: imgKeyToDelete,
+        },
+      });
+
+      // Actualiza el estado de la visita después de eliminar la imagen
+      setVisita((prevIncidencia) => ({
+        ...prevIncidencia,
+        [imgKeyToDelete]: null, // Se establece la clave de la imagen a null
+      }));
+
+      onReload(); // Recarga los datos
+      setShowImg(false); // Cierra el modal de imagen
+      setShowConfirmDelImg(false); // Cierra el modal de confirmación
     } catch (error) {
-      console.error('Error al eliminar la imagen:', error)
+      console.error('Error al eliminar la imagen:', error);
     }
-  };
+  }
 
   const onShowConfirmDelImg = (imgKey) => {
     setImageToDelete(imgKey)
@@ -57,6 +77,8 @@ export function DatosCodigo(props) {
     setShowSubirImg(false)
   }
 
+  const imageKeys = ['img1', 'img2', 'img3', 'img4']
+  
   return (
     <div className={styles.main}>
       <div className={styles.section}>
@@ -91,35 +113,17 @@ export function DatosCodigo(props) {
               </div>
             </div>
 
-            <div className={styles.uploadImg}>
-              <div>
-                {!visita.img1 ? (
-                  <div className={styles.noImg} onClick={() => onShowSubirImg('img1')}>
-                    <div>
-                      <FaImage />
-                    </div>
+              <div className={styles.imgContent}>
+                {imageKeys.map(imgKey => (
+                  <div key={imgKey}>
+                    {visita[imgKey] === null ? (
+                      <FaImage onClick={() => onShowSubirImg(imgKey)} />
+                    ) : (
+                      <Image src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
+                    )}
                   </div>
-                ) : (
-                  <div className={styles.imgDel}>
-                    <Image src={visita.img1} alt="Incidencia imagen 1" onClick={() => onShowSubirImg('img1')} />
-                    <FaTrash onClick={() => onShowConfirmDelImg('img1')} />
-                  </div>
-                )}
-
-                {!visita.img2 ? (
-                  <div className={styles.noImg} onClick={() => onShowSubirImg('img2')}>
-                    <div>
-                      <FaImage />
-                    </div>
-                  </div>
-                ) : (
-                  <div className={styles.imgDel}>
-                    <Image src={visita.img2} alt="Incidencia imagen 2" onClick={() => onShowSubirImg('img2')} />
-                    <FaTrash onClick={() => onShowConfirmDelImg('img2')} />
-                  </div>
-                )}
+                ))}
               </div>
-            </div>
           </>
         )}
       </div>
@@ -138,6 +142,15 @@ export function DatosCodigo(props) {
         )}
       </BasicModal>
 
+      <BasicModal show={showImg} onClose={() => setShowImg(false)}>
+        <ModalImg
+          img={selectedImg}
+          openImg={() => setShowImg(false)}
+          onShowConfirmDelImg={() => onShowConfirmDelImg(imgKeyToDelete)}
+          imgKey={imgKeyToDelete}
+        />
+      </BasicModal>
+
       <Confirm
         open={showConfirmDelImg}
         cancelButton={
@@ -150,7 +163,7 @@ export function DatosCodigo(props) {
             <FaCheck />
           </div>
         }
-        onConfirm={deleteImage}
+        onConfirm={handleDeleteImage}
         onCancel={() => setShowConfirmDelImg(false)}
         content="¿Estás seguro de eliminar la imagen?"
       />

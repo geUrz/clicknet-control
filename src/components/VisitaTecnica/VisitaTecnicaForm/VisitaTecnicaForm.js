@@ -15,7 +15,6 @@ export function VisitaTecnicaForm(props) {
   const [visitatecnica, setVisitatecnica] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [date, setDate] = useState(null)
-  const [hora, setHora] = useState('')
 
   const { reload, onReload, onOpenCloseForm, onToastSuccessVisitatecnica } = props
 
@@ -34,10 +33,6 @@ export function VisitaTecnicaForm(props) {
 
     if (!date) {
       newErrors.date = 'El campo es requerido'
-    }
-
-    if (!hora) {
-      newErrors.hora = 'El campo es requerido'
     }
 
     setErrors(newErrors)
@@ -70,7 +65,6 @@ export function VisitaTecnicaForm(props) {
         visitatecnica,
         descripcion,
         date: formattedDate,
-        hora,
         estado,
         residencial_id: user.residencial_id
       })
@@ -78,7 +72,6 @@ export function VisitaTecnicaForm(props) {
       setVisitatecnica('')
       setDescripcion('')
       setDate(null)
-      setHora('')
 
       onReload()
       onOpenCloseForm()
@@ -141,18 +134,6 @@ export function VisitaTecnicaForm(props) {
                   popperPlacement="top"
                 />
                 {errors.date && <Message negative>{errors.date}</Message>}
-              </FormField>
-              <FormField error={!!errors.hora}>
-                <Label>
-                  Hora
-                </Label>
-                <Input
-                  name='hora'
-                  type="time"
-                  value={hora}
-                  onChange={(e) => setHora(e.target.value)}
-                />
-                {errors.hora && <Message negative>{errors.hora}</Message>}
               </FormField>
             </FormGroup>
             <Button

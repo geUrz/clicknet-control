@@ -11,13 +11,10 @@ export function VisitaTecnicaEditForm(props) {
 
   const { reload, onReload, visitatecnica, onOpenEditVisitatecnica, onToastSuccessVisitatecnicaMod } = props
 
-  const { user } = useAuth()
-
   const [formData, setFormData] = useState({
     visitatecnica: visitatecnica.visitatecnica,
     descripcion: visitatecnica.descripcion,
     date: visitatecnica.date ? new Date(visitatecnica.date + 'T00:00:00') : null,
-    hora: visitatecnica.hora,
     estado: visitatecnica.estado
   })
 
@@ -38,10 +35,6 @@ export function VisitaTecnicaEditForm(props) {
       newErrors.date = 'El campo es requerido'
     }
 
-    if (!formData.hora) {
-      newErrors.hora = 'El campo es requerido'
-    }
-
     if (!formData.estado) {
       newErrors.estado = 'El campo es requerido'
     }
@@ -57,7 +50,6 @@ export function VisitaTecnicaEditForm(props) {
     setFormData({ ...formData, [name]: value })
   }
 
-  // Enviar los datos actualizados
   const handleSubmit = async (e) => {
 
     e.preventDefault()
@@ -132,18 +124,6 @@ export function VisitaTecnicaEditForm(props) {
               popperPlacement="top"
             />
             {errors.date && <Message negative>{errors.date}</Message>}
-          </FormField>
-          <FormField error={!!errors.hora}>
-            <Label>
-              Hora
-            </Label>
-            <Input
-              name='hora'
-              type="time"
-              value={formData.hora}
-              onChange={handleChange}
-            />
-            {errors.hora && <Message negative>{errors.hora}</Message>}
           </FormField>
           <FormField error={!!errors.estado}>
             <Label>

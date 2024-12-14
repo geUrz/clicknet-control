@@ -141,7 +141,7 @@ export function VisitasList(props) {
       : ''}
 
       {showLoading ? (
-        <Loading size={45} loading={2} />
+        <Loading size={45} loading={1} />
       ) : (
         size(filteredVisitas) === 0 ? (
           <ListEmpty />
@@ -158,7 +158,7 @@ export function VisitasList(props) {
                     </div>
                     <div className={styles.column2}>
                       <div >
-                        <h1>Visita</h1>
+                        <h1>Nombre de la visita</h1>
                         <h2>{visita.visita}</h2>
                       </div>
                       <div >

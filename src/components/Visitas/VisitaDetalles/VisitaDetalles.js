@@ -1,29 +1,36 @@
 import { IconClose, Confirm, DatosRes, ToastSuccessQR } from '@/components/Layouts';
 import { formatDate } from '@/helpers';
-import { BasicModal } from '@/layouts';
-import { FaCheck, FaDownload, FaEdit, FaInfoCircle, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa';
+import { BasicModal, ModalImg } from '@/layouts';
+import { FaCheck, FaDownload, FaEdit, FaImage, FaInfoCircle, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
-import { Image as SemanticImage } from 'semantic-ui-react';
+import { Image, Image as SemanticImage } from 'semantic-ui-react';
 import styles from './VisitaDetalles.module.css';
 
 export function VisitaDetalles(props) {
   const { reload, onReload, visita, onOpenCloseDetalles, onToastSuccessVisitaMod, onToastSuccessVisitaDel } = props;
   const { user } = useAuth()
-  
+
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
   const [showTipoAcc, setShowTipoAcc] = useState(false)
   const [showConfirmDel, setShowConfirmDel] = useState(false)
   const [showDownQR, setShowDownQR] = useState(false)
+  const [showImg, setShowImg] = useState(false)
+  const [selectedImg, setSelectedImg] = useState(null)
 
   const onOpenEditVisita = () => setShowEditVisita((prevState) => !prevState)
   const onOpenCloseRes = () => setShowRes((prevState) => !prevState)
   const onOpenCloseTipoAcc = () => setShowTipoAcc((prevState) => !prevState)
   const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
   const onToastSuccessDownloadQR = () => setShowDownQR((prevState) => !prevState)
+
+  const openImg = (imgUrl) => {
+    setSelectedImg(imgUrl)
+    setShowImg(true)
+  }
 
   const handleDeleteVisita = async () => {
     if (visita?.id) {
@@ -208,7 +215,7 @@ export function VisitaDetalles(props) {
             try {
               await navigator.share({
                 title: 'Código QR de acceso',
-                text: `Visita: ${visita.visita}\nCódigo de acceso: ${visita.codigo}`,
+                text: `Nombre de la visita: ${visita.visita}\nCódigo de acceso: ${visita.codigo}`,
                 files: [file], // Compartir el archivo con datos adicionales
               });
               console.log('QR compartido exitosamente');
@@ -229,6 +236,8 @@ export function VisitaDetalles(props) {
     }
   }
 
+  const imageKeys = ['img1', 'img2', 'img3', 'img4']
+
   return (
     <>
       {showDownQR && <ToastSuccessQR onToastSuccessDownloadQR={onToastSuccessDownloadQR} />}
@@ -239,7 +248,7 @@ export function VisitaDetalles(props) {
         <div className={styles.box1}>
           <div className={styles.box1_1}>
             <div>
-              <h1>Visita</h1>
+              <h1>Nombre de la visita</h1>
               <h2>{visita.visita}</h2>
             </div>
             <div className={styles.tipoAcc}>
@@ -259,16 +268,26 @@ export function VisitaDetalles(props) {
           </div>
           <div className={styles.box1_2}>
             <div>
-              <div>
-                <h1>Tipo de visita</h1>
-                <h2>{visita.tipovisita}</h2>
-              </div>
-              <div>
-                <h1>Estatus</h1>
-                <h2>{visita.estado}</h2>
-              </div>
+              <h1>Tipo de visita</h1>
+              <h2>{visita.tipovisita}</h2>
+            </div>
+            <div>
+              <h1>Estatus</h1>
+              <h2>{visita.estado}</h2>
             </div>
           </div>
+        </div>
+
+        <div className={styles.imgContent}>
+          {imageKeys.map(imgKey => (
+            <div key={imgKey}>
+              {visita[imgKey] === null ? (
+                <FaImage onClick={() => onShowSubirImg(imgKey)} />
+              ) : (
+                <Image src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
+              )}
+            </div>
+          ))}
         </div>
 
         <div className={styles.codigo}>
@@ -319,6 +338,7 @@ export function VisitaDetalles(props) {
         show={showTipoAcc}
         onClose={onOpenCloseTipoAcc}
       >
+
         <IconClose onOpenClose={onOpenCloseTipoAcc} />
         <div className={styles.diasMain}>
           {visita.tipoacceso === 'frecuente' ? (
@@ -343,6 +363,14 @@ export function VisitaDetalles(props) {
           calle={visita.usuario_calle}
           casa={visita.usuario_casa}
           onOpenCloseRes={onOpenCloseRes} />
+      </BasicModal>
+
+      <BasicModal show={showImg} onClose={() => setShowImg(false)}>
+        <ModalImg
+          img={selectedImg}
+          openImg={() => setShowImg(false)}
+          delImage={false}
+        />
       </BasicModal>
 
       <Confirm

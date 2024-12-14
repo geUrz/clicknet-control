@@ -65,9 +65,9 @@ export default function Validarvisitas() {
 
       {toastSuccessQRValido && <ToastSuccessQRValido onToastSuccessQRValido={onToastSuccessQRValido} />}
 
-        {toastSuccessVisitaMod && <ToastSuccess contain='Visita modificada exitosamente' onClose={() => setToastSuccessVisitaMod(false)} />}
+        {toastSuccessVisitaMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessVisitaMod(false)} />}
 
-        {toastSuccessVisitaDel && <ToastDelete contain='Visita eliminada exitosamente' onClose={() => setToastSuccessVisitaDel(false)} />}
+        {toastSuccessVisitaDel && <ToastDelete contain='Eliminada exitosamente' onClose={() => setToastSuccessVisitaDel(false)} />}
 
         <DatosCodigo visita={visita} reload={reload} onReload={onReload} />
 

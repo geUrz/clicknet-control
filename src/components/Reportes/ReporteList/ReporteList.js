@@ -5,16 +5,15 @@ import { BasicModal } from '@/layouts'
 import { ReporteDetalles } from '../ReporteDetalles'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Dropdown, Form, FormField, FormGroup, Label } from 'semantic-ui-react'
+import { Form, FormField, FormGroup, Label } from 'semantic-ui-react'
 import { formatDate, formatDateInc } from '@/helpers'
-import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ReporteList.module.css'
 
 export function ReporteList(props) {
 
-  const { reload, onReload, reportes, onToastSuccessReportesMod, onToastSuccessReportesDel } = props
+  const { reload, onReload, reportes, onToastSuccessMod, onToastSuccessDel } = props
 
   const { loading } = useAuth()
 
@@ -37,17 +36,9 @@ export function ReporteList(props) {
 
   const filteredReporte = (reportes || []).filter((reporte) => {
     return (
-      (filterEstado === '' || filterEstado === 'Todas' || reporte.estado === filterEstado) &&
       (filterFecha === null || reporte.date === formatDateInc(filterFecha))
     )
   })
-
-  const opcionesEstado = [
-    { key: 1, text: 'Todas', value: 'Todas' },
-    { key: 2, text: 'Pendiente', value: 'Pendiente' },
-    { key: 3, text: 'En proceso', value: 'En proceso' },
-    { key: 4, text: 'Realizada', value: 'Realizada' }
-  ]
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,15 +62,6 @@ export function ReporteList(props) {
 
         <Form>
           <FormGroup>
-          <Label className={styles.label}>Estatus</Label>
-            <Dropdown
-                placeholder='Todas'
-                fluid
-                selection
-                options={opcionesEstado}
-                value={filterEstado}
-                onChange={(e, data) => setFilterEstado(data.value)}
-              />
             <Label className={styles.label}>Fecha</Label>
             <FormField>
               <DatePicker
@@ -98,18 +80,15 @@ export function ReporteList(props) {
       </div>
 
       {showLoading ? (
-        <Loading size={45} loading={2} />
+        <Loading size={45} loading={1} />
       ) : (
         size(filteredReporte) === 0 ? (
           <ListEmpty />
         ) : (
           <div className={styles.main}>
-            {map(filteredReporte, (reporte) => {
-              const statusClass = getStatusClass(reporte.estado)
-
-              return (
+            {map(filteredReporte, (reporte) => (
                 <div key={reporte.id} className={styles.section} onClick={() => onOpenDetalles(reporte)}>
-                  <div className={`${styles[statusClass]}`}>
+                  <div>
                     <div className={styles.column1}>
                       <FaClipboard />
                     </div>
@@ -122,15 +101,10 @@ export function ReporteList(props) {
                         <h1>Fecha</h1>
                         <h2>{formatDate(reporte.date)}</h2>
                       </div>
-                      <div >
-                        <h1>Estatus</h1>
-                        <h2>{reporte.estado}</h2>
-                      </div>
                     </div>
                   </div>
                 </div>
-              )
-            })}
+            ))}
           </div>
         )
       )}
@@ -142,8 +116,8 @@ export function ReporteList(props) {
             onReload={onReload}
             reporte={reporteSeleccionada}
             onOpenCloseDetalles={onCloseDetalles}
-            onToastSuccessReportesMod={onToastSuccessReportesMod}
-            onToastSuccessReportesDel={onToastSuccessReportesDel}
+            onToastSuccessMod={onToastSuccessMod}
+            onToastSuccessDel={onToastSuccessDel}
           />
         )}
       </BasicModal>

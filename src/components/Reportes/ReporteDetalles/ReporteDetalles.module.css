@@ -20,12 +20,14 @@
   font-size: 14px;
   font-weight: 600 !important;
   color: var(--clrBL0000);
+  word-break: break-all;
 }
 
 .box1 h2{
   margin-top: 3px;
   font-size: 12.5px;
   color: var(--clrGR0000);
+  word-break: break-all;
 }
 
 
@@ -37,8 +39,12 @@
   align-items: center;
 }
 
+.box1_1 div, .box1_2 div{
+  margin: 5px 0;
+}
+
 .box1_1{
-  width: 50%;
+  width: 90%;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -59,6 +65,132 @@
   text-align: right;
 }
 
+.mainImg{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainImg h1{
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0000);
+}
+
+.mainTab{
+  margin-top: 30px;
+}
+
+.tabContent{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabContent > div{
+  margin: 10px;
+  width: 115px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabContent img{
+  width: 80px;
+  height: 80px;
+  border-radius: 2%;
+  cursor: pointer;
+}
+
+.tabContent h1{
+  margin-top: 4px;
+  font-size: 12.5px;
+  text-align: center;
+  color: var(--clrGR0000);
+}
+
+.faImage{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tabContent svg, .tabContent path{
+  font-size: 60px;
+  color: var(--clrGR00);
+  cursor: pointer;
+}
+
+.editTitle{
+  margin-top: 0 !important;
+}
+
+.editTitle svg, .editTitle path{
+  font-size: 20px;
+  color: var(--clrBL0000);
+  cursor: pointer;
+}
+
+.editTitle div:hover svg, .editTitle div:hover path{
+  color: var(--clrBL1);
+}
+
+.editTitle div:active svg, .editTitle div:active path{
+  color: var(--clrBL2);
+}
+
+.formNota{
+  margin-top: 30px;
+}
+
+.charCount{
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--clrBL0000);
+}
+
+.imgFirma{
+  margin-top: 50px;
+}
+
+.imgFirma, .imgFirma > div{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgFirma img{
+  
+}
+
+.imgFirma svg, .imgFirma path{
+  margin-right: 10px;
+} 
+
+.linea{
+  margin-top: 10px;
+  width: 250px;
+  height: 2px;
+  background-color: black;
+}
+
+.imgFirma h2{
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0000);
+}
+
 .iconEdit{
   margin-top: 50px;
   width: 100%;
@@ -74,11 +206,11 @@
   cursor: pointer;
 }
 
-.iconEdit svg:hover, .iconEdit:hover path{
+.iconEdit div svg:hover, .iconEdit div:hover path{
   color: var(--clrBL0);
 }
 
-.iconEdit svg:active, .iconEdit:active path{
+.iconEdit div svg:active, .iconEdit div:active path{
   color: var(--clrBL1);
 }
 
@@ -97,11 +229,11 @@
   cursor: pointer;
 }
 
-.iconDel svg:hover, .iconDel:hover path{
+.iconDel div svg:hover, .iconDel div:hover path{
   color: var(--clrGR00);
 }
 
-.iconDel svg:active, .iconDel:active path{
+.iconDel div svg:active, .iconDel div:active path{
   color: var(--clrGR0);
 }
 
@@ -147,5 +279,4 @@
   color: var(--clrBL1);
   cursor: pointer;
 }
-
 

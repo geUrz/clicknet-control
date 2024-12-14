@@ -51,12 +51,9 @@ export function UsuarioList(props) {
           <ListEmpty />
         ) : (
           <div className={styles.main}>
-            {map(usuarios, (usuario) => {
-              const statusClass = getStatusClass(usuario.estado)
-
-              return (
+            {map(usuarios, (usuario) => (
                 <div key={usuario.id} className={styles.section} onClick={() => onOpenDetalles(usuario)}>
-                  <div className={`${styles[statusClass]}`}>
+                  <div>
                     <div className={styles.column1}>
                       <FaUsers />
                     </div>
@@ -73,7 +70,7 @@ export function UsuarioList(props) {
                   </div>
                 </div>
               )
-            })}
+            )}
           </div>
         )
       )}

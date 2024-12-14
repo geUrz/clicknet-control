@@ -127,8 +127,7 @@ export function VisitaEditForm(props) {
 
   const opcionesEstado = [
     { key: 1, text: 'Sin ingresar', value: 'Sin ingresar' },
-    { key: 2, text: 'Ingresado', value: 'Ingresado' },
-    { key: 3, text: 'Realizado', value: 'Realizado' }
+    { key: 2, text: 'Ingresado', value: 'Ingresado' }
   ]
 
   const [activate, setActivate] = useState(false)
@@ -170,7 +169,7 @@ export function VisitaEditForm(props) {
         <FormGroup widths='equal'>
           <FormField error={!!errors.visita}>
             <Label>
-              Visita
+              Nombre de la visita
             </Label>
             <Input
               name='visita'

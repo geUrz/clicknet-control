@@ -9,7 +9,7 @@ import styles from './ReporteEditForm.module.css'
 
 export function ReporteEditForm(props) {
 
-  const { reload, onReload, reporte, onOpenEditReporte, onToastSuccessReportesMod } = props
+  const { reload, onReload, reporte, onOpenEditReporte, onToastSuccessMod } = props
 
   const { user } = useAuth()
 
@@ -68,7 +68,7 @@ export function ReporteEditForm(props) {
       })
       onReload()
       onOpenEditReporte()
-      onToastSuccessReportesMod()
+      onToastSuccessMod()
     } catch (error) {
       console.error('Error actualizando el reporte:', error)
     }

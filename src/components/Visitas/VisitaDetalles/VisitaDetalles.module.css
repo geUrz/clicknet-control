@@ -28,13 +28,16 @@
   color: var(--clrGR0000);
 }
 
-
 .box1_1, .box1_2{
   width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.box1_1 div, .box1_2 div{
+  margin: 5px 0;
 }
 
 .box1_1{
@@ -108,34 +111,6 @@
   color: var(--clrBL000);
 }
 
-.mainImg{
-  margin-top: 20px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sectionImg{
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sectionImg div{
-  margin: 0 4px;
-  width: 135px;
-}
-
-.sectionImg div img{
-  width: 135px;
-  box-sizing: border-box;
-  border: 4px solid var(--clrGR1);
-}
-
 .iconClose svg, .iconClose path{
   padding: 8px;
   font-size: 34px;
@@ -205,6 +180,37 @@
 
 .reporta div svg:active, .reporta div:active path, .tipoAcc div svg:active, .tipoAcc div:active path{
   color: var(--clrBL2);
+}
+
+.imgContent{
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgContent > div{
+  margin: 10px;
+  width: 120px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.imgContent img{
+  width: 80px;
+  height: 80px;
+  border-radius: 2%;
+  cursor: pointer;
+}
+
+.imgContent svg, .imgContent path{
+  font-size: 60px;
+  color: var(--clrGR00);
+  cursor: pointer;
 }
 
 .iconEdit{

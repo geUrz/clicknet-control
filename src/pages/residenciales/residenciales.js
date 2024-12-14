@@ -60,9 +60,9 @@ export default function Residenciales() {
 
       <BasicLayout title='Residenciales' relative onReload={onReload}>
 
-        {toastSuccessResidenciales && <ToastSuccess contain='Residencial creado exitosamente' onClose={() => setToastSuccessResidenciales(false)} />}
+        {toastSuccessResidenciales && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessResidenciales(false)} />}
 
-        {toastSuccessResidencialesMod && <ToastSuccess contain='Residencial modificado exitosamente' onClose={() => setToastSuccessResidencialesMod(false)} />}
+        {toastSuccessResidencialesMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessResidencialesMod(false)} />}
 
         <ResidencialList reload={reload} onReload={onReload} residenciales={residenciales} onToastSuccessResidencialMod={onToastSuccessResidencialMod} />
 

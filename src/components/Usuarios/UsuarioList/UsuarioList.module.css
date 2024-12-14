@@ -39,14 +39,6 @@
   background-color: rgb(204, 255, 255);
 }
 
-.inProcess{
-  background-color: var(--inProcess) !important;
-}
-
-.realizada{
-  background-color: var(--finish) !important;
-}
-
 .column1{
   width: 10%;
   height: auto;

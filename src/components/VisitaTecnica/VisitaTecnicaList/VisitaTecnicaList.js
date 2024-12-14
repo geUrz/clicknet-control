@@ -98,7 +98,7 @@ export function VisitaTecnicaList(props) {
       </div>
 
       {showLoading ? (
-        <Loading size={45} loading={2} />
+        <Loading size={45} loading={1} />
       ) : (
         size(filteredVisitatecnica) === 0 ? (
           <ListEmpty />
@@ -122,9 +122,9 @@ export function VisitaTecnicaList(props) {
                         <h1>Fecha</h1>
                         <h2>{formatDate(visitatecnica.date)}</h2>
                       </div>
-                      <div >
-                        <h1>Hora</h1>
-                        <h2>{convertTo12HourFormat(visitatecnica.hora)}</h2>
+                      <div>
+                        <h1>Estatus</h1>
+                        <h2>{visitatecnica.estado}</h2>
                       </div>
                     </div>
                   </div>

@@ -26,12 +26,12 @@ export default function Incidencias() {
     if (user && user.residencial_id) {
       (async () => {
         try {
-          const res = await axios.get(`/api/incidencias/incidencias?residencial_id=${user.residencial_id}`);
-          setIncidencias(res.data);
+          const res = await axios.get(`/api/incidencias/incidencias?residencial_id=${user.residencial_id}`)
+          setIncidencias(res.data)
         } catch (error) {
-          console.error(error);
+          console.error(error)
         }
-      })();
+      })()
     }
   }, [reload, user])
 
@@ -70,15 +70,15 @@ export default function Incidencias() {
 
       <BasicLayout title='incidencias' relative onReload={onReload}>
 
-        {toastSuccessIncidencia && <ToastSuccess contain='Incidencia creada exitosamente' onClose={() => setToastSuccessIncidencia(false)} />}
+        {toastSuccessIncidencia && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccessIncidencia(false)} />}
 
-        {toastSuccessIncidenciaMod && <ToastSuccess contain='Incidencia modificada exitosamente' onClose={() => setToastSuccessIncidenciaMod(false)} />}
+        {toastSuccessIncidenciaMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessIncidenciaMod(false)} />}
 
-        {toastSuccessIncidenciaDel && <ToastDelete contain='Incidencia eliminada exitosamente' onClose={() => setToastSuccessIncidenciaDel(false)} />}
+        {toastSuccessIncidenciaDel && <ToastDelete contain='Eliminada exitosamente' onClose={() => setToastSuccessIncidenciaDel(false)} />}
 
         <IncidenciasList reload={reload} onReload={onReload} incidencias={incidencias} onToastSuccessIncidenciaMod={onToastSuccessIncidenciaMod} onToastSuccessIncidenciaDel={onToastSuccessIncidenciaDel} />
 
-        <Add titulo='crear incidencia' onOpenClose={onOpenCloseForm} />
+        <Add onOpenClose={onOpenCloseForm} />
 
       </BasicLayout>
 

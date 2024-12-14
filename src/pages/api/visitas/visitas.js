@@ -30,6 +30,10 @@ export default async function handler(req, res) {
                         visitas.hora,
                         visitas.estado,
                         visitas.dias,
+                        visitas.img1,
+                        visitas.img2,
+                        visitas.img3,
+                        visitas.img4,
                         visitas.createdAt
                     FROM visitas
                     JOIN usuarios ON visitas.usuario_id = usuarios.id
@@ -92,6 +96,8 @@ export default async function handler(req, res) {
                         autorizo_usuario.isAdmin AS autorizo_isAdmin,
                         visitas.img1,
                         visitas.img2,
+                        visitas.img3,
+                        visitas.img4,
                         visitas.createdAt
                     FROM visitas
                     JOIN usuarios ON visitas.usuario_id = usuarios.id
@@ -143,6 +149,8 @@ export default async function handler(req, res) {
                     autorizo_usuario.isAdmin AS autorizo_isAdmin,
                     visitas.img1,
                     visitas.img2,
+                    visitas.img3,
+                    visitas.img4,
                     visitas.createdAt
                 FROM visitas
                 JOIN usuarios ON visitas.usuario_id = usuarios.id

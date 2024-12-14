@@ -20,14 +20,15 @@
   font-size: 14px;
   font-weight: 600 !important;
   color: var(--clrBL0000);
+  word-break: break-all;
 }
 
 .box1 h2{
   margin-top: 3px;
   font-size: 12.5px;
   color: var(--clrGR0000);
+  word-break: break-all;
 }
-
 
 .box1_1, .box1_2{
   width: 100%;
@@ -37,8 +38,12 @@
   align-items: center;
 }
 
+.box1_1 div, .box1_2 div{
+  margin: 5px 0;
+}
+
 .box1_1{
-  width: 50%;
+  width: 90%;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -59,6 +64,103 @@
   text-align: right;
 }
 
+.mainImg{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainImg h1{
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0000);
+}
+
+.mainTab{
+  margin-top: 30px;
+}
+
+.tabContent{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabContent > div{
+  margin: 10px;
+  width: 115px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabContent img{
+  width: 80px;
+  height: 80px;
+  border-radius: 2%;
+  cursor: pointer;
+}
+
+.tabContent h1{
+  margin-top: 4px;
+  font-size: 12.5px;
+  text-align: center;
+  color: var(--clrGR0000);
+}
+
+.faImage{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tabContent svg, .tabContent path{
+  font-size: 60px;
+  color: var(--clrGR00);
+  cursor: pointer;
+}
+
+.editTitle{
+  margin-top: 0 !important;
+}
+
+.editTitle svg, .editTitle path{
+  font-size: 20px;
+  color: var(--clrBL0000);
+  cursor: pointer;
+}
+
+.editTitle div:hover svg, .editTitle div:hover path{
+  color: var(--clrBL1);
+}
+
+.editTitle div:active svg, .editTitle div:active path{
+  color: var(--clrBL2);
+}
+
+.imgAdd{
+  width: 45px !important;
+  height: 45px !important;
+  background-color: var(--clrGR2);
+  border-radius: 5%;
+  cursor: pointer;
+}
+
+.imgAdd:hover{
+  background-color: var(--clrGR1);
+}
+
+.imgAdd svg, .imgAdd path{
+  font-size: 20px;
+}
+
 .iconEdit{
   margin-top: 50px;
   width: 100%;
@@ -74,11 +176,11 @@
   cursor: pointer;
 }
 
-.iconEdit svg:hover, .iconEdit:hover path{
+.iconEdit div:hover svg, .iconEdit div:hover path{
   color: var(--clrBL0);
 }
 
-.iconEdit svg:active, .iconEdit:active path{
+.iconEdit div:active svg, .iconEdit div:active path{
   color: var(--clrBL1);
 }
 
@@ -92,16 +194,17 @@
 }
 
 .iconDel svg, .iconDel path{
+  margin-right: 10px;
   font-size: 20px;
   color: var(--clrGR000);
   cursor: pointer;
 }
 
-.iconDel svg:hover, .iconDel:hover path{
+.iconDel div:hover svg, .iconDel div:hover path{
   color: var(--clrGR00);
 }
 
-.iconDel svg:active, .iconDel:active path{
+.iconDel div:active svg, .iconDel div:active path{
   color: var(--clrGR0);
 }
 
@@ -148,96 +251,18 @@
   cursor: pointer;
 }
 
-.img{
-  margin-top: 20px;
+.caracteres{
   width: 100%;
   height: auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.img h1{
+.caracteres h2{
   font-size: 14px;
-  font-weight: 600 !important;
-  color: var(--clrBL0000);
+  color: var(--clrBL1);
 }
 
-.img div{
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
-}
 
-.noImg{
-  width: 160px;
-  height: 250px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  cursor: pointer;
-}
 
-.noImg div{
-  cursor: pointer;
-}
-
-.noImg svg, .noImg path{
-  margin: 10px;
-  font-size: 80px;
-  color: var(--clrGR0);
-  cursor: pointer;
-}
-
-.noImg div svg:hover, .noImg:hover div path{
-  color: var(--clrGR1);
-}
-
-.imgDel{
-  margin: 0 2.5px;
-  width: 135px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-}
-
-.imgDel img{
-  margin-bottom: 15px;
-  width: 135px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  cursor: pointer;
-}
-
-.imgDel svg, .imgDel path{
-  font-size: 18px;
-  color: var(--clrGR0);
-  cursor: pointer;
-}
-
-.imgDel div{
-  margin: 0;
-}
-
-.imgDel div svg:hover, .imgDel div:hover path{
-  color: var(--clrGR1);
-}
-
-.imgDel div svg:active, .imgDel div:active path{
-  color: var(--clrGR2);
-}
-
-@media screen and (min-width: 400px) {
-
-  .imgDel{
-    width: 160px;
-  }
-  
-  .imgDel img{
-    width: 160px;
-  }
-
-}

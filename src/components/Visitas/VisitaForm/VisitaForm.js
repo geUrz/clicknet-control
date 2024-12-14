@@ -125,7 +125,7 @@ export function VisitaForm(props) {
           <Form>
             <FormGroup widths='equal'>
               <FormField error={!!errors.visita}>
-                <Label>Visita</Label>
+                <Label>Nombre de la visita</Label>
                 <Input
                   name='visita'
                   type="text"

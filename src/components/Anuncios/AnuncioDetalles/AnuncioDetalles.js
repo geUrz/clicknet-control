@@ -72,12 +72,16 @@ export function AnuncioDetalles(props) {
           <>
 
             <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenEditAnuncio} />
+              <div>
+                <FaEdit onClick={onOpenEditAnuncio} />
+              </div>
             </div>
 
             {user.isadmin === 'Admin' || user.isadmin === 'Comité' ? (
               <div className={styles.iconDel}>
-                <FaTrash onClick={onOpenCloseConfirmDel} />
+                <div>
+                  <FaTrash onClick={onOpenCloseConfirmDel} />
+                </div>
               </div>
             ) : (
               ''

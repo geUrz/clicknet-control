@@ -56,78 +56,35 @@
   text-transform: capitalize;
 }
 
-.uploadImg{
+.imgContent{
   margin-top: 10px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.uploadImg div{
-  margin: 0 8px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 }
 
-.noImg{
-  width: 160px;
-  height: 250px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  cursor: pointer;
-}
-
-.noImg div{
-  cursor: pointer;
-}
-
-.noImg svg, .noImg path{
-  font-size: 65px;
-  color: var(--clrGR0);
-  cursor: pointer;
-}
-
-.noImg div svg:hover, .noImg:hover div path{
-  color: var(--clrGR1);
-}
-
-.imgDel{
-  margin: 0 2.5px;
-  width: 135px;
+.imgContent > div{
+  margin: 10px;
+  width: 120px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
+}
+
+.imgContent img{
+  width: 80px;
+  height: 80px;
+  border-radius: 2%;
   cursor: pointer;
 }
 
-.imgDel img{
-  margin-top: 20px;
-  width: 135px;
-  box-sizing: border-box;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: 4px solid var(--clrGR1);
+.imgContent svg, .imgContent path{
+  font-size: 60px;
+  color: var(--clrGR00);
   cursor: pointer;
-}
-
-.imgDel svg, .imgDel path{
-  margin-top: 10px;
-  font-size: 18px;
-  color: var(--clrGR0);
-  cursor: pointer;
-}
-
-.imgDel div svg:hover, .imgDel div:hover path{
-  color: var(--clrGR1);
-}
-
-.imgDel div svg:active, .imgDel div:active path{
-  color: var(--clrGR2);
 }
 
 .iconClose svg, .iconClose path{

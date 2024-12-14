@@ -29,15 +29,15 @@ export default function Reportes() {
           const res = await axios.get(`/api/reportes/reportes?residencial_id=${user.residencial_id}`);
           setReportes(res.data);
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
       })();
     }
   }, [reload, user])
 
-  const [toastSuccessReportes, setToastSuccessReportes] = useState(false)
-  const [toastSuccessReportesMod, setToastSuccessReportesMod] = useState(false)
-  const [toastSuccessReportesDel, setToastSuccessReportesDel] = useState(false)
+  const [toastSuccess, setToastSuccessReportes] = useState(false)
+  const [toastSuccessMod, setToastSuccessReportesMod] = useState(false)
+  const [toastSuccessDel, setToastSuccessReportesDel] = useState(false)
 
   const onToastSuccessReporte = () => {
     setToastSuccessReportes(true)
@@ -70,16 +70,16 @@ export default function Reportes() {
 
       <BasicLayout title='Reportes' relative onReload={onReload}>
 
-        {toastSuccessReportes && <ToastSuccess contain='Reporte creado exitosamente' onClose={() => setToastSuccessReportes(false)} />}
+        {toastSuccess && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessReportes(false)} />}
 
-        {toastSuccessReportesMod && <ToastSuccess contain='Reporte modificado exitosamente' onClose={() => setToastSuccessReportesMod(false)} />}
+        {toastSuccessMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessReportesMod(false)} />}
 
-        {toastSuccessReportesDel && <ToastDelete contain='Reporte eliminado exitosamente' onClose={() => setToastSuccessReportesDel(false)} />}
+        {toastSuccessDel && <ToastDelete contain='Eliminado exitosamente' onClose={() => setToastSuccessReportesDel(false)} />}
 
         <ReporteList reload={reload} onReload={onReload} reportes={reportes} onToastSuccessReportesMod={onToastSuccessReportesMod} onToastSuccessReportesDel={onToastSuccessReportesDel} />
 
         {user.isadmin === 'Admin' ? (
-          <Add titulo='crear reporte' onOpenClose={onOpenCloseForm} />
+          <Add onOpenClose={onOpenCloseForm} />
         ) : (
           ''
         )}

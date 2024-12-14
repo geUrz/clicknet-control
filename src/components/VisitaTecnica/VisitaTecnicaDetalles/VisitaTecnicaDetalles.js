@@ -1,81 +1,205 @@
-import { IconClose, Confirm, Loading } from '@/components/Layouts';
-import { convertTo12HourFormat, formatDate } from '@/helpers';
-import { BasicModal } from '@/layouts';
+import { IconClose, Confirm, Loading, UploadImg } from '@/components/Layouts';
+import { formatDate } from '@/helpers';
+import { BasicModal, ModalImg } from '@/layouts';
 import { FaCheck, FaEdit, FaImage, FaTimes, FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { VisitaTecnicaEditForm } from '../VisitaTecnicaEditForm/VisitaTecnicaEditForm';
 import axios from 'axios';
+import { Button, Form, FormField, FormGroup, Image, Input, Tab } from 'semantic-ui-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Image } from 'semantic-ui-react';
-import { VisitatecnicaUpImg } from '../VisitatecnicaUpImg';
 import styles from './VisitaTecnicaDetalles.module.css';
 
 export function VisitaTecnicaDetalles(props) {
-
-  const { reload, onReload, visitatecnica, onOpenCloseDetalles, onToastSuccessVisitatecnicaMod, onToastSuccessVisitatecnicaDel } = props
+  const {
+    reload,
+    onReload,
+    visitatecnica: initialVisitaTecnica,
+    onOpenCloseDetalles,
+    onToastSuccessVisitatecnicaMod,
+    onToastSuccessVisitatecnicaDel,
+  } = props
 
   const { user } = useAuth()
+  
+  const [visitatecnica, setVisitatecnica] = useState(initialVisitaTecnica || {})
+  const [showEditVisitatecnica, setShowEditVisitatecnica] = useState(false)
+  const [showSubirImg, setShowSubirImg] = useState(false)
+  const [selectedImageKey, setSelectedImageKey] = useState(null)
+  const [showImg, setShowImg] = useState(false)
+  const [selectedImg, setSelectedImg] = useState(null)
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentTitleKey, setCurrentTitleKey] = useState(null);
+  const [showEditTitleModal, setShowEditTitleModal] = useState(false);
 
-  const [showSubirImg, setShowSubirImg] = useState(false);
-  const [selectedImageKey, setSelectedImageKey] = useState(null);  // Nuevo estado para controlar la imagen seleccionada
+  const onOpenEditVisitatecnica = () => setShowEditVisitatecnica((prevState) => !prevState)
 
-  const [showConfirmDel, setShowConfirmDel] = useState(null)
+  const [showConfirmDel, setShowConfirmDel] = useState(false)
+
   const onOpenCloseConfirmDel = () => setShowConfirmDel((prevState) => !prevState)
+
+  const [imgKeyToDelete, setImgKeyToDelete] = useState(null);
+
+  const openImg = (imgUrl, imgKey) => {
+    setSelectedImg(imgUrl)
+    setImgKeyToDelete(imgKey)
+    setShowImg(true)
+  }
+
+  const onShowSubirImg = (imgKey) => {
+    setSelectedImageKey(imgKey)
+    setShowSubirImg(true)
+  }
+
+  const onCloseSubirImg = () => {
+    setShowSubirImg(false); // Cierra el modal
+    setSelectedImageKey(null); // Limpia la clave de la imagen seleccionada
+  };
+
 
   const [showConfirmDelImg, setShowConfirmDelImg] = useState(null)
   const [imageToDelete, setImageToDelete] = useState(null)
-
-  const [showEditVisitatecnica, setShowEditVisitatecnica] = useState(null)
-  const onOpenEditVisitatecnica = () => setShowEditVisitatecnica(prevState => !prevState)
-
-  const onShowSubirImg = (imgKey) => {
-    if (user.isadmin === 'Admin' || visitatecnica.usuario_id === user.id) {
-      setSelectedImageKey(imgKey)
-      setShowSubirImg(true)
-    } 
-  }
-  
-  const onCloseSubirImg = () => {
-    setShowSubirImg(false)
-    setSelectedImageKey(null)
-  }
 
   const handleDeleteVisitatecnica = async () => {
     if (visitatecnica?.id) {
       try {
         await axios.delete(`/api/visitatecnica/visitatecnica?id=${visitatecnica.id}`)
+        setVisitatecnica(null)
         onReload()
-        onToastSuccessVisitatecnicaDel()
+        onToastSuccessIncidenciaDel()
         onOpenCloseDetalles()
       } catch (error) {
-        console.error('Error al eliminar la visitatecnica:', error)
+        console.error('Error al eliminar la visita tecnica:', error)
       }
     } else {
       console.error('Visita técnica o ID no disponible')
     }
   }
 
-  const deleteImage = async () => {
+  const handleDeleteImage = async () => {
     try {
-      if (imageToDelete) {
-        await axios.put(`/api/visitatecnica/updateImage?id=${visitatecnica.id}`, { [imageToDelete]: null });
-        onReload(); // Actualizar la página para reflejar los cambios
-        setShowConfirmDelImg(false); // Cerrar la confirmación
-      }
+      await axios.delete(`/api/visitatecnica/uploadImage`, {
+        params: {
+          id: visitatecnica.id,
+          imageKey: imgKeyToDelete,
+        },
+      })
+
+      setVisitatecnica ((prevVisitatecnica) => ({
+        ...prevVisitatecnica,
+        [imgKeyToDelete]: null, // Se establece la clave de la imagen a null
+      }));
+
+      onReload(); // Vuelve a cargar los datos
+      setShowImg(false); // Cierra el modal de imagen
+      setShowConfirmDelImg(false); // Cierra el modal de confirmación
     } catch (error) {
       console.error('Error al eliminar la imagen:', error);
     }
   }
 
   const onShowConfirmDelImg = (imgKey) => {
-    setImageToDelete(imgKey); // Establece la imagen que se va a eliminar
-    setShowConfirmDelImg(true); // Abre el modal de confirmación
+    setImageToDelete(imgKey)
+    setShowConfirmDelImg(true)
   }
+
+  const handleImageUploadSuccess = (imageKey, imageUrl) => {
+    setVisitatecnica({ ...visitatecnica, [imageKey]: imageUrl });
+    setShowSubirImg(false);
+  }
+
+  const MAX_TITLE_LENGTH = 40
+
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value || ''
+    if (newTitle.length <= MAX_TITLE_LENGTH) {
+      setCurrentTitle(newTitle)
+    }
+  };
+  
+
+  const handleEditTitle = (title, key) => {
+    setCurrentTitle(title);
+    setCurrentTitleKey(key); // Guardamos la clave del título que se está editando
+    setShowEditTitleModal(true);
+  };
+
+  const handleSaveTitle = async () => {
+    try {
+      await axios.put(`/api/visitatecnica/uploadTitle`, {
+        id: visitatecnica.id,
+        titleKey: currentTitleKey,
+        titleValue: currentTitle,
+      });
+
+      setVisitatecnica((prev) => ({
+        ...prev,
+        [currentTitleKey]: currentTitle, // Actualizamos el título en el estado
+      }));
+
+      setShowEditTitleModal(false);
+      onReload();
+    } catch (error) {
+      console.error('Error al guardar el título:', error);
+    }
+  }
+
+  const imageKeys1 = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8', 'img9', 'img10']
+  const imageKeys2 = ['img11', 'img12', 'img13', 'img14', 'img15', 'img16', 'img17', 'img18', 'img19', 'img20']
+
+  const panes = [
+    {
+      menuItem: 'Antes',
+      render: () => (
+        <Tab.Pane>
+          <div className={styles.tabContent}>
+          {imageKeys1.map(imgKey => (
+              <div key={imgKey}>
+                {visitatecnica[imgKey] === null ? (
+                  <FaImage onClick={() => onShowSubirImg(imgKey)} />
+                ) : (
+                  <>
+                    <Image src={visitatecnica[imgKey]} onClick={() => openImg(visitatecnica[imgKey], imgKey)} />
+                    <h1>{visitatecnica[`title${imageKeys1.indexOf(imgKey) + 1}`] || 'Sin título'}</h1>
+                    <div className={styles.editTitle} onClick={() => handleEditTitle(visitatecnica[`title${imageKeys1.indexOf(imgKey) + 1}`], `title${imageKeys1.indexOf(imgKey) + 1}`)}>
+                      <FaEdit />
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: 'Después',
+      render: () => (
+        <Tab.Pane>
+          <div className={styles.tabContent}>
+          {imageKeys2.map(imgKey => (
+            <div key={imgKey}>
+            {visitatecnica[imgKey] === null ? (
+              <FaImage onClick={() => onShowSubirImg(imgKey)} />
+            ) : (
+              <>
+                <Image src={visitatecnica[imgKey]} onClick={() => openImg(visitatecnica[imgKey], imgKey)} />
+                <h1>{visitatecnica[`title${imageKeys2.indexOf(imgKey) + 1}`] || 'Sin título'}</h1>
+                <div className={styles.editTitle} onClick={() => handleEditTitle(visitatecnica[`title${imageKeys2.indexOf(imgKey) + 1}`], `title${imageKeys2.indexOf(imgKey) + 1}`)}>
+                  <FaEdit />
+                </div>
+              </>
+            )}
+          </div>  
+          ))}
+          </div>
+        </Tab.Pane>
+      ),
+    },
+  ];
 
   return (
     <>
       <IconClose onOpenClose={onOpenCloseDetalles} />
-
       <div className={styles.section}>
         <div className={styles.box1}>
           <div className={styles.box1_1}>
@@ -87,13 +211,9 @@ export function VisitaTecnicaDetalles(props) {
               <h1>Descripción</h1>
               <h2>{visitatecnica.descripcion}</h2>
             </div>
-            <div >
+            <div>
               <h1>Técnico</h1>
               <h2>{visitatecnica.usuario_nombre}</h2>
-            </div>
-            <div>
-              <h1>Estatus</h1>
-              <h2>{visitatecnica.estado}</h2>
             </div>
           </div>
           <div className={styles.box1_2}>
@@ -106,125 +226,94 @@ export function VisitaTecnicaDetalles(props) {
               <h2>{formatDate(visitatecnica.date)}</h2>
             </div>
             <div>
-              <h1>Hora</h1>
-              <h2>{convertTo12HourFormat(visitatecnica.hora)}</h2>
+              <h1>Estatus</h1>
+              <h2>{visitatecnica.estado}</h2>
             </div>
           </div>
         </div>
-
-        <div className={styles.img}>
+        <div className={styles.mainImg}>
           <h1>Evidencias</h1>
-          <div>
-            {!visitatecnica.img1 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img1")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!visitatecnica.img1 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={visitatecnica.img1} onClick={() => onShowSubirImg("img1")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img1")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!visitatecnica.img2 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img2")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!visitatecnica.img2 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={visitatecnica.img2} onClick={() => onShowSubirImg("img2")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img2")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!visitatecnica.img3 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img3")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!visitatecnica.img3 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={visitatecnica.img3} onClick={() => onShowSubirImg("img3")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img3")} />
-                  </>
-                )}
-              </div>
-            )}
-            {!visitatecnica.img4 ? (
-              <div className={styles.noImg} onClick={() => onShowSubirImg("img4")}>
-                <div>
-                  <FaImage />
-                </div>
-              </div>
-            ) : (
-              <div className={styles.imgDel}>
-                {!visitatecnica.img4 ? (
-                  <Loading size={25} loading={2} />
-                ) : (
-                  <>
-                    <Image src={visitatecnica.img4} onClick={() => onShowSubirImg("img4")} />
-                    <FaTrash onClick={() => onShowConfirmDelImg("img4")} />
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+          <Tab panes={panes} className={styles.mainTab} />
         </div>
 
-        {user.isadmin === 'Admin' || visitatecnica.usuario_id === user.id ? (
+        {user.isadmin === 'Admin' || incidencia.usuario_id === user.id ? (
           <>
-
             <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenEditVisitatecnica} />
+              <div>
+                <FaEdit onClick={onOpenEditVisitatecnica} />
+              </div>
             </div>
 
             {user.isadmin === 'Admin' ? (
               <div className={styles.iconDel}>
-                <FaTrash onClick={onOpenCloseConfirmDel} />
+                <div>
+                  <FaTrash onClick={onOpenCloseConfirmDel} />
+                </div>
               </div>
             ) : (
               ''
             )}
-
           </>
         ) : (
           ''
         )}
+
       </div>
 
-      <BasicModal title='modificar la visita técnica' show={showEditVisitatecnica} onClose={onOpenEditVisitatecnica}>
-        <VisitaTecnicaEditForm reload={reload} onReload={onReload} visitatecnica={visitatecnica} onOpenEditVisitatecnica={onOpenEditVisitatecnica} onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod} />
+      <BasicModal title="Modificar la visita técnica" show={showEditVisitatecnica} onClose={onOpenEditVisitatecnica}>
+        <VisitaTecnicaEditForm
+          reload={reload}
+          onReload={onReload}
+          visitatecnica={visitatecnica}
+          onOpenEditVisitatecnica={onOpenEditVisitatecnica}
+          onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod}
+        />
       </BasicModal>
 
-      <BasicModal title='Subir imagen' show={showSubirImg} onClose={onCloseSubirImg}>
+      <BasicModal title="Subir imagen" show={showSubirImg} onClose={onCloseSubirImg}>
         {selectedImageKey && (
-          <VisitatecnicaUpImg
-            reload={reload}
+          <UploadImg
+          reload={reload}
             onReload={onReload}
-            visitatecnica={visitatecnica}
+            itemId={visitatecnica.id}
             onShowSubirImg={onCloseSubirImg}
             selectedImageKey={selectedImageKey}
-          />
+            endpoint="visitatecnica"
+            onSuccess={handleImageUploadSuccess}
+      />
         )}
+      </BasicModal>
+
+      <BasicModal show={showImg} onClose={() => setShowImg(false)}>
+        <ModalImg
+          img={selectedImg}
+          openImg={() => setShowImg(false)}
+          onShowConfirmDelImg={() => onShowConfirmDelImg(imgKeyToDelete)}
+          imgKey={imgKeyToDelete}
+        />
+      </BasicModal>
+
+      <BasicModal title="Título de la imagen" show={showEditTitleModal} onClose={() => setShowEditTitleModal(false)}>
+        <div>
+          <IconClose onOpenClose={() => setShowEditTitleModal(false)} />
+
+          <Form>
+          <FormGroup widths='equal'>
+            <FormField>
+            <Input
+            type="text"
+            value={currentTitle}
+            onChange={handleTitleChange} 
+            placeholder="Título"
+          />
+            </FormField>
+          </FormGroup>
+          <div className={styles.caracteres}>
+          <h2>{(currentTitle || '').length}/{MAX_TITLE_LENGTH}</h2>
+        </div>
+          <Button primary onClick={handleSaveTitle}>Guardar</Button>
+          </Form>
+        </div>
       </BasicModal>
 
       <Confirm
@@ -241,7 +330,7 @@ export function VisitaTecnicaDetalles(props) {
         }
         onConfirm={handleDeleteVisitatecnica}
         onCancel={onOpenCloseConfirmDel}
-        content='¿ Estas seguro de eliminar la visita técnica ?'
+        content="¿Estás seguro de eliminar la visita técnica?"
       />
 
       <Confirm
@@ -256,11 +345,10 @@ export function VisitaTecnicaDetalles(props) {
             <FaCheck />
           </div>
         }
-        onConfirm={deleteImage}
+        onConfirm={handleDeleteImage}
         onCancel={() => setShowConfirmDelImg(false)}
-        content='¿ Estás seguro de eliminar la imagen ?'
+        content="¿Estás seguro de eliminar la imagen?"
       />
-
     </>
-  )
+  );
 }

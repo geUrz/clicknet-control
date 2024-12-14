@@ -69,16 +69,16 @@ export default function Visitas() {
 
       <BasicLayout title='Visitas' relative onReload={onReload}>
 
-        {toastSuccessVisita && <ToastSuccess contain='Visita creada exitosamente' onClose={() => setToastSuccessVisita(false)} />}
+        {toastSuccessVisita && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccessVisita(false)} />}
 
-        {toastSuccessVisitaMod && <ToastSuccess contain='Visita modificada exitosamente' onClose={() => setToastSuccessVisitaMod(false)} />}
+        {toastSuccessVisitaMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessVisitaMod(false)} />}
 
-        {toastSuccessVisitaDel && <ToastDelete contain='Visita eliminada exitosamente' onClose={() => setToastSuccessVisitaDel(false)} />}
+        {toastSuccessVisitaDel && <ToastDelete contain='Eliminada exitosamente' onClose={() => setToastSuccessVisitaDel(false)} />}
 
         <VisitasList reload={reload} onReload={onReload} visitas={visitas} onToastSuccessVisitaMod={onToastSuccessVisitaMod} onToastSuccessVisitaDel={onToastSuccessVisitaDel} />
 
 
-        <Add titulo='crear visita' onOpenClose={onOpenCloseForm} />
+        <Add onOpenClose={onOpenCloseForm} />
 
       </BasicLayout>
 

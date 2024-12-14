@@ -68,16 +68,16 @@ export default function Visitaprovedores() {
 
       <BasicLayout title='visita proveedores' relative onReload={onReload}>
 
-        {toastSuccessVisitaprov && <ToastSuccess contain='Visita proveedor creado exitosamente' onClose={() => setToastSuccessVisitaprov(false)} />}
+        {toastSuccessVisitaprov && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessVisitaprov(false)} />}
 
-        {toastSuccessVisitaprovMod && <ToastSuccess contain='Visita proveedor modificado exitosamente' onClose={() => setToastSuccessVisitaprovMod(false)} />}
+        {toastSuccessVisitaprovMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessVisitaprovMod(false)} />}
 
         {toastSuccessVisitaprovDel && <ToastDelete contain='Visita proveedor eliminado exitosamente' onClose={() => setToastSuccessVisitaprovDel(false)} />}
 
         <VisitaProvsList reload={reload} onReload={onReload} visitaprovs={visitaprovs} onToastSuccessVisitaprovMod={onToastSuccessVisitaprovMod} onToastSuccessVisitaprovDel={onToastSuccessVisitaprovDel} />
 
         {user.isadmin === 'Admin' || user.isadmin === 'Caseta' || user.isadmin === 'Comité' ? (
-          <Add titulo='crear visita provedor' onOpenClose={onOpenCloseForm} />
+          <Add onOpenClose={onOpenCloseForm} />
         ) : (
           ''
         )}

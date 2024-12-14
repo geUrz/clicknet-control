@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 export default function Visitatecnica() {
 
   const { user, loading } = useAuth()
-
+  
   const [reload, setReload] = useState(false)
 
   const onReload = () => setReload((prevState) => !prevState)
@@ -68,16 +68,16 @@ export default function Visitatecnica() {
 
       <BasicLayout title='visita técnica' relative>
 
-        {toastSuccessVisitatecnica && <ToastSuccess contain='Visita técnica creada exitosamente' onClose={() => setToastSuccessVisitatecnica(false)} />}
+        {toastSuccessVisitatecnica && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccessVisitatecnica(false)} />}
 
-        {toastSuccessVisitatecnicaMod && <ToastSuccess contain='Visita técnica modificada exitosamente' onClose={() => setToastSuccessVisitatecnicaMod(false)} />}
+        {toastSuccessVisitatecnicaMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessVisitatecnicaMod(false)} />}
 
-        {toastSuccessVisitatecnicaDel && <ToastDelete contain='Visita técnica eliminada exitosamente' onClose={() => setToastSuccessVisitatecnicaDel(false)} />}
+        {toastSuccessVisitatecnicaDel && <ToastDelete contain=' Eliminada exitosamente' onClose={() => setToastSuccessVisitatecnicaDel(false)} />}
 
         <VisitaTecnicaList reload={reload} onReload={onReload} visitatecnicas={visitatecnicas} onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod} onToastSuccessVisitatecnicaDel={onToastSuccessVisitatecnicaDel} />
 
         {user.isadmin === 'Admin' ? (
-          <Add titulo='crear visita técnica' onOpenClose={onOpenCloseForm} />
+          <Add onOpenClose={onOpenCloseForm} />
         ) : (
           ''
         )}

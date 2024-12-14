@@ -44,7 +44,7 @@ export function VisitasListSearch(props) {
                   </div>
                   <div className={styles.column2}>
                     <div >
-                      <h1>Visita</h1>
+                      <h1>Nombre de la visita</h1>
                       <h2>{visita.visita}</h2>
                     </div>
                     <div >

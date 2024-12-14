@@ -1,7 +1,7 @@
 import { BasicLayout } from '@/layouts'
 import { useCallback, useEffect, useState } from 'react'
 import { Card } from '@/components/Home'
-import { FaBuilding, FaBullhorn, FaCarCrash, FaClipboard, FaUserCheck, FaUserCog, FaUserMd, FaUsers } from 'react-icons/fa'
+import { FaBuilding, FaBullhorn, FaCarCrash, FaClipboard, FaFileAlt, FaFileContract, FaFileInvoice, FaUserCheck, FaUserCog, FaUserMd, FaUsers } from 'react-icons/fa'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import axios from 'axios'
 import { size } from 'lodash'
@@ -24,7 +24,10 @@ export default function Home() {
     reportes: null,
     visitaprovedores: null,
     residenciales: null,
-    usuarios: null
+    usuarios: null,
+    ordenservicio: null,
+    recibos: null,
+    cotizaciones: null
   });
 
   const fetchData = useCallback(async (endpoint, key) => {
@@ -48,6 +51,9 @@ export default function Home() {
       fetchData(`/api/visitaprovedores/visitaprovedores?residencial_id=${user.residencial_id}`, 'visitaprovedores')
       fetchData('/api/residenciales/residenciales', 'residenciales'),
       fetchData('/api/usuarios/usuarios', 'usuarios')
+      fetchData(`/api/ordenservicio/ordenservicio?residencial_id=${user.residencial_id}`, 'ordenservicio')
+      fetchData(`/api/recibos/recibos?residencial_id=${user.residencial_id}`, 'recibos')
+      fetchData(`/api/cotizaciones/cotizaciones?residencial_id=${user.residencial_id}`, 'cotizaciones')
     }
   }, [reload, user, fetchData])
 
@@ -58,7 +64,10 @@ export default function Home() {
     reportes: size(data.reportes),
     visitaprovedores: size(data.visitaprovedores),
     residenciales: size(data.residenciales),
-    usuarios: size(data.usuarios)
+    usuarios: size(data.usuarios),
+    ordenservicio: size(data.ordenservicio),
+    recibos: size(data.recibos),
+    cotizaciones: size(data.cotizaciones)
 
   }
 
@@ -72,6 +81,10 @@ export default function Home() {
       <BasicLayout title='Panel' onReload={onReload}>
         <div className={styles.main}>
           <div className={styles.section}>
+            <Card link='/visitas' title='Mis visitas'
+              count={false}>
+              <FaUsers />
+            </Card>
             <Card link='/incidencias' title='Incidencias'
               countIncidencias={countData.incidencias}>
               <FaCarCrash />
@@ -106,6 +119,11 @@ export default function Home() {
                   <FaBuilding />
                 </Card>
 
+                <Card link='/ordenesdeservicio' title='Órdenes Servicio'
+                  countOrdenesdeservicio={countData.ordenservicio}>
+                  <FaFileAlt />
+                </Card>
+
               </>
               : null
             }
@@ -114,6 +132,23 @@ export default function Home() {
               <Card link='/validarvisitas' title='Validar Visitas' count={false}>
                 <FaUserCheck />
               </Card>
+              : null
+            }
+
+            {user && (user.isadmin === 'Admin') ?
+              <>
+
+                <Card link='/recibos' title='Recibos'
+                  countRecibos={countData.recibos}>
+                  <FaFileInvoice />
+                </Card>
+
+                <Card link='/cotizaciones' title='Cotizaciones'
+                  countCotizaciones={countData.cotizaciones}>
+                  <FaFileContract />
+                </Card>
+
+              </>
               : null
             }
 

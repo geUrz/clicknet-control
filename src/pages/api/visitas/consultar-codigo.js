@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       // Obtener la visita asociada al código proporcionado
       const [rows] = await connection.execute(`
         SELECT visitas.id, visitas.usuario_id, visitas.codigo, visitas.visita, visitas.tipovisita, 
-               visitas.tipoacceso, visitas.nota, visitas.date, visitas.fromDate, visitas.toDate, visitas.hora, visitas.estado, visitas.dias, visitas.countAcc, 
+               visitas.tipoacceso, visitas.nota, visitas.date, visitas.fromDate, visitas.toDate, visitas.hora, visitas.estado, visitas.dias, visitas.countAcc, visitas.img1, visitas.img2, visitas.img3, visitas.img4, 
                usuarios.nombre AS usuario_nombre, usuarios.privada AS usuario_privada, usuarios.calle AS usuario_calle, usuarios.casa AS usuario_casa
         FROM visitas
         JOIN usuarios ON visitas.usuario_id = usuarios.id
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
       const diasSeleccionados = visita.dias ? visita.dias.split(', ').map(d => d.trim()) : [];
       
-      const diasDeLaSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+      const diasDeLaSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
       const diaActual = diasDeLaSemana[(new Date().getDay() + 6) % 7]
       
       const msjTipoAcceso = visita.tipoacceso === 'eventual' || visita.tipoacceso === 'frecuente'

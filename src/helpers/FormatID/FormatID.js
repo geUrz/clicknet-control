@@ -76,3 +76,12 @@ export function genUserId(length) {
   }
   return result;
 }
+
+export function genOSId(length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = 'OS-0'; // Prefijo para el folio
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}

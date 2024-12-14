@@ -12,6 +12,10 @@
   color: var(--clrGR0000) !important;
 }
 
+.ui.form textarea{
+  height: 250px;
+}
+
 .ui.form input:focus, .ui.form textarea:focus, .ui.form select:focus{
   border: 2px solid var(--clrBL0) !important;
 }
@@ -94,4 +98,17 @@
 
 .ui.dropdown .menu{
   border: 1px solid var(--clrBL0) !important;
+}
+
+
+@media screen and (min-width:768px) {
+
+  .ui.form input, .ui.form textarea, .ui.selection.dropdown{
+    width: 450px !important;
+  }
+
+  .ui.form textarea{
+    height: 350px;
+  }
+
 }
