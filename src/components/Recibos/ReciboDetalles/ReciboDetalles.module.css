@@ -1,0 +1,266 @@
+.main{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;  
+}
+
+.sectionDatos{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  
+}
+
+.sectionDatos div{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;  
+}
+
+.datos_1 div, .datos_2 div{
+  margin: 10px 0;
+}
+
+.datos_2 div{
+  align-items: flex-end !important;  
+}
+
+.datos_1 h1, .datos_2 h1{
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: black;
+}
+
+.datos_1 h2, .datos_2 h2{
+  font-size: 14px;
+  color: var(--clrGR000);
+}
+
+.cliente div{
+  margin: 0;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.cliente h2{
+  text-transform: capitalize;
+}
+
+.datos_1 div svg, .datos_1 div path{
+  margin-left: 5px;
+  color: var(--clrM0);
+  cursor: pointer;
+}
+
+.datos_1 div svg:hover, .datos_1 div:hover path{
+  color: var(--clrM2);
+}
+
+.datos_1 div svg:active, .datos_1 div:active path{
+  color: var(--clrM3);
+}
+
+.toggleNota{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toggleNota h1{
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: black;
+}
+
+.toggleNotaOFF, .toggleNotaON{
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleNotaOFF svg, .toggleNotaOFF path, .toggleNotaON svg, .toggleNotaON path{
+  font-size: 30px;
+  color: black;
+  cursor: pointer;
+}
+
+.toggleNotaOFF svg, .toggleNotaOFF path{
+  color: var(--clrGR000);
+}
+
+.formNota{
+  margin-top: 20px;
+}
+
+.charCount{
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--clrGR000);
+}
+
+.iconPlus{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconPlus div{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background-color: var(--clrR0);
+  cursor: pointer;
+}
+
+.iconPlus div:hover{
+  background-color: var(--clrR1);
+}
+
+.iconPlus div:active{
+  background-color: var(--clrR2);
+}
+
+.iconPlus svg, .iconPlus path{
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sectionTotal{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sectionTotal h1{
+  font-size: 12.5px;
+  color: black;
+}
+
+.sectionTotal_1{
+  margin-right: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sectionTotal_2{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sectionTotal_2 h1{
+  margin: 3.5px 0;
+}
+
+.sectionTotal_1 h1:nth-child(3), .sectionTotal_2 h1:nth-child(3){
+  font-weight: 600 !important;
+}
+
+.toggleOFF, .toggleON{
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleOFF svg, .toggleON svg, .toggleOFF path, .toggleON path{
+  margin-right: 5px;
+  color: var(--clrGR000);
+  cursor: pointer;
+}
+
+.toggleON svg, .toggleON path{
+  color: black;
+  cursor: pointer;
+}
+
+.iconEdit{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconEdit svg, .iconEdit path{
+  font-size: 26px;
+  color: var(--clrM0);
+  cursor: pointer;
+}
+
+.iconEdit svg:hover, .iconEdit:hover path{
+  color: var(--clrM1);
+}
+
+.iconEdit svg:active, .iconEdit:active path{
+  color: var(--clrM2);
+}
+
+.iconClose svg, .iconClose path{
+  padding: 8px;
+  font-size: 34px;
+  color: var(--clrGR00);
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.iconClose svg:hover,.iconClose path:hover{
+  background-color: var(--clrGR3);
+}
+
+.iconClose svg:active,.iconClose path:active{
+  background-color: var(--clrGR4);
+}
+
+.iconCheck{
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--clrGR2);
+}
+
+.iconCheck:active{
+  background-color: var(--clrGR3);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 22px;
+  color: var(--clrM0);
+  cursor: pointer;
+}
+

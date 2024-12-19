@@ -16,7 +16,7 @@ export function VisitaTecnicaForm(props) {
   const [descripcion, setDescripcion] = useState('')
   const [date, setDate] = useState(null)
 
-  const { reload, onReload, onOpenCloseForm, onToastSuccessVisitatecnica } = props
+  const { reload, onReload, onOpenCloseForm, onToastSuccess } = props
 
   const [errors, setErrors] = useState({})
 
@@ -75,7 +75,7 @@ export function VisitaTecnicaForm(props) {
 
       onReload()
       onOpenCloseForm()
-      onToastSuccessVisitatecnica()
+      onToastSuccess()
 
     } catch (error) {
       console.error('Error al crear la visitatecnica:', error)

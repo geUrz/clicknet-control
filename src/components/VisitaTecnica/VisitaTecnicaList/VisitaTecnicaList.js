@@ -14,7 +14,7 @@ import styles from './VisitaTecnicaList.module.css'
 
 export function VisitaTecnicaList(props) {
 
-  const { reload, onReload, visitatecnicas, onToastSuccessVisitatecnicaMod, onToastSuccessVisitatecnicaDel } = props
+  const { reload, onReload, visitatecnica, onToastSuccessMod, onToastSuccessDel } = props
 
   const { loading } = useAuth()
 
@@ -35,7 +35,7 @@ export function VisitaTecnicaList(props) {
   const [filterEstado, setFilterEstado] = useState('')
   const [filterFecha, setFilterFecha] = useState(null)
 
-  const filteredVisitatecnica = (visitatecnicas || []).filter((visitatecnica) => {
+  const filteredVisitatecnica = (visitatecnica || []).filter((visitatecnica) => {
     return (
       (filterEstado === '' || filterEstado === 'Todas' || visitatecnica.estado === filterEstado) &&
       (filterFecha === null || visitatecnica.date === formatDateInc(filterFecha))
@@ -142,8 +142,8 @@ export function VisitaTecnicaList(props) {
             onReload={onReload}
             visitatecnica={visitatecnicaSeleccionada}
             onOpenCloseDetalles={onCloseDetalles}
-            onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod}
-            onToastSuccessVisitatecnicaDel={onToastSuccessVisitatecnicaDel}
+            onToastSuccessMod={onToastSuccessMod}
+            onToastSuccessDel={onToastSuccessDel}
           />
         )}
       </BasicModal>

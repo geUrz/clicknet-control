@@ -6,35 +6,40 @@ import { formatDate } from '@/helpers'
 import styles from './ReportePDF.module.css'
 
 export function ReportePDF(props) {
-
   const { reporte, user, firmaCli, firmaTec } = props
 
   const generarPDF = async () => {
-
     if (!reporte) return
 
-    const doc = new jsPDF(
-      {
-        orientation: 'p',
-        unit: 'mm',
-        format: 'a5'
-      }
-    )
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a5'
+    })
 
+    const marginMain = 4
+    const pageWidth = doc.internal.pageSize.getWidth()
+
+    // Función para agregar el texto en el pie de página
+    const addFooterText = () => {
+      const text = 'www.clicknetmx.com'
+      const textWidth = doc.getTextWidth(text)
+      const x = (pageWidth - textWidth) / 2
+      const y = doc.internal.pageSize.height - 5 // Posición a 10 mm del borde inferior
+      doc.setFontSize(8)
+      doc.setTextColor(120, 120, 120)
+      doc.text(text, x, y)
+    }
+
+    // Añadir contenido a la primera página
     const logoImg = 'img/logo.png'
     const logoWidth = 50
     const logoHeight = 14
-    const marginMain = 4
-    const marginRightLogo = marginMain
-
-    const pageWidth = doc.internal.pageSize.getWidth()
-
-    const xPosition = pageWidth - logoWidth - marginRightLogo
+    const xPosition = pageWidth - logoWidth - marginMain
 
     doc.addImage(logoImg, 'PNG', xPosition, 12.5, logoWidth, logoHeight)
 
     doc.setFont('helvetica')
-
     const font1 = 9.5
     const font2 = 8.5
     const font3 = 8
@@ -105,9 +110,7 @@ export function ReportePDF(props) {
         cellPadding: 2.5,
         valign: 'middle'
       },
-
       margin: { top: 0, left: marginMain, bottom: 0, right: marginMain },
-
     })
 
     const top = 154
@@ -118,7 +121,7 @@ export function ReportePDF(props) {
     doc.rect(marginMain, top, boxWidth, boxHeight)
 
     doc.setFontSize(`${font2}`)
-    doc.setTextColor(0, 0, 0);
+    doc.setTextColor(0, 0, 0)
     doc.text('Nota:', marginMain, top + 0)
 
     doc.setFontSize(`${font2}`)
@@ -136,24 +139,11 @@ export function ReportePDF(props) {
 
     doc.text(content, textX, textY, { maxWidth: txtWidth })
 
-    const pWidth = doc.internal.pageSize.getWidth()
-    const mRight = marginMain
-    const tableWidth = 33
-    const marginLeft = pWidth - mRight - tableWidth
-
+    // Firma
     const firmaWidth = 24
     const firmaHeight = 12
     const marginRightFirma = 20
-
-    const firmaWidthCli = 24
-    const firmaHeightCli = 12
-    const marginRightFirmaCli = 70
-
-    const pgWidth = doc.internal.pageSize.getWidth()
-    const pgWidthCli = doc.internal.pageSize.getWidth()
-
-    const xPos = pgWidth - firmaWidth - marginRightFirma
-    const xPosCli = pgWidthCli - firmaWidthCli - marginRightFirmaCli
+    const xPos = pageWidth - firmaWidth - marginRightFirma
 
     if (firmaTec) {
       doc.addImage(firmaTec, 'PNG', xPos, 174, firmaWidth, firmaHeight)
@@ -163,48 +153,31 @@ export function ReportePDF(props) {
     doc.text('_________________________', doc.internal.pageSize.width - 35 - doc.getTextWidth('Firma Técnico'), 188)
     doc.text('Firma Técnico', doc.internal.pageSize.width - 23.5 - doc.getTextWidth('Firma Técnico'), 192.5)
 
-
     if (firmaCli) {
-      doc.addImage(firmaCli, 'PNG', xPosCli, 174, firmaWidthCli, firmaHeightCli)
+      doc.addImage(firmaCli, 'PNG', xPos, 174, firmaWidth, firmaHeight)
     }
     doc.setFontSize(`${font3}`)
     doc.setTextColor(50, 50, 50)
     doc.text('_________________________', doc.internal.pageSize.width - 85 - doc.getTextWidth('Firma Cliente'), 188)
     doc.text('Firma Cliente', doc.internal.pageSize.width - 72 - doc.getTextWidth('Firma Cliente'), 192.5)
 
-
     const qrCodeText = 'https://www.facebook.com/clicknet.mx'
     const qrCodeDataUrl = await QRCode.toDataURL(qrCodeText)
     doc.addImage(qrCodeDataUrl, 'PNG', 2, 170, 35, 35)
 
-    doc.setFontSize(`${font3}`);
+    doc.setFontSize(`${font3}`)
     doc.setTextColor(120, 120, 120)
 
-    const text = 'www.clicknetmx.com';
-    const textWidth = doc.getTextWidth(text);
-    const pagWidth = doc.internal.pageSize.width
-    const x = (pagWidth - textWidth) / 2
-    const y = 205
-    doc.text(text, x, y)
+    addFooterText() // Agregar texto en el pie de la primera página
 
-    const imgWidth = 25;
-    const imgHeight = 45;
-    const spaceBetweenImages = 35; // Espacio horizontal entre las imágenes
-    const imagesPerRow = 4;
-
-    // Función para calcular el punto de inicio en X para centrar las imágenes
-    function calculateInitialPosX(docWidth) {
-      const totalImagesWidth = imagesPerRow * imgWidth + (imagesPerRow - 1) * (spaceBetweenImages - imgWidth);
-      return (docWidth - totalImagesWidth) / 2;
-    }
-
-    doc.addPage();
+    doc.addPage()
     doc.autoTable({
       startY: 4,
       head: [[{ content: 'Evidencias Antes del Trabajo', styles: { halign: 'left' } }]],
       headStyles: { fillColor: [240, 240, 240], fontSize: font1, textColor: [50, 50, 50] },
       margin: { top: 0, left: marginMain, right: marginMain },
-    });
+    })
+    addFooterText() // Agregar texto en el pie de la segunda página
 
     const imgAntes = [
       { img: reporte.img1, title: reporte.title1 },
@@ -219,39 +192,33 @@ export function ReportePDF(props) {
       { img: reporte.img10, title: reporte.title10 }
     ]
 
-    let firstRowTopMargin = 18; // Margen superior personalizado para la primera fila
-    let posY = firstRowTopMargin; // Aplicar el margen para la primera fila
-    let posX = calculateInitialPosX(doc.internal.pageSize.width)
+    let posY = 18
+    let posX = 20
 
     imgAntes.forEach((item, index) => {
       if (item.img) {
-        doc.addImage(item.img, 'PNG', posX, posY, imgWidth, imgHeight);
-
+        doc.addImage(item.img, 'PNG', posX, posY, 50, 30)
         if (item.title) {
-          doc.setFontSize(font2);
-          doc.setTextColor(0, 0, 0);
-          doc.text(item.title, posX + imgWidth / 2, posY + imgHeight + 5, { maxWidth: imgWidth, align: 'center' });
+          doc.setFontSize(font2)
+          doc.setTextColor(0, 0, 0)
+          doc.text(item.title, posX + 25, posY + 35, { maxWidth: 50, align: 'center' })
         }
       }
-
-      posX += spaceBetweenImages;
-
-      if ((index + 1) % imagesPerRow === 0) {
-        posX = calculateInitialPosX(doc.internal.pageSize.width); // Centrado de nuevo en la siguiente fila
-        posY += 62; // Espacio entre filas de imágenes
+      posX += 55
+      if ((index + 1) % 2 === 0) {
+        posX = 20
+        posY += 40
       }
     })
 
-
-
-    // Sección de imágenes "Después"
-    doc.addPage();
+    doc.addPage()
     doc.autoTable({
       startY: 4,
       head: [[{ content: 'Evidencias Después del Trabajo', styles: { halign: 'left' } }]],
       headStyles: { fillColor: [240, 240, 240], fontSize: font1, textColor: [50, 50, 50] },
       margin: { top: 0, left: marginMain, right: marginMain },
-    });
+    })
+    addFooterText() // Agregar texto en el pie de la tercera página
 
     const imgDespues = [
       { img: reporte.img11, title: reporte.title11 },
@@ -266,44 +233,37 @@ export function ReportePDF(props) {
       { img: reporte.img20, title: reporte.title20 }
     ]
 
-    posY = firstRowTopMargin; // Utilizar el mismo margen superior
-    posX = calculateInitialPosX(doc.internal.pageSize.width); // Centrado en X
+    posY = 18
+    posX = 20
 
     imgDespues.forEach((item, index) => {
       if (item.img) {
-        doc.addImage(item.img, 'PNG', posX, posY, imgWidth, imgHeight);
-
+        doc.addImage(item.img, 'PNG', posX, posY, 50, 30)
         if (item.title) {
-          doc.setFontSize(font2);
-          doc.setTextColor(0, 0, 0);
-          doc.text(item.title, posX + imgWidth / 2, posY + imgHeight + 5, { maxWidth: imgWidth, align: 'center' });
+          doc.setFontSize(font2)
+          doc.setTextColor(0, 0, 0)
+          doc.text(item.title, posX + 25, posY + 35, { maxWidth: 50, align: 'center' })
         }
       }
-
-      posX += spaceBetweenImages;
-
-      if ((index + 1) % imagesPerRow === 0) {
-        posX = calculateInitialPosX(doc.internal.pageSize.width); // Centrado de nuevo en la siguiente fila
-        posY += 62; // Espacio entre filas de imágenes
+      posX += 55
+      if ((index + 1) % 2 === 0) {
+        posX = 20
+        posY += 40
       }
     })
 
     doc.save(`${reporte.folio}.pdf`)
-
   }
 
   const compartirPDF = () => {
-
     generarPDF()
   }
 
   return (
-
     <div className={styles.iconPDF}>
       <div onClick={compartirPDF}>
         <BiSolidFilePdf />
       </div>
     </div>
-
   )
 }

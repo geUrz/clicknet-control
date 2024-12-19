@@ -21,6 +21,16 @@ export function OrdenServicioPDF(props) {
       }
     )
 
+    const addFooterText = () => {
+      const text = 'www.clicknetmx.com'
+      const textWidth = doc.getTextWidth(text)
+      const x = (pageWidth - textWidth) / 2
+      const y = doc.internal.pageSize.height - 5 // Posición a 10 mm del borde inferior
+      doc.setFontSize(8)
+      doc.setTextColor(120, 120, 120)
+      doc.text(text, x, y)
+    }
+
     const logoImg = 'img/logo.png'
     const logoWidth = 50
     const logoHeight = 14
@@ -89,7 +99,7 @@ export function OrdenServicioPDF(props) {
       startY: 58,
       head: [
         [
-          { content: 'Descripción', styles: { halign: 'center' } }
+          { content: 'Descripción', styles: { halign: 'left' } }
         ]
       ],
       styles: {
@@ -180,12 +190,7 @@ export function OrdenServicioPDF(props) {
     doc.setFontSize(`${font3}`);
     doc.setTextColor(120, 120, 120)
 
-    const text = 'www.clicknetmx.com';
-    const textWidth = doc.getTextWidth(text);
-    const pagWidth = doc.internal.pageSize.width
-    const x = (pagWidth - textWidth) / 2
-    const y = 205
-    doc.text(text, x, y)
+    addFooterText()
 
     if (toggle) {
 
@@ -203,7 +208,7 @@ export function OrdenServicioPDF(props) {
       doc.addPage();
       doc.autoTable({
         startY: 4,
-        head: [[{ content: 'Evidencias Antes del Trabajo', styles: { halign: 'center' } }]],
+        head: [[{ content: 'Evidencias Antes del Trabajo', styles: { halign: 'left' } }]],
         headStyles: { fillColor: [240, 240, 240], fontSize: font1, textColor: [50, 50, 50] },
         margin: { top: 0, left: marginMain, right: marginMain },
       });
@@ -244,13 +249,13 @@ export function OrdenServicioPDF(props) {
         }
       })
 
-      
+      addFooterText()
 
       // Sección de imágenes "Después"
       doc.addPage();
       doc.autoTable({
         startY: 4,
-        head: [[{ content: 'Evidencias Después del Trabajo', styles: { halign: 'center' } }]],
+        head: [[{ content: 'Evidencias Después del Trabajo', styles: { halign: 'left' } }]],
         headStyles: { fillColor: [240, 240, 240], fontSize: font1, textColor: [50, 50, 50] },
         margin: { top: 0, left: marginMain, right: marginMain },
       });
@@ -270,6 +275,8 @@ export function OrdenServicioPDF(props) {
 
       posY = firstRowTopMargin; // Utilizar el mismo margen superior
       posX = calculateInitialPosX(doc.internal.pageSize.width); // Centrado en X
+
+      addFooterText()
 
       imgDespues.forEach((item, index) => {
         if (item.img) {

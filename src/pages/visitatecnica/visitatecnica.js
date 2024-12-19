@@ -18,7 +18,7 @@ export default function Visitatecnica() {
 
   const onOpenCloseForm = () => setOpenForm((prevState) => !prevState)
 
-  const [visitatecnicas, setVisitatecnica] = useState(null)
+  const [visitatecnica, setVisitatecnica] = useState(null)
 
   useEffect(() => {
     if (user && user.residencial_id) {
@@ -33,28 +33,28 @@ export default function Visitatecnica() {
     }
   }, [reload, user])
 
-  const [toastSuccessVisitatecnica, setToastSuccessVisitatecnica] = useState(false)
-  const [toastSuccessVisitatecnicaMod, setToastSuccessVisitatecnicaMod] = useState(false)
-  const [toastSuccessVisitatecnicaDel, setToastSuccessVisitatecnicaDel] = useState(false)
+  const [toastSuccess, setToastSuccess] = useState(false)
+  const [toastSuccessMod, setToastSuccessMod] = useState(false)
+  const [toastSuccessDel, setToastSuccessDel] = useState(false)
 
-  const onToastSuccessVisitatecnica = () => {
-    setToastSuccessVisitatecnica(true)
+  const onToastSuccess = () => {
+    setToastSuccess(true)
     setTimeout(() => {
-      setToastSuccessVisitatecnica(false)
+      setToastSuccess(false)
     }, 3000)
   }
 
-  const onToastSuccessVisitatecnicaMod = () => {
-    setToastSuccessVisitatecnicaMod(true)
+  const onToastSuccessMod = () => {
+    setToastSuccessMod(true)
     setTimeout(() => {
-      setToastSuccessVisitatecnicaMod(false)
+      setToastSuccessMod(false)
     }, 3000)
   }
 
-  const onToastSuccessVisitatecnicaDel = () => {
-    setToastSuccessVisitatecnicaDel(true)
+  const onToastSuccessDel = () => {
+    setToastSuccessDel(true)
     setTimeout(() => {
-      setToastSuccessVisitatecnicaDel(false)
+      setToastSuccessDel(false)
     }, 3000)
   }
 
@@ -68,13 +68,13 @@ export default function Visitatecnica() {
 
       <BasicLayout title='visita técnica' relative>
 
-        {toastSuccessVisitatecnica && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccessVisitatecnica(false)} />}
+        {toastSuccess && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccess(false)} />}
 
-        {toastSuccessVisitatecnicaMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessVisitatecnicaMod(false)} />}
+        {toastSuccessMod && <ToastSuccess contain='Modificada exitosamente' onClose={() => setToastSuccessMod(false)} />}
 
-        {toastSuccessVisitatecnicaDel && <ToastDelete contain=' Eliminada exitosamente' onClose={() => setToastSuccessVisitatecnicaDel(false)} />}
+        {toastSuccessDel && <ToastDelete contain=' Eliminada exitosamente' onClose={() => setToastSuccessDel(false)} />}
 
-        <VisitaTecnicaList reload={reload} onReload={onReload} visitatecnicas={visitatecnicas} onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod} onToastSuccessVisitatecnicaDel={onToastSuccessVisitatecnicaDel} />
+        <VisitaTecnicaList reload={reload} onReload={onReload} visitatecnica={visitatecnica} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
 
         {user.isadmin === 'Admin' ? (
           <Add onOpenClose={onOpenCloseForm} />
@@ -85,7 +85,7 @@ export default function Visitatecnica() {
       </BasicLayout>
 
       <BasicModal title='crear visita técnica' show={openForm} onClose={onOpenCloseForm}>
-        <VisitaTecnicaForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccessVisitatecnica={onToastSuccessVisitatecnica} />
+        <VisitaTecnicaForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccess={onToastSuccess} />
       </BasicModal>
 
     </ProtectedRoute>

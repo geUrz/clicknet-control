@@ -9,7 +9,7 @@ import styles from './VisitaTecnicaEditForm.module.css'
 
 export function VisitaTecnicaEditForm(props) {
 
-  const { reload, onReload, visitatecnica, onOpenEditVisitatecnica, onToastSuccessVisitatecnicaMod } = props
+  const { reload, onReload, visitatecnica, onOpenEditVisitatecnica, onToastSuccessMod } = props
 
   const [formData, setFormData] = useState({
     visitatecnica: visitatecnica.visitatecnica,
@@ -65,7 +65,7 @@ export function VisitaTecnicaEditForm(props) {
       })
       onReload()
       onOpenEditVisitatecnica()
-      onToastSuccessVisitatecnicaMod()
+      onToastSuccessMod()
     } catch (error) {
       console.error('Error actualizando la visitatecnica:', error)
     }

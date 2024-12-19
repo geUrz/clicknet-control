@@ -117,9 +117,9 @@ export default async function handler(req, res) {
           [id]
         );
 
-        if (rows.length === 0) {
+        /* if (rows.length === 0) {
           return res.status(404).json({ message: 'Visita técnica no encontrada' });
-        }
+        } */
 
         res.status(200).json(rows[0]); // Retornamos el primer resultado
       } catch (error) {

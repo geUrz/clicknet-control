@@ -15,8 +15,8 @@ export function VisitaTecnicaDetalles(props) {
     onReload,
     visitatecnica: initialVisitaTecnica,
     onOpenCloseDetalles,
-    onToastSuccessVisitatecnicaMod,
-    onToastSuccessVisitatecnicaDel,
+    onToastSuccessMod,
+    onToastSuccessDel,
   } = props
 
   const { user } = useAuth()
@@ -65,7 +65,7 @@ export function VisitaTecnicaDetalles(props) {
         await axios.delete(`/api/visitatecnica/visitatecnica?id=${visitatecnica.id}`)
         setVisitatecnica(null)
         onReload()
-        onToastSuccessIncidenciaDel()
+        onToastSuccessDel()
         onOpenCloseDetalles()
       } catch (error) {
         console.error('Error al eliminar la visita tecnica:', error)
@@ -266,7 +266,7 @@ export function VisitaTecnicaDetalles(props) {
           onReload={onReload}
           visitatecnica={visitatecnica}
           onOpenEditVisitatecnica={onOpenEditVisitatecnica}
-          onToastSuccessVisitatecnicaMod={onToastSuccessVisitatecnicaMod}
+          onToastSuccessMod={onToastSuccessMod}
         />
       </BasicModal>
 

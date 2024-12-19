@@ -39,21 +39,21 @@ export default function Reportes() {
   const [toastSuccessMod, setToastSuccessReportesMod] = useState(false)
   const [toastSuccessDel, setToastSuccessReportesDel] = useState(false)
 
-  const onToastSuccessReporte = () => {
+  const onToastSuccess = () => {
     setToastSuccessReportes(true)
     setTimeout(() => {
       setToastSuccessReportes(false)
     }, 3000)
   }
 
-  const onToastSuccessReportesMod = () => {
+  const onToastSuccessMod = () => {
     setToastSuccessReportesMod(true)
     setTimeout(() => {
       setToastSuccessReportesMod(false)
     }, 3000)
   }
 
-  const onToastSuccessReportesDel = () => {
+  const onToastSuccessDel = () => {
     setToastSuccessReportesDel(true)
     setTimeout(() => {
       setToastSuccessReportesDel(false)
@@ -76,7 +76,7 @@ export default function Reportes() {
 
         {toastSuccessDel && <ToastDelete contain='Eliminado exitosamente' onClose={() => setToastSuccessReportesDel(false)} />}
 
-        <ReporteList reload={reload} onReload={onReload} reportes={reportes} onToastSuccessReportesMod={onToastSuccessReportesMod} onToastSuccessReportesDel={onToastSuccessReportesDel} />
+        <ReporteList reload={reload} onReload={onReload} reportes={reportes} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
 
         {user.isadmin === 'Admin' ? (
           <Add onOpenClose={onOpenCloseForm} />
@@ -87,7 +87,7 @@ export default function Reportes() {
       </BasicLayout>
 
       <BasicModal title='crear Reporte' show={openForm} onClose={onOpenCloseForm}>
-        <ReporteForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccessReporte={onToastSuccessReporte} />
+        <ReporteForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccess={onToastSuccess} />
       </BasicModal>
 
     </ProtectedRoute>
